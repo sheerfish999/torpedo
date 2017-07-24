@@ -5,18 +5,11 @@
 
 import os,time,sys
 
-from selenium import webdriver    
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.keys import Keys
-
 sys.path.append(sys.path[0] + "/modules/")    #python 2.7 对   modules.  的方式兼容不好
-from getids import *    ####  获得各种服务器脚本映射到页面的信息
-from finddoit import *    #####   用于封装基础的元素判断操作
-from randomid import *    #####  生成各种随机量唯一值
-
-## 用于报告, 使用公共变量
-import reportit
+from getids import *    	####  获得各种服务器脚本映射到页面的信息
+from finddoit import *    	#####   用于封装基础的元素判断操作
+from randomid import *    	#####  生成各种随机量唯一值
+import reportit				## 用于报告, 使用公共变量
 
 
 ######################################  百度基本操作
