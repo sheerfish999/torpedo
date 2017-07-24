@@ -24,13 +24,6 @@ from record import *    ##  用于录像
 from getids import *    ####  获得各种服务器脚本映射到页面的信息
 from randomid import *    #####  生成各种随机量唯一值
 
-############ 功能点封装
-
-from testbaidu import *     #######  框架测试基本功能
-
-###  功能测试的函数在这里
-
-# from XXXX import *
 
 ################################################   本脚本用于最初重建用户的情况
 
