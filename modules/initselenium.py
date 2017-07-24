@@ -59,6 +59,9 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report , get_type):
 
 	
 	#  录像和报告 错误日志文件夹初始化
+
+	os.system("echo touches > ./pic/touchs.jpg")
+
 	if os.path.exists("./pic") ==False:
 		os.makedirs("./pic")
 
