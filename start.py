@@ -91,7 +91,7 @@ if __name__ == '__main__':
 			#当时的页面源码存储到文件
 			source=browser.page_source
 			sourcelog='./logs/source'+ times +'.log'
-			fo = open(sourcelog, "w")
+			fo = open(sourcelog, "w",encoding = 'utf-8')
 			fo.writelines(source)
 			fo.close()
 
