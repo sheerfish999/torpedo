@@ -374,7 +374,7 @@ def search_switch_to_type(browser,xpath,frametype,timeouts=3):
 	ele=[]
 	ele=browser.find_elements_by_xpath(frametype)   ###  find_elements_by_xpath != find_element_by_xpath , 前者是个列表
 
-	print("has frame:",str(len(ele)))
+	#print("has frame:",str(len(ele)))
 
 	for i in range(len(ele)):
 		names=ele[i].get_attribute("name")
@@ -385,7 +385,7 @@ def search_switch_to_type(browser,xpath,frametype,timeouts=3):
 		if has==0:
 			browser.switch_to_default_content()   #### 到最上层，以便后续查找
 		else:
-			print("in frame found:",xpath)
+			#print("in frame found:",xpath)
 			return 1   ### 存在
 
 	return 0
