@@ -29,10 +29,12 @@ get_report=0    #生成报告   0  不生成,  1 生成   (非linux不生成报�
 
 #get_type=0      # 本地 firefox      #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
 get_type=1     # 本地 chrome         ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
+get_type=2     # 本地 ie
 #get_type=5	    # 本地 phantomjs     ###### 服务器使用
-#get_type=10    # 本地 firefox 容器   , 通常情况下, 调试与演示建议使用10, 因为0 firefox 模式后台创建产品存在500问题,   远程自动模式推荐  5 phantomjs 
 
+#get_type=10    # 本地 firefox 容器   , 通常情况下, 调试与演示建议使用10, 因为0 firefox 模式后台创建产品存在500问题,   远程自动模式推荐  5 phantomjs 
 #get_type=11    # 本地 chrome 容器
+
 #get_type=20   # 远程 firefox
 #get_type=21   # 远程 chrome
 
@@ -56,6 +58,7 @@ dockerinitsh=""
 本地模式:
 0  本地 firefox  (较新的firefox需要geckodriver, 并且较新 注意版本与浏览器的匹配会影响操作: https://github.com/mozilla/geckodriver/releases/)
 1  本地 chrome     (需要chromedriver)  
+2  本地 ie  (需要IEDriverServer)
 5  本地 phantomjs   (需要phantomjs)    #  注意:  半支持系统 js 弹出alert , 需要针对性的调试
 
 容器模式:  避免了driver 版本以及 python 库\浏览器的版本对应关系造成出现的莫名其妙的问题, 可供日常显示调试和演示
@@ -67,7 +70,7 @@ dockerinitsh=""
 推荐官方容器, hub模式不显示界面, 支持多并发(适合jenkins, 免转ghostdriver的模式).   注意尽量升级客户端   pip install -U selenium
 20  远程firefox		比较慢不推荐, 注意暂时抓图不正确, 还未进行调研和修改, 模仿 phantomjs 
 21  远程chrome		比较慢不推荐, 注意暂时抓图不正确, 还未进行调研和修改, 模仿 phantomjs 
-25  远程 htmlunit     	--貌似意义不大?
+25  远程 htmlunit   貌似意义不大
 # 需要htmlunit特别的 jar : htmlunit-driver-standalone   https://github.com/SeleniumHQ/htmlunit-driver/releases    -- DEV   
 # jar 包权限:  644,   java -cp htmlunit-driver-standalone-2.21.jar:selenium-server-standalone-2.53.0.jar org.openqa.grid.selenium.GridLauncher
 

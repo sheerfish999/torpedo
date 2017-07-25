@@ -188,6 +188,9 @@ def trytoconnect(remotedriverip, get_type):
 
 		return(browser)
 
+	if get_type==2:   ### ie
+		browser = webdriver.Ie()
+		return(browser)
 
 	if get_type==5:         ##  本地 PhantomJS    注意不支持 系统 js 弹出alert 的业务流
 		browser = webdriver.PhantomJS()
