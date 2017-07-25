@@ -375,6 +375,8 @@ def search_switch_to_type(browser,xpath,frametype,timeouts=3):
 	#print(len(ele))
 	browser.switch_to_default_content()   #### 先到最上层
 
+	print(len(ele))
+
 	for i in range(len(ele)):
 		names=ele[i].get_attribute("name")
 		#print(names)
