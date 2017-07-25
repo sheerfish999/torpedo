@@ -59,11 +59,6 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 			maybealert(browser, 0.5)
 
 
-	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
-	if exists(browser,xpath,0.5)==0:
-		search_switch_to_frame(browser,xpath,0.5)
-
-
 	## 等待元素可定位
 	try:
 		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
@@ -134,10 +129,6 @@ def send_keys(browser,xpath, value, displayedwait=1):             # displayedwai
 
 	#  获得 driver 属性
 	drivertypes = drivertype()
-
-	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
-	if exists(browser,xpath,0.5)==0:
-		search_switch_to_frame(browser,xpath,0.5)
 
 
 	## 等待元素出现
@@ -233,11 +224,6 @@ def click_action(browser,xpath):
 ######### select  
 
 def selects(browser,xpath, value):          ########  列表选择 ,  注意  value 不是  里面的 txt
-
-
-	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
-	if exists(browser,xpath,0.5)==0:
-		search_switch_to_frame(browser,xpath,0.5)
 
 
 	## 等待元素出现
@@ -378,31 +364,49 @@ def exists(browser,xpath,timesouts):
 
 
 
-###### 查找并自动切换到存在元素的 iframe 上
-
-def search_switch_to_frame(browser,xpath,timeouts=8):
+###### 查找并自动切换到存在元素的 iframe 上, 简易搜索一层，搜索失败则退到最上层。已经处于复杂的嵌套时不建议使用, 第二层无法进入
 
 
-	############## iframe
-
-	iframexpath=".//body/iframe"
+def search_switch_to_type(browser,xpath,frametype,timeouts=3):
 
 	ele=[]
-	ele=browser.find_elements_by_xpath(iframexpath)   ###  find_elements_by_xpath != find_element_by_xpath
+	ele=browser.find_elements_by_xpath(frametype)   ###  find_elements_by_xpath != find_element_by_xpath , 前者是个列表
 
 	#print(len(ele))
-	browser.switch_to_default_content()
+	browser.switch_to_default_content()   #### 先到最上层
 
 	for i in range(len(ele)):
 		names=ele[i].get_attribute("name")
 		#print(names)
-		browser.switch_to_frame(names)
+		browser.switch_to_frame(names)   ####
 		has=exists(browser,xpath,timeouts)    ##### 快速判断
 
 		if has==0:
-			browser.switch_to_default_content()
+			browser.switch_to_default_content()   #### 到最上层，以便后续查找
 		else:
-			break
+			return 1   ### 存在
+
+	return 0
+
+
+def search_switch_to_frame(browser,xpath,timeouts=3):
+
+
+	############## iframe
+
+	frametype=".//body/iframe"
+
+	ret=search_switch_to_type(browser,xpath,frametype,timeouts)
+	if ret==1:
+		return
+
+	############## iframe
+
+	frametype=".//body/frame"
+
+	ret=search_switch_to_type(browser,xpath,frametype,timeouts)
+	if ret==1:
+		return
 
 
 ##########  根据 链接输出 xpath , 以便得到父路径及推导其它xpath
@@ -425,11 +429,6 @@ def getlinkxpath(linkstr, eletypes="a"):
 #########  getvalues     取值的封装
 
 def getvalues(browser,xpath,waittime=20):
-
-
-	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
-	if exists(browser,xpath,0.5)==0:
-		search_switch_to_frame(browser,xpath,0.5)
 
 
 	## 等待元素出现
@@ -465,9 +464,6 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 
 	timestart = datetime.datetime.now()
 
-	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
-	if exists(browser,xpath,0.5)==0:
-		search_switch_to_frame(browser,xpath,0.5)
 
 	## 等待元素出现
 	try:
@@ -523,10 +519,6 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 def existrefreshs(browser,xpath,timeout):
 
 	Url=browser.current_url
-
-	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
-	if exists(browser,xpath,0.5)==0:
-		search_switch_to_frame(browser,xpath,0.5)
 
 	while exists(browser,xpath,timeout) ==0:     
 		#  某些环境该页面需要 F5刷才能刷出来, 只是请求的话不行
@@ -607,10 +599,6 @@ def maybealert(browser, timeout):
 ##########  执行 js 脚本替换元素属性,  代替 selenium 的方法,  可以兼容 类似 phantomjs 结合 selenium 后元素找不到的情况, 造成js 作用失败
 
 def changeattrbyjs(browser,xpath,attrname,attrvalue):
-
-	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
-	if exists(browser,xpath,0.5)==0:
-		search_switch_to_frame(browser,xpath,0.5)
 
 
 	#print(xpath)   #在浏览器中调试一下 ,  是否js作用的元素对了
