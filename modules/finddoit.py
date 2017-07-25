@@ -364,7 +364,7 @@ def exists(browser,xpath,timesouts):
 
 ###### 查找并自动切换到存在元素的 iframe 上
 
-def search_switch_to_frame(browser,xpath):
+def search_switch_to_frame(browser,xpath,timeouts=8):
 
 
 	############## iframe
@@ -381,7 +381,7 @@ def search_switch_to_frame(browser,xpath):
 		names=ele[i].get_attribute("name")
 		#print(names)
 		browser.switch_to_frame(names)
-		has=exists(browser,xpath,1)    ##### 快速判断
+		has=exists(browser,xpath,timeouts)    ##### 快速判断
 
 		if has==0:
 			browser.switch_to_default_content()
