@@ -385,6 +385,7 @@ def search_switch_to_type(browser,xpath,frametype,timeouts=3):
 		if has==0:
 			browser.switch_to_default_content()   #### 到最上层，以便后续查找
 		else:
+			print("in frame found:",xpath)
 			return 1   ### 存在
 
 	return 0
