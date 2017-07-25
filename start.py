@@ -84,8 +84,16 @@ if __name__ == '__main__':
 				browser.save_screenshot(errorjpg)
 				time.sleep(1)   #等待文件生成
 
+			 #异常存储到文件
 			errorlog='./logs/error'+ times +'.log'
-			traceback.print_exc(file=open(errorlog,"w"))   #存储到文件
+			traceback.print_exc(file=open(errorlog,"w"))  
+
+			#当时的页面源码存储到文件
+			source=browser.page_source
+			sourcelog='./logs/source'+ times +'.log'
+			fo = open(sourcelog, "w")
+			fo.writelines(source)
+			fo.close()
 
 			errstrings=u"测试提前结束, 请查阅 logs目录: " + errorjpg  + u" 及 " + errorlog 
 			print(errstrings + u" 错误触发操作位置:")
