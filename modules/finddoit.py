@@ -59,6 +59,11 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 			maybealert(browser, 0.5)
 
 
+	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
+	if exists(browser,xpath,0.5)==0:
+		search_switch_to_frame(browser,xpath,0.5)
+
+
 	## 等待元素可定位
 	try:
 		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
@@ -129,6 +134,11 @@ def send_keys(browser,xpath, value, displayedwait=1):             # displayedwai
 
 	#  获得 driver 属性
 	drivertypes = drivertype()
+
+	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
+	if exists(browser,xpath,0.5)==0:
+		search_switch_to_frame(browser,xpath,0.5)
+
 
 	## 等待元素出现
 	waittime=30
