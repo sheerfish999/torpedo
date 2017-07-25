@@ -234,6 +234,12 @@ def click_action(browser,xpath):
 
 def selects(browser,xpath, value):          ########  列表选择 ,  注意  value 不是  里面的 txt
 
+
+	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
+	if exists(browser,xpath,0.5)==0:
+		search_switch_to_frame(browser,xpath,0.5)
+
+
 	## 等待元素出现
 	waittime=20
 
@@ -420,6 +426,12 @@ def getlinkxpath(linkstr, eletypes="a"):
 
 def getvalues(browser,xpath,waittime=20):
 
+
+	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
+	if exists(browser,xpath,0.5)==0:
+		search_switch_to_frame(browser,xpath,0.5)
+
+
 	## 等待元素出现
 	try:
 		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
@@ -452,6 +464,10 @@ def getvalues(browser,xpath,waittime=20):
 def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表示完全匹配; 1 , 部分匹配即可
 
 	timestart = datetime.datetime.now()
+
+	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
+	if exists(browser,xpath,0.5)==0:
+		search_switch_to_frame(browser,xpath,0.5)
 
 	## 等待元素出现
 	try:
@@ -507,6 +523,10 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 def existrefreshs(browser,xpath,timeout):
 
 	Url=browser.current_url
+
+	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
+	if exists(browser,xpath,0.5)==0:
+		search_switch_to_frame(browser,xpath,0.5)
 
 	while exists(browser,xpath,timeout) ==0:     
 		#  某些环境该页面需要 F5刷才能刷出来, 只是请求的话不行
@@ -587,6 +607,11 @@ def maybealert(browser, timeout):
 ##########  执行 js 脚本替换元素属性,  代替 selenium 的方法,  可以兼容 类似 phantomjs 结合 selenium 后元素找不到的情况, 造成js 作用失败
 
 def changeattrbyjs(browser,xpath,attrname,attrvalue):
+
+	## 尝试快速判断，并切换 iframe/frame 查找, 查找不到则继续
+	if exists(browser,xpath,0.5)==0:
+		search_switch_to_frame(browser,xpath,0.5)
+
 
 	#print(xpath)   #在浏览器中调试一下 ,  是否js作用的元素对了
 
