@@ -361,6 +361,34 @@ def exists(browser,xpath,timesouts):
 	    	return(1)   #存在
 
 
+
+###### 查找并自动切换到存在元素的 iframe 上
+
+def search_switch_to_frame(browser,xpath):
+
+
+	############## iframe
+
+	iframexpath=".//body/iframe"
+
+	ele=[]
+	ele=browser.find_elements_by_xpath(iframexpath)   ###  find_elements_by_xpath != find_element_by_xpath
+
+	#print(len(ele))
+	browser.switch_to_default_content()
+
+	for i in range(len(ele)):
+		names=ele[i].get_attribute("name")
+		#print(names)
+		browser.switch_to_frame(names)
+		has=exists(browser,xpath,1)    ##### 快速判断
+
+		if has==0:
+			browser.switch_to_default_content()
+		else:
+			break
+
+
 ##########  根据 链接输出 xpath , 以便得到父路径及推导其它xpath
 
 ## 获得后可以进行 诸如 父路径 再乡下追溯 (../xxx) , 以及兄弟节点等操作
