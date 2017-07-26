@@ -377,9 +377,14 @@ def search_switch_to_type(browser,xpath,frametype,timeouts=3):
 	#print("has frame:",str(len(ele)))
 
 	for i in range(len(ele)):
-		names=ele[i].get_attribute("name")
+
+		#### 有些可能没有 name
+		#names=ele[i].get_attribute("name")
 		#print(names)
-		browser.switch_to_frame(names)   ####
+		#browser.switch_to_frame(names)
+
+		browser.switch_to.frame(ele[i])
+
 		has=exists(browser,xpath,timeouts)    ##### 快速判断
 
 		if has==0:
