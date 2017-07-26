@@ -393,8 +393,8 @@ def search_switch_to_frametype(browser,xpath,frametype,level=0,timeouts=3):
 	for i in range(len(ele)):
 
 		#### 有些可能没有 name
-		#names=ele[i].get_attribute("name")
-		#print(names)
+		names=ele[i].get_attribute("name")
+		print(names)
 		#browser.switch_to_frame(names)
 
 		browser.switch_to.frame(ele[i])
