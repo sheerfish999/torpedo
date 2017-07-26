@@ -364,12 +364,25 @@ def exists(browser,xpath,timesouts):
 
 
 
-###### 查找并自动切换到存在元素的 iframe 上, 简易搜索一层，搜索失败则退到最上层。已经处于复杂的嵌套时不建议使用, 第二层无法进入
+###### 查找并自动切换到存在元素的 iframe 上, 简易搜索一层，搜索失败则退到特定层。已经处于复杂的嵌套时不建议使用
 
 
-def search_switch_to_type(browser,xpath,frametype,timeouts=3):
+"""
+level=0  从顶层搜索，失败后退到顶层 (默认)
+level=1  从当前的父一层搜索，失败后退到父一层
+level=2  从当前乡下搜索，失败后退到当前
 
-	browser.switch_to_default_content()   #### 先到最上层
+"""
+
+
+def search_switch_to_type(browser,xpath,frametype,level=0,timeouts=3):
+
+	if level==0:
+		browser.switch_to_default_content()   #### 最上层
+	if level==1:
+		browser..switch_to.parent_frame()   ### 父层
+	if level==2:						
+		pass								### 不变
 
 	ele=[]
 	ele=browser.find_elements_by_xpath(frametype)   ###  find_elements_by_xpath != find_element_by_xpath , 前者是个列表
@@ -388,22 +401,28 @@ def search_switch_to_type(browser,xpath,frametype,timeouts=3):
 		has=exists(browser,xpath,timeouts)    ##### 快速判断
 
 		if has==0:
-			browser.switch_to_default_content()   #### 到最上层，以便后续查找
+			#### 以便后续查找
+			if level==0:
+				browser.switch_to_default_content()   #### 最上层
+			if level==1:
+				browser.switch_to.parent_frame()   ### 父层
+			if level==2:						
+				browser.switch_to.parent_frame()   ### 父层
 		else:
-			#print("in frame found:",xpath)
+			#print(u"产生有效Frame切换")
 			return 1   ### 存在
 
 	return 0
 
 
-def search_switch_to_frame(browser,xpath,timeouts=3):
+def search_switch_to_frame(browser,xpath,level=0,timeouts=3):      #### 存在默认在每个frame下查找元素的超时时间
 
 
 	############## iframe
 
 	frametype=".//body/iframe"
 
-	ret=search_switch_to_type(browser,xpath,frametype,timeouts)
+	ret=search_switch_to_type(browser,xpath,frametype,level,timeouts)
 	if ret==1:
 		return
 
@@ -411,7 +430,7 @@ def search_switch_to_frame(browser,xpath,timeouts=3):
 
 	frametype=".//body/frame"
 
-	ret=search_switch_to_type(browser,xpath,frametype,timeouts)
+	ret=search_switch_to_type(browser,xpath,frametype,level,timeouts)
 	if ret==1:
 		return
 
