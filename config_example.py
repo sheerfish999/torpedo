@@ -27,10 +27,10 @@ get_report=0    #生成报告   0  不生成,  1 生成   (非linux不生成报�
 
 ######  模式见下文说明
 
-#get_type=0      # 本地 firefox      #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
-get_type=1     # 本地 chrome         ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
-#get_type=2     # 本地 ie             #### 将 ie 安全模式，全部调整为相同（关闭或打开），某些产品智能使用该驱动
-#get_type=5	    # 本地 phantomjs     ###### 服务器使用
+#get_type=0      # 本地 firefox    #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
+get_type=1     # 本地 chrome       ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
+#get_type=2     # 本地 ie          #### 需要将 ie 安全 "安全模式"，全部调整为相同（关闭或打开），某些产品只能使用该驱动。但速度较慢, 某些API不支持
+#get_type=5	    # 本地 phantomjs   ###### 服务器使用, 某些API不支持, js弹窗不支持，需要注入解决
 
 #get_type=10    # 本地 firefox 容器   , 通常情况下, 调试与演示建议使用10, 因为0 firefox 模式后台创建产品存在500问题,   远程自动模式推荐  5 phantomjs 
 #get_type=11    # 本地 chrome 容器
@@ -56,28 +56,32 @@ dockerinitsh=""
 
 """  测试模式和驱动说明    get_type   注意已经定义的, 勿修改, 涉及较多位置关联
 本地模式:
-0  本地 firefox  (较新的firefox需要geckodriver, 并且较新 注意版本与浏览器的匹配会影响操作: https://github.com/mozilla/geckodriver/releases/)
+0  本地 firefox  (3.0 以上版本 firefox需要geckodriver, 并且较新 注意版本与浏览器的匹配会影响操作: https://github.com/mozilla/geckodriver/releases/)
 1  本地 chrome     (需要chromedriver)  
-2  本地 ie  (需要IEDriverServer)
+2  本地 ie  		(需要IEDriverServer)
 5  本地 phantomjs   (需要phantomjs)    #  注意:  半支持系统 js 弹出alert , 需要针对性的调试
 
 容器模式:  避免了driver 版本以及 python 库\浏览器的版本对应关系造成出现的莫名其妙的问题, 可供日常显示调试和演示
 10  本地firefox容器  (容器需要docker支持和设置)   
-11  本地chrome容器  (容器需要docker支持和设置)   	
+11  本地chrome容器   (容器需要docker支持和设置)   	
 15  本地htmlunit 容器 不显示页面, 速度更快    ### 暂时没有明确测试
 
 远程模式:    selenium-server-standalone  -role hub  或   -role node  -hub http://localhost:4444/grid/register   
-推荐官方容器, hub模式不显示界面, 支持多并发(适合jenkins, 免转ghostdriver的模式).   注意尽量升级客户端   pip install -U selenium
-20  远程firefox		比较慢不推荐, 注意暂时抓图不正确, 还未进行调研和修改, 模仿 phantomjs 
-21  远程chrome		比较慢不推荐, 注意暂时抓图不正确, 还未进行调研和修改, 模仿 phantomjs 
+或使用 官方容器 hub, 可避开phantomjs不支持的情况, 支持多并发(适合jenkins, 免转ghostdriver的模式).  
+
+20  远程firefox		比 phantomjs 要慢, 注意暂时抓图不正确, 还未进行调研和修改
+21  远程chrome		比 phantomjs 要慢, 注意暂时抓图不正确, 还未进行调研和修改
+
 25  远程 htmlunit   貌似意义不大
-# 需要htmlunit特别的 jar : htmlunit-driver-standalone   https://github.com/SeleniumHQ/htmlunit-driver/releases    -- DEV   
+# 需要htmlunit特别的 jar : htmlunit-driver-standalone   https://github.com/SeleniumHQ/htmlunit-driver/releases    --- 调试中 
 # jar 包权限:  644,   java -cp htmlunit-driver-standalone-2.21.jar:selenium-server-standalone-2.53.0.jar org.openqa.grid.selenium.GridLauncher
 
-3.0 以上版本, firefox 需要使用 geckodriver
 
 不打算支持:
 Opera (本地的驱动不好找, 远程意义不大, 浏览器份额较小,  selenium 和 Opera 官方似乎都不再明确支持对应驱动)
+
+还未支持：
+safari
 
 """
 
