@@ -372,10 +372,11 @@ level=0  从顶层搜索，失败后退到顶层 (默认)
 level=1  从当前的父一层搜索，失败后退到父一层
 level=2  从当前下搜索，失败后退到当前
 
+注意： PhantomJS/Safari/IE  由于不支持  switch_to.parent_frame ，所以不支持 12。 chrome 和 firefox 应支持
+
 """
 
-
-def search_switch_to_type(browser,xpath,frametype,level=0,timeouts=3):
+def search_switch_to_frametype(browser,xpath,frametype,level=0,timeouts=3):
 
 	if level==0:
 		browser.switch_to_default_content()   #### 最上层
@@ -409,7 +410,7 @@ def search_switch_to_type(browser,xpath,frametype,level=0,timeouts=3):
 			if level==2:						
 				browser.switch_to.parent_frame()   ### 父层
 		else:
-			print(u"产生有效Frame切换:" + xpath )
+			print(u"搜索到有效的Frame切换: " + xpath )
 			return 1   ### 存在
 
 	return 0
@@ -422,7 +423,7 @@ def search_switch_to_frame(browser,xpath,level=0,timeouts=3):      #### 存在�
 
 	frametype=".//body/iframe"
 
-	ret=search_switch_to_type(browser,xpath,frametype,level,timeouts)
+	ret=search_switch_to_frametype(browser,xpath,frametype,level,timeouts)
 	if ret==1:
 		return
 
@@ -430,7 +431,7 @@ def search_switch_to_frame(browser,xpath,level=0,timeouts=3):      #### 存在�
 
 	frametype=".//body/frame"
 
-	ret=search_switch_to_type(browser,xpath,frametype,level,timeouts)
+	ret=search_switch_to_frametype(browser,xpath,frametype,level,timeouts)
 	if ret==1:
 		return
 
