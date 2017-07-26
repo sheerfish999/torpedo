@@ -388,7 +388,7 @@ def search_switch_to_frametype(browser,xpath,frametype,level=0,timeouts=3):
 	ele=[]
 	ele=browser.find_elements_by_xpath(frametype)   ###  find_elements_by_xpath != find_element_by_xpath , 前者是个列表
 
-	print("has frame:",str(len(ele)))
+	#print("has frame:",str(len(ele)))
 
 	for i in range(len(ele)):
 
