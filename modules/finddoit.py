@@ -409,7 +409,7 @@ def search_switch_to_type(browser,xpath,frametype,level=0,timeouts=3):
 			if level==2:						
 				browser.switch_to.parent_frame()   ### 父层
 		else:
-			#print(u"产生有效Frame切换")
+			print(u"产生有效Frame切换:" + xpath )
 			return 1   ### 存在
 
 	return 0
