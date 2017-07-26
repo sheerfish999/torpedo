@@ -370,7 +370,7 @@ def exists(browser,xpath,timesouts):
 """
 level=0  从顶层搜索，失败后退到顶层 (默认)
 level=1  从当前的父一层搜索，失败后退到父一层
-level=2  从当前乡下搜索，失败后退到当前
+level=2  从当前下搜索，失败后退到当前
 
 """
 
@@ -380,7 +380,7 @@ def search_switch_to_type(browser,xpath,frametype,level=0,timeouts=3):
 	if level==0:
 		browser.switch_to_default_content()   #### 最上层
 	if level==1:
-		browser..switch_to.parent_frame()   ### 父层
+		browser.switch_to.parent_frame()   ### 父层
 	if level==2:						
 		pass								### 不变
 
