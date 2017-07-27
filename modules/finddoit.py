@@ -162,8 +162,10 @@ def send_keys(browser,xpath, value, displayedwait=1):             # displayedwai
 
 
     # 向下滑动直到找到元素(如果有滑块)
-	browser.execute_script("arguments[0].scrollIntoView(true)",xpath)
-
+    try:
+		browser.execute_script("arguments[0].scrollIntoView(true)",xpath)
+	except:
+		pass
 
 	## 最终用于操作的元素
 	lastele=browser.find_element_by_xpath(xpath) 
