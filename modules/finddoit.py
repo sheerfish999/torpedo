@@ -162,7 +162,7 @@ def send_keys(browser,xpath, value, displayedwait=1):             # displayedwai
 
 
     # 向下滑动直到找到元素(如果有滑块)
-    try:
+	try:
 		browser.execute_script("arguments[0].scrollIntoView(true)",xpath)
 	except:
 		pass
