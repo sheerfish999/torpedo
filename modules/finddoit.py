@@ -243,7 +243,7 @@ def click_action(browser,xpath):
 	hov.perform()
 
 
-######### select  
+######### select    单选模式
 
 def selects(browser,xpath, value):          ########  列表选择 ,  注意  value 不是  里面的 txt, 可能是个id
 
@@ -294,6 +294,43 @@ def selects(browser,xpath, value):          ########  列表选择 ,  注意  va
 
 	## 操作之后的录像抓图
 	recordpic(browser,location)
+
+
+
+######## 隐藏封装的 多选list 的点击
+
+
+def clicks_multi_list(browser,inputxpath, comboboxxpath, ids):
+
+
+	waittime=20  ### 元素超时时间
+
+
+	####################
+
+	clicks(browser,inputxpath)
+	list_xpath=comboboxxpath+"/div[" + str(ids) + "]"
+
+
+    # 定位到checkbox
+
+	## 等待元素出现
+	browser.implicitly_wait(waittime)
+	hiddmenu=browser.find_element_by_xpath(list_xpath)
+
+
+    # 向下滑动直到找到元素(如果有滑块)
+	try:
+		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+	except:
+		pass
+
+	menu=browser.find_element_by_xpath(inputxpath)
+	ActionChains(browser).move_to_element(menu).click(hiddmenu).perform()
+
+
+    #### 没有进行抓图录像所需定位等操作
+
 
 
 #############  页面载入的封装 (失败则反复重试)
