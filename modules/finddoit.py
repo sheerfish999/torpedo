@@ -750,7 +750,7 @@ def changeattrbyjs(browser,xpath,attrname,attrvalue):
 
 def delattrbyjs(browser,xpath,attrname):
 
-	cmd="document.getElementByXpath('" + xpath +"').removeAttribute('" + attrname + "')"
+	cmd="document.getElementByXpath(\"" + xpath + "\").removeAttribute(\"" + attrname + "\")"
 	print(cmd)
 	browser.execute_script(cmd)
 
