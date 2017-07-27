@@ -155,11 +155,11 @@ def send_keys(browser,xpath, value):
 
 
 	## 等待元素出现
-	if displayedwait==1:   # 这个参数默认是要求等待元素出现
-		try:
-			WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
-		except TimeoutException:
-			timeoutlog(browser,xpath, waittime)
+
+	try:
+		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
+	except TimeoutException:
+		timeoutlog(browser,xpath, waittime)
 
 	"""
 	#这种判断无效
