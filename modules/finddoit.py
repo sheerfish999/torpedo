@@ -62,8 +62,8 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	## 等待元素出现
 	try:
 		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
-	except:
-		lastele=browser.find_element_by_xpath(xpath)
+	except TimeoutException:
+		timeoutlog(browser,xpath, waittime)
 
 	lastele=browser.find_element_by_xpath(xpath)
 
