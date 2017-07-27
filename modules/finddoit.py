@@ -173,7 +173,7 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait   1 �
 	
 	#if displayedwait==2:   # 修改元素属性, 强制变为元素显示和可写
 
-		""" 
+	""" 
 		#以下修改可写和显示的方法已经过时
 
 		lastele=browser.find_element_by_xpath(xpath)
@@ -190,7 +190,7 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait   1 �
 			browser.execute_script(js, lastele, js2)    # dir(webdriver.Firefox.webdriver.WebDriver)   ,  browser.execute_async_script(js, lastele, js2)    是异步的
 		
 
-		"""
+	"""
 	#	delattrbyjs(browser,xpath,"display")
 	#	delattrbyjs(browser,xpath,"readonly")
 
