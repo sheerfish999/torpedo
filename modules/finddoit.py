@@ -172,19 +172,17 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait 0  不
 	if displayedwait==2:   # 修改元素属性, 强制变为元素显示
 		lastele=browser.find_element_by_xpath(xpath)
 		js="arguments[0].style=arguments[1]"
-		js2="display: 'block'; readonly: 'block';"         		#js2="display: '';"
+		#js2="display: 'block'; readonly: 'false';"         		#js2="display: '';"
+		js2="readonly: 'false';" 
 
-		if displayedwait==2 and int(drivertypes)==5:     ###  phantomjs 情况比较特殊 ,  selenium 对元素上执行 js 的方法, phantomjs 找不到元素
+		if int(drivertypes)==5:     ###  phantomjs 情况比较特殊 ,  selenium 对元素上执行 js 的方法, phantomjs 找不到元素
 
 			changeattrbyjs(browser,xpath,"style" ,"display:'block'")
 			changeattrbyjs(browser,xpath,"style" ,"readonly:'block'")
 	
 		else:
-			#browser.execute_script(js, lastele, js2)    # dir(webdriver.Firefox.webdriver.WebDriver)   ,  browser.execute_async_script(js, lastele, js2)    是异步的
+			browser.execute_script(js, lastele, js2)    # dir(webdriver.Firefox.webdriver.WebDriver)   ,  browser.execute_async_script(js, lastele, js2)    是异步的
 		
-			lastele.removeAttribute('display')
-			lastele.removeAttribute('readonly')
-
 		browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果	
 
 
