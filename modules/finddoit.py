@@ -141,9 +141,20 @@ def send_keys(browser,xpath, value, displayedwait=1):             # displayedwai
 	#  获得 driver 属性
 	drivertypes = drivertype()
 
+	waittime=20
 
 	## 等待元素出现
-	waittime=30
+	browser.implicitly_wait(waittime)
+	lastele=browser.find_element_by_xpath(xpath)
+
+    # 向下滑动直到找到元素(如果有滑块)
+	try:
+		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+	except:
+		pass
+
+
+	## 等待元素出现
 	if displayedwait==1:   # 这个参数默认是要求等待元素出现
 		try:
 			WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
@@ -171,8 +182,7 @@ def send_keys(browser,xpath, value, displayedwait=1):             # displayedwai
 		browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果	
 
 
-	## 最终用于操作的元素
-	lastele=browser.find_element_by_xpath(xpath) 
+	## 最终用于操作的元素位置
 	location = lastele.location
 
 	#显示位置调整
@@ -241,13 +251,23 @@ def selects(browser,xpath, value):          ########  列表选择 ,  注意  va
 	## 等待元素出现
 	waittime=20
 
+	## 等待元素出现
+	browser.implicitly_wait(waittime)
+	lastele=browser.find_element_by_xpath(xpath)
+
+    # 向下滑动直到找到元素(如果有滑块)
+	try:
+		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+	except:
+		pass
+
+
 	try:
 		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
 	except TimeoutException:
 			timeoutlog(browser,xpath, waittime)
 
-	## 最终用于操作的元素
-	lastele=browser.find_element_by_xpath(xpath) 
+	## 最终用于操作的元素位置
 	location = lastele.location
 
 	#显示位置调整
@@ -367,8 +387,20 @@ def loads(browser,Url,timeouts=8,alerts=1):   # 默认页面重试的超时时�
 def exists(browser,xpath,timesouts):
 
 	try:
+
+		## 等待元素出现
+		browser.implicitly_wait(timesouts)
+		lastele=browser.find_element_by_xpath(xpath)
+
+	    # 向下滑动直到找到元素(如果有滑块)
+		try:
+			browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+		except:
+			pass
+
 		###  注意有个响应时间, 本地脚本0.2, 远程返回的弹出框时间建议1-2, 对于刷新判断的页面 建议 5
-		WebDriverWait(browser, timesouts).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
+		WebDriverWait(browser, timesouts).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())
+
 	except:
 	    	return(0)
 	else:
@@ -471,13 +503,22 @@ def getvalues(browser,xpath,waittime=20):
 
 
 	## 等待元素出现
+	browser.implicitly_wait(waittime)
+	lastele=browser.find_element_by_xpath(xpath)
+
+    # 向下滑动直到找到元素(如果有滑块)
+	try:
+		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+	except:
+		pass
+
+	## 等待元素出现
 	try:
 		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
 	except TimeoutException:
 		timeoutlog(browser,xpath, waittime)
 
-	## 最终用于操作的元素
-	lastele=browser.find_element_by_xpath(xpath) 
+	## 最终用于操作的元素位置
 	location = lastele.location
 
 	#显示位置调整
@@ -505,6 +546,17 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 
 
 	## 等待元素出现
+	browser.implicitly_wait(waittime)
+	lastele=browser.find_element_by_xpath(xpath)
+
+    # 向下滑动直到找到元素(如果有滑块)
+	try:
+		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+	except:
+		pass
+
+
+	## 等待元素出现
 	try:
 		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())    
 	except TimeoutException:
@@ -514,8 +566,7 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 	timesend = datetime.datetime.now()
 	ret=str(round((timesend-timestart).total_seconds(),2))
 
-	## 最终用于操作的元素
-	lastele=browser.find_element_by_xpath(xpath)
+	## 最终用于操作的元素位置
 	location = lastele.location
 
 	#显示位置调整
