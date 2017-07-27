@@ -59,6 +59,7 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 			maybealert(browser, 0.5)
 
 
+	
 	## 等待元素出现
 	try:
 		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath))     
