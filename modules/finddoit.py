@@ -181,7 +181,8 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait 0  不
 			changeattrbyjs(browser,xpath,"style" ,"readonly:'block'")
 	
 		else:
-			browser.execute_script(js, lastele, js2)    # dir(webdriver.Firefox.webdriver.WebDriver)   ,  browser.execute_async_script(js, lastele, js2)    是异步的
+			delattrbyjs(browser,xpath,"readonly")
+			#browser.execute_script(js, lastele, js2)    # dir(webdriver.Firefox.webdriver.WebDriver)   ,  browser.execute_async_script(js, lastele, js2)    是异步的
 		
 		browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果	
 
@@ -743,6 +744,15 @@ def changeattrbyjs(browser,xpath,attrname,attrvalue):
 	#print(jsstr)
 	
 	browser.execute_script(jsstr)       #   代替  browser.execute_script(js, lastele, js2)    , 针对 一些driver 找不到元素的情况, 如 phantomjs
+
+
+######### 执行js 删除一个属性
+
+def delattrbyjs(browser,xpath,attrname):
+
+
+	browser.execute_script("document.getElementByXpath(" + xpath +").removeAttribute(" + attrname + ")")
+
 
 
 ##########  phantomjs 模式, 对于 alert  accept 的选择的情况,  需要先注入脚本再点击,  这样 js 才能起作用,  注意只针对 phantomjs 等 ghostdriver
