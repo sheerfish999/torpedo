@@ -172,8 +172,8 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait   1 �
 
 	
 
-	"""
-	if displayedwait==2:   # 修改元素属性, 强制变为元素显示和可写
+	
+	#if displayedwait==2:   # 修改元素属性, 强制变为元素显示和可写
 
 		""" 以下修改可写和显示的方法已经过时
 
@@ -192,11 +192,11 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait   1 �
 		
 
 		"""
-		delattrbyjs(browser,xpath,"display")
-		delattrbyjs(browser,xpath,"readonly")
+	#	delattrbyjs(browser,xpath,"display")
+	#	delattrbyjs(browser,xpath,"readonly")
 
-		browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果
-	"""
+	#	browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果
+	
 	delattrbyjs(browser,xpath,"display")
 	delattrbyjs(browser,xpath,"readonly")	
 
