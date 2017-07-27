@@ -59,6 +59,15 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 			maybealert(browser, 0.5)
 
 
+	lastele=browser.find_element_by_xpath(xpath)
+
+    # 向下滑动直到找到元素(如果有滑块)
+	try:
+		browser.execute_script("arguments[0].scrollIntoView(true)",xpath)
+	except:
+		pass
+
+
 	## 等待元素可定位
 	try:
 		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
@@ -72,8 +81,7 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 		timeoutlog(browser,xpath, waittime)
 
 
-	## 最终用于操作的元素
-	lastele=browser.find_element_by_xpath(xpath)
+	## 最终用于操作的元素位置
 	location = lastele.location
 
 	#显示位置调整
@@ -159,13 +167,6 @@ def send_keys(browser,xpath, value, displayedwait=1):             # displayedwai
 		
 		browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果	
 
-
-
-    # 向下滑动直到找到元素(如果有滑块)
-	try:
-		browser.execute_script("arguments[0].scrollIntoView(true)",xpath)
-	except:
-		pass
 
 	## 最终用于操作的元素
 	lastele=browser.find_element_by_xpath(xpath) 
