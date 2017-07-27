@@ -136,7 +136,7 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 
 #########  sendkeys     输出内容封装  (注意封装了 clear)
 
-def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait   1 判断并等待, 2 强制变为 显示 并可写
+def send_keys(browser,xpath, value):
 
 	#  获得 driver 属性
 	drivertypes = drivertype()
@@ -162,6 +162,7 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait   1 �
 			timeoutlog(browser,xpath, waittime)
 
 	"""
+	#这种判断无效
 	if displayedwait==0 or displayedwait==2:   ## 仍然要判断元素是否已经存在     
 		try:
 			WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath))     # ------  这种判断无效
@@ -170,35 +171,27 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait   1 �
 	"""
 
 
-	
-	#if displayedwait==2:   # 修改元素属性, 强制变为元素显示和可写
-
 	""" 
-		#以下修改可写和显示的方法已经过时
+	#以下修改可写和显示的方法已经过时
 
-		lastele=browser.find_element_by_xpath(xpath)
-		js="arguments[0].style=arguments[1]"
-		js2="display: 'block';"         		#js2="display: '';"
-		#js2="readonly: 'False';" 
+	lastele=browser.find_element_by_xpath(xpath)
+	js="arguments[0].style=arguments[1]"
+	js2="display: 'block';"         		#js2="display: '';"
+	#js2="readonly: 'False';" 
 
-		if int(drivertypes)==5:     ###  phantomjs 情况比较特殊 ,  selenium 对元素上执行 js 的方法, phantomjs 找不到元素
+	if int(drivertypes)==5:     ###  phantomjs 情况比较特殊 ,  selenium 对元素上执行 js 的方法, phantomjs 找不到元素
 
-			changeattrbyjs(browser,xpath,"style" ,"display:'block'")
-			changeattrbyjs(browser,xpath,"style" ,"readonly:'block'")
+		changeattrbyjs(browser,xpath,"style" ,"display:'block'")
+		changeattrbyjs(browser,xpath,"style" ,"readonly:'block'")
+
+	else:
+		browser.execute_script(js, lastele, js2)    # dir(webdriver.Firefox.webdriver.WebDriver)   ,  browser.execute_async_script(js, lastele, js2)    是异步的
 	
-		else:
-			browser.execute_script(js, lastele, js2)    # dir(webdriver.Firefox.webdriver.WebDriver)   ,  browser.execute_async_script(js, lastele, js2)    是异步的
-		
-
 	"""
-	#	delattrbyjs(browser,xpath,"display")
-	#	delattrbyjs(browser,xpath,"readonly")
-
-	#	browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果
 	
 	delattrbyjs(browser,xpath,"display")
 	delattrbyjs(browser,xpath,"readonly")	
-
+	#browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果
 
 	## 最终用于操作的元素位置
 	location = lastele.location
