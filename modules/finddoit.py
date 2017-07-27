@@ -47,9 +47,11 @@ from frame import *   ## 用于获得驱动类型
 
 def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体,  针对一些场景
 
-	## 等待元素出现
-	waittime=20
+	waittime=20  ### 元素超时时间
+	timeouts=20  ### 默认页面重试的超时时间, 考虑到情况复杂, 加长时间
 
+	## 等待元素出现
+	
 	timestart = datetime.datetime.now()
 	
 	if alerts==1:   #忽略弹出窗体, 如果出现就 accept
@@ -59,13 +61,8 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 			maybealert(browser, 0.5)
 
 
-	
 	## 等待元素出现
-	try:
-		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath))     
-	except TimeoutException:
-		timeoutlog(browser,xpath, waittime)
-
+	browser.implicitly_wait(waittime)
 	lastele=browser.find_element_by_xpath(xpath)
 
 
@@ -121,7 +118,6 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 		pass
 
 	 # 操作
-	timeouts=20   # 默认页面重试的超时时间, 考虑到情况复杂, 加长时间
 	browser.set_page_load_timeout(timeouts)
 
 	try:     ### 出问题则重试
