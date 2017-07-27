@@ -171,11 +171,10 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait   1 �
 
 
 	
-
-	
 	#if displayedwait==2:   # 修改元素属性, 强制变为元素显示和可写
 
-		""" 以下修改可写和显示的方法已经过时
+		""" 
+		#以下修改可写和显示的方法已经过时
 
 		lastele=browser.find_element_by_xpath(xpath)
 		js="arguments[0].style=arguments[1]"
