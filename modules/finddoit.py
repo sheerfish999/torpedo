@@ -180,8 +180,11 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait 0  不
 			changeattrbyjs(browser,xpath,"style" ,"readonly:'block'")
 	
 		else:
-			browser.execute_script(js, lastele, js2)    # dir(webdriver.Firefox.webdriver.WebDriver)   ,  browser.execute_async_script(js, lastele, js2)    是异步的
+			#browser.execute_script(js, lastele, js2)    # dir(webdriver.Firefox.webdriver.WebDriver)   ,  browser.execute_async_script(js, lastele, js2)    是异步的
 		
+			lastele.removeAttribute('display')
+			lastele.removeAttribute('readonly')
+
 		browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果	
 
 
