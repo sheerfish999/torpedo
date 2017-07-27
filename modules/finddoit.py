@@ -59,11 +59,18 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 			maybealert(browser, 0.5)
 
 
+	## 等待元素出现
+	try:
+		WebDriverWait(browser, timesouts).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
+	except:
+		lastele=browser.find_element_by_xpath(xpath)
+
 	lastele=browser.find_element_by_xpath(xpath)
+
 
     # 向下滑动直到找到元素(如果有滑块)
 	try:
-		browser.execute_script("arguments[0].scrollIntoView(true)",xpath)
+		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
 	except:
 		pass
 
@@ -92,9 +99,9 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	js="var q=document.documentElement.scrollTop=" + str(y) +";"
 	browser.execute_script(js)   
 
-	## 录像抓图
+	### 录像抓图
 
-	## 等待元素可定位
+	## 等待元素可再次定位
 	try:
 		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
 	except TimeoutException:
@@ -102,7 +109,6 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 
 	location = lastele.location
 	recordpic(browser,location)
-
 
 
 	## 页面中认为的焦点移到对应的元素上方, 减少误触, 并且模拟实际焦点情况
