@@ -159,6 +159,12 @@ def send_keys(browser,xpath, value, displayedwait=1):             # displayedwai
 		
 		browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果	
 
+
+
+    # 向下滑动直到找到元素(如果有滑块)
+    browser.execute_script("arguments[0].scrollIntoView(true)",xpath)
+
+
 	## 最终用于操作的元素
 	lastele=browser.find_element_by_xpath(xpath) 
 	location = lastele.location
@@ -223,7 +229,7 @@ def click_action(browser,xpath):
 
 ######### select  
 
-def selects(browser,xpath, value):          ########  列表选择 ,  注意  value 不是  里面的 txt
+def selects(browser,xpath, value):          ########  列表选择 ,  注意  value 不是  里面的 txt, 可能是个id
 
 
 	## 等待元素出现
