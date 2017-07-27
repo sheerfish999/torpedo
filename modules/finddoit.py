@@ -173,7 +173,7 @@ def send_keys(browser,xpath, value, displayedwait=1):     # displayedwait 0  不
 		lastele=browser.find_element_by_xpath(xpath)
 		js="arguments[0].style=arguments[1]"
 		#js2="display: 'block'; readonly: 'false';"         		#js2="display: '';"
-		js2="readonly: 'false';" 
+		js2="readonly: 'False';" 
 
 		if int(drivertypes)==5:     ###  phantomjs 情况比较特殊 ,  selenium 对元素上执行 js 的方法, phantomjs 找不到元素
 
