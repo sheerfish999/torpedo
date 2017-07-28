@@ -256,7 +256,7 @@ def click_action(browser,xpath):
 
 ######### select    单选模式
 
-def selects(browser,xpath, value):          ########  列表选择 ,  注意  value 不是  里面的 txt, 可能是个id
+def selects(browser,xpath, value):       ########  列表选择 ,  注意  value 可能是里面显示的 txt, 可能是个id ， 要具体看html
 
 
 	## 等待元素出现
@@ -538,11 +538,19 @@ def search_switch_to_frame(browser,xpath,level=0,timeouts=3):      #### 存在�
 //a[text()='首页- ']/../following-sibling::div[1]/div[2]/div[2]/a[2]      preceding-sibling  为之前
 """
 
-def getlinkxpath(linkstr, eletypes="a"):
+def getlinkxpath(linkstr, eletypes="a",parentPath="//"):    # eletypes 默认元素类型 a  , parentPath 默认上层路径位于根
 
 	# 链接  包含的方法  //a[contains(text(),'自动化测试t8ca8b8b8')]
 
-	link="//" + eletypes+ "[contains(text(),'" + linkstr + "')]"
+	if parentPath!="//":
+
+		if parentPath[len(parentPath)-1:]=="/":   #最后一个是 / 则去掉
+			parentPath=parentPath[:len(parentPath)-1]
+
+		parentPath=parentPath+"//"
+
+
+	link=parentPath + eletypes+ "[contains(text(),'" + linkstr + "')]"
 	return(link)
 
 #########  getvalues     取值的封装
@@ -757,7 +765,7 @@ def changeattrbyjs(browser,xpath,attrname,attrvalue):
 def delattrbyjs(browser,xpath,attrname):
 
 	jsstr=u"function getElementByXpath(path) {return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;}"
-	jsstr=jsstr + u"var thatisattr = getElementByXpath(" + u"\"" +xpath + u"\"" + u"); thatisattr.removeAttribute(\"" + attrname + "\")"
+	jsstr=jsstr + u"var thatisattr = getElementByXpath(" + u"\"" +xpath + u"\"" + u"); thatisattr.removeAttribute(\"" + attrname + u"\")"
 	#print(jsstr)
 	browser.execute_script(jsstr)
 
