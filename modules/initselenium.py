@@ -123,7 +123,7 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report , get_type):
 	reports=reports.strip('\n')
 	reportf.close()
 
-	if platform.system()=="Linux" and str(reports)!="0":
+	if str(reports)!="0":
 		(reportit.documents.document,  reportit.documents.cursor)=reportit.opendoc()
 
 
@@ -282,7 +282,7 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 	reports=reports.strip('\n')
 	reportf.close()
 
-	if platform.system()=="Linux" and str(reports)!="0":
+	if str(reports)!="0":
 		reportit.closedoc(savename)
 
 	##################  发送邮件
@@ -305,8 +305,8 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 	config=openfiles("config.py")   
 	exec(config)
 
-	### 存在报告标记并且为 Linux
-	if platform.system()=="Linux" and str(reports)!="0":
+	### 存在报告标记
+	if str(reports)!="0":
 		sendmaillist(mail_host,mail_user,mail_pass,mail_postfix, u"自动化测试报告 [本报告自动触发,请勿直接回复,疑问请联系测试人员]")	
 
 	##################
