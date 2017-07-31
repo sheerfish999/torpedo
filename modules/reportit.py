@@ -367,7 +367,7 @@ def closedoc(savename):
 
 	savetopdf(document,savename)
 
-	print("报告名称: " + savenames)
+	print("报告名称: " + savename)
 
 	## 弹出文档报告
 	if getenvs('DISPLAY')!="":  #linux本地模式
