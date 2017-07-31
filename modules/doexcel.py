@@ -115,7 +115,10 @@ class openexcel():
 			
 			self.full_path=os.path.abspath(filename)
 			
-			app=win32com.client.Dispatch('Excel.Application')
+			app=win32com.client.DispatchEx('Word.Application')  ### 独立进程，不影响其它进程
+			#app=win32com.client.Dispatch('Excel.Application')
+			
+			app.Visible = 0    ## 默认为0    某些场景无效，原因不明
 			app.DisplayAlerts=False    ## 不进行提示，一切按默认进行
 
 			self.document=app.Workbooks.Open(self.full_path)
@@ -292,10 +295,10 @@ class openexcel():
 				if width<0:
 					return
 				else:
-                                        try:
-                                                sheets.Columns(column).ColumnWidth=width
-                                        except:
-                                                hues.warn(u"列宽数值设置错误")
+                    try:
+                            sheets.Columns(column).ColumnWidth=width
+                    except:
+                            hues.warn(u"列宽数值设置错误")
 
 				docsave(self.document)
 
@@ -332,11 +335,11 @@ class openexcel():
 				if height<0:
 					return
 				else:
-                                        try:
-                                                sheets.Rows(row).RowHeight=height
+                    try:
+                            sheets.Rows(row).RowHeight=height
 
-                                        except:
-                                                hues.warn(u"行高数值设置错误")
+                    except:
+                            hues.warn(u"行高数值设置错误")
                                                 
 				docsave(self.document)
 

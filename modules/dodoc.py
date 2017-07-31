@@ -96,7 +96,21 @@ def openthedoc():
 		document = desktop.loadComponentFromURL("private:factory/swriter", "_blank", 0, ())
 		cursor = document.Text.createTextCursor()
 
-		return(document,cursor)
+
+	if platform.system()=="Windows":
+
+		document=win32com.client.DispatchEx('Word.Application')   ### 独立进程，不影响其它进程
+		#document=win32com.client.Dispatch('Word.Application')
+
+		document.Visible = 0         ## 默认为0    某些场景无效，原因不明
+		#document.WindowState = 2   #1表示正常，2表示最小化，3表示最大化
+		document.DisplayAlerts=0    ## 不进行提示，一切按默认进行
+
+		doc=document.Documents.Add()
+
+		cursor=doc.Range(0,0)
+
+	return(document,cursor)
 
 
 ######  插入字符
@@ -107,6 +121,10 @@ def doc_insertstring(document,cursor,strs):
 
 		document.Text.insertString(cursor, strs, 0)
 
+	if platform.system()=="Windows":
+
+		cursor.InsertAfter(strs)
+
 
 ######  插入章节分隔符
 
@@ -116,6 +134,8 @@ def doc_insertbreak(document,cursor):
 
 		xText = document.getText()
 		xText.insertControlCharacter(cursor, PARAGRAPH_BREAK, False)
+
+
 
 
 
@@ -144,7 +164,7 @@ def doc_inserttable(document,cursor,linecount,colcount):
 		mytable.initialize(linecount, colcount)
 		document.Text.insertTextContent(cursor, mytable, 0)
 
-		return mytable
+	return mytable
 
 ###### 表格插入字符
 
@@ -168,11 +188,18 @@ def table_setattr(table,pos,attrname,attrvalue):
 
 def savetopdf(document,savename):
 
+
+	# 保存
+	paths=sys.path[0]    #必须使用绝对路径
+
 	if platform.system()=="Linux":  
 
-		# 保存
-		paths=sys.path[0]    #必须使用绝对路径
+		# 转换  已经废弃
 		#document.storeAsURL("file://" +  paths + "/reports/" + savename + ".odt",())   
+		#os.system("python3 DocumentConverter.py  ./reports/"+ savename +".odt" + " " + "./reports/" + savename + ".pdf")
+		## 清理
+		#os.system("rm -f  ./reports/"+ savename +".odt")
+
 
 		# 转换
 		property = (PropertyValue( "FilterName" , 0, "writer_pdf_Export" , 0 ),)
@@ -181,16 +208,28 @@ def savetopdf(document,savename):
 
 		document.dispose()
 
-		# 转换  已经废弃
-		#os.system("python3 DocumentConverter.py  ./reports/"+ savename +".odt" + " " + "./reports/" + savename + ".pdf")
 
-		## 清理
-		#os.system("rm -f  ./reports/"+ savename +".odt")
+	if platform.system()=="Windows":
+
+		savename= paths + "/" + savename +".pdf"
+		document.ActiveDocument.SaveAs(savename,FileFormat=17)
+
+		wc = win32com.client.constants
+		document.Documents.Close(0)
+		document.Quit()
 
 
+################################################  测试
+
+if __name__ == '__main__':  
+
+	savename="./reports/test"
+
+	(document,cursor)=openthedoc()
+
+	doc_insertstring(document,cursor,"1111111111111")
+	doc_insertstring(document,cursor,"2222222222222")
 
 
-
-
-
+	savetopdf(document,savename)
 
