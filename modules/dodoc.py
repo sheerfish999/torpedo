@@ -298,7 +298,7 @@ def savetopdf(document,savename):
 
 	if platform.system()=="Windows":
 
-		savename= paths + "/" + savename +".pdf"
+		savename= paths + "/reports/" + savename +".pdf"
 
 		try:
 			document.ActiveDocument.SaveAs(savename,FileFormat=17)
