@@ -53,9 +53,9 @@ if platform.system()=="Linux":
 	from com.sun.star.beans import PropertyValue
 	from com.sun.star.text.ControlCharacter import PARAGRAPH_BREAK
 
-if platform.system() == "Windows":
+if platform.system() == "Windows":  ### https://msdn.microsoft.com/EN-US/library/microsoft.office.interop.word.range_members.aspx
 	#http://analysistabs.com/vba-code
-	from win32com.client import Dispatch   ### pip install pywin32  
+	from win32com.client import *   ### pip install pywin32
 	import win32com.client
 
 
@@ -110,6 +110,7 @@ def openthedoc():
 
 		cursor=doc.Range(0,0)
 
+
 	return(document,cursor)
 
 
@@ -123,6 +124,9 @@ def doc_insertstring(document,cursor,strs):
 
 	if platform.system()=="Windows":
 
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
+		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
+
 		cursor.InsertAfter(strs)
 
 
@@ -135,13 +139,20 @@ def doc_insertbreak(document,cursor):
 		xText = document.getText()
 		xText.insertControlCharacter(cursor, PARAGRAPH_BREAK, False)
 
+	if platform.system()=="Windows":
 
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
+		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
+
+		##cursor.Sections.Add()   ## 这是分页
+		cursor.Paragraphs.Add()
+		#cursor.InsertParagraphAfter()
 
 
 
 ###### 插入图片
 
-def doc_insertimg(document,cursor,imgpath,imgwidth,imgheight):
+def doc_insertimg(document,cursor,imgpath,imgwidth=16000,imgheight=8000):
 
 	if platform.system()=="Linux":
 
@@ -152,6 +163,21 @@ def doc_insertimg(document,cursor,imgpath,imgwidth,imgheight):
 		img.Height = imgheight
 
 		document.Text.insertTextContent(cursor, img, False)
+
+	if platform.system()=="Windows":
+
+		#cursor.Collapse(0)  ## 更换为以下方法
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
+		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
+
+		#document.ActiveDocument.Shapes.AddPicture(imgpath,1,1)   ### 似乎无法以光标动态移动, 会盖住
+		#document.Selection.Range.InlineShapes.AddPicture(imgpath,1,1)
+		pic=cursor.InlineShapes.AddPicture(imgpath)
+
+		#### 换算比率
+		pic.Height = (imgheight/100)*2.60
+		pic.Width  = (imgwidth/100)*2.60
+
 
 
 ####### 插入表格
@@ -164,7 +190,18 @@ def doc_inserttable(document,cursor,linecount,colcount):
 		mytable.initialize(linecount, colcount)
 		document.Text.insertTextContent(cursor, mytable, 0)
 
+
+	if platform.system()=="Windows":
+
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
+		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
+
+		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
+		mytable.Style = u"网格型"
+
+
 	return mytable
+
 
 ###### 表格插入字符
 
@@ -174,6 +211,25 @@ def table_insertstring(table,pos,strs):
 
 		table.getCellByName(pos).setString(strs)
 
+	if platform.system()=="Windows":
+
+		#### 表示模式替换
+
+		x_str=pos[:1]
+		y_str=pos[1:]
+
+		az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"   ## 最多支持26列
+		azlist = list(az)
+
+		for i in range(len(azlist)):
+			if azlist[i]==x_str:
+				break
+
+		x=i+1
+		y=int(y_str)
+
+		table.Cell(y,x).Range.Text = strs
+
 
 ###### 表格设置属性
 
@@ -182,6 +238,31 @@ def table_setattr(table,pos,attrname,attrvalue):
 	if platform.system()=="Linux":
 
 		table.getCellByName(pos).setPropertyValue(attrname, attrvalue)
+
+	if platform.system()=="Windows":
+
+		#### 表示模式替换
+
+		x_str=pos[:1]
+		y_str=pos[1:]
+
+		az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"   ## 最多支持26列
+		azlist = list(az)
+
+		for i in range(len(azlist)):
+			if azlist[i]==x_str:
+				break
+
+		x=i+1
+		y=int(y_str)
+
+
+		if attrname=="BackColor":  ### 背景色  , 字体为 ： table.Cell(y,x).Range.Font.Color
+
+			# 没找到WORD 设置 cell 背景色的办法
+			#table.Cell(y,x).Range.cells.interior.color = attrvalue    #  格式 0xff4500
+
+			table.Cell(y,x).Range.Font.Color=attrvalue
 
 
 ####### 保存文档
@@ -204,7 +285,11 @@ def savetopdf(document,savename):
 		# 转换
 		property = (PropertyValue( "FilterName" , 0, "writer_pdf_Export" , 0 ),)
 		savenames="./reports/" + savename + ".pdf"
-		document.storeToURL("file://" +  paths + "/" + savenames ,property)
+
+		try:
+			document.storeToURL("file://" +  paths + "/" + savenames ,property)
+		except:
+			print(u"路径错误或文件无法写入")
 
 		document.dispose()
 
@@ -212,7 +297,11 @@ def savetopdf(document,savename):
 	if platform.system()=="Windows":
 
 		savename= paths + "/" + savename +".pdf"
-		document.ActiveDocument.SaveAs(savename,FileFormat=17)
+
+		try:
+			document.ActiveDocument.SaveAs(savename,FileFormat=17)
+		except:
+			print(u"路径错误或文件无法写入")
 
 		wc = win32com.client.constants
 		document.Documents.Close(0)
@@ -223,13 +312,35 @@ def savetopdf(document,savename):
 
 if __name__ == '__main__':  
 
+
+
 	savename="./reports/test"
 
 	(document,cursor)=openthedoc()
 
+	##### 插入字
+
 	doc_insertstring(document,cursor,"1111111111111")
+	doc_insertbreak(document,cursor)
 	doc_insertstring(document,cursor,"2222222222222")
+	
+
+	#### 插入图片
+	paths=sys.path[0] 
+	path=paths+"/test/test.png"
+	doc_insertimg(document,cursor,path)
+
+
+	#### 插入表格
+	table=doc_inserttable(document,cursor,3,2)
+
+	#### 表格插入字符
+	table_insertstring(table,"A2","33333")
+
+	#### 表格背景色
+	table_setattr(table,"A2","BackColor",0xff4500)
 
 
 	savetopdf(document,savename)
+
 
