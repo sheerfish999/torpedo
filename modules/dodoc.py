@@ -259,10 +259,12 @@ def table_setattr(table,pos,attrname,attrvalue):
 
 		if attrname=="BackColor":  ### 背景色  , 字体为 ： table.Cell(y,x).Range.Font.Color
 
-			# 没找到WORD 设置 cell 背景色的办法
-			#table.Cell(y,x).Range.cells.interior.color = attrvalue    #  格式 0xff4500
+			#  格式 0xff4500
+			#table.Cell(y,x).Range.cells.interior.color = attrvalue     ## 不可行
 
-			table.Cell(y,x).Range.Font.Color=attrvalue
+			table.Cell(y,x).Range.Shading.BackgroundPatternColor= attrvalue
+
+
 
 
 ####### 保存文档
