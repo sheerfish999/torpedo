@@ -102,7 +102,7 @@ def openthedoc():
 		document=win32com.client.DispatchEx('Word.Application')   ### 独立进程，不影响其它进程
 		#document=win32com.client.Dispatch('Word.Application')
 
-		document.Visible = 0         ## 默认为0    某些场景无效，原因不明
+		document.Visible = 0        ## 默认为0    某些场景无效，原因不明
 		#document.WindowState = 2   #1表示正常，2表示最小化，3表示最大化
 		document.DisplayAlerts=0    ## 不进行提示，一切按默认进行
 
@@ -199,6 +199,9 @@ def doc_inserttable(document,cursor,linecount,colcount):
 		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
 		mytable.Style = u"网格型"
 
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
+		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
+
 
 	return mytable
 
@@ -232,7 +235,7 @@ def table_insertstring(table,pos,strs):
 
 
 ###### 表格设置属性
-# 颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的，适当调节以便显示正确
+# 颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的， rb位反转即可
 
 def table_setattr(table,pos,attrname,attrvalue):
 
@@ -260,7 +263,7 @@ def table_setattr(table,pos,attrname,attrvalue):
 
 		if attrname=="BackColor":  ### 背景色  , 字体为 ： table.Cell(y,x).Range.Font.Color
 
-			#  颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的，适当调节以便显示正确
+			#  颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的， rb位反转即可
 			#table.Cell(y,x).Range.cells.interior.color = attrvalue     ## 不可行
 
 			table.Cell(y,x).Range.Shading.BackgroundPatternColor= attrvalue
