@@ -201,7 +201,7 @@ def doc_inserttable(document,cursor,linecount,colcount):
 		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
 		cursor=document.ActiveDocument.Range(page.end,page.end)  #当前页面尾部
 
-		pos=document.selection.GoTo(constants.wdGoToHeading, constants.wdGoToNext, 10)
+		pos=document.selection.GoTo(constants("wdGoToHeading"), constants("wdGoToNext"), 10)
 		cursor=document.ActiveDocument.Range(pos.end,pos.end)  #表格仅仅到当前页面尾部是不够的	
 
 		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
