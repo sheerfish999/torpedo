@@ -196,11 +196,13 @@ def doc_inserttable(document,cursor,linecount,colcount):
 	if platform.system()=="Windows":
 
 		#cursor.Collapse(0)  ## 方法废弃
+		#document.selection.EndKey() ## 不可行
 		
-		#page = document.selection.GoTo(-1, 0, 0, Name="\Page")
-		#cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
+		cursor=document.ActiveDocument.Range(page.end,page.end)  #当前页面尾部
 
-		document.selection.EndKey(1,1)
+		pos=document.selection.GoTo(constants.wdGoToHeading, constants.wdGoToNext, 10)
+		cursor=document.ActiveDocument.Range(page.end,page.end)  #表格仅仅到当前页面尾部是不够的	
 
 		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
 		mytable.Style = u"网格型"
