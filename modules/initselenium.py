@@ -124,7 +124,7 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report , get_type):
 	reportf.close()
 
 	if str(reports)!="0":
-		(reportit.documents.document,  reportit.documents.cursor)=reportit.opendoc()
+		reportit.documents.doc=reportit.opendoc()
 
 
 	##########  清空附件列表文件

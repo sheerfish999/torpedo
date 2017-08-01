@@ -75,283 +75,329 @@ fc-cache -fv
 
 ######## 新建文档
 
-def openthedoc():
+class openthedoc():
 
-	if platform.system()=="Linux":   
+	document=None
+	cursor=None
 
-		soffice="nohup soffice --headless --accept='socket,host=localhost,port=2002;urp;' --norestore --nologo --nodefault --invisible "
+	### 初始化
+	def __init__(self):
 
-		soffice=soffice + " >/dev/null 2>log &"
-		os.system(soffice)
 
-		sleep(1)  #稍等启动, 需要进行等待
+		if platform.system()=="Linux":   
 
-		# connect   连接
-		local = uno.getComponentContext()
-		resolver = local.ServiceManager.createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", local)
-		context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
+			soffice="nohup soffice --headless --accept='socket,host=localhost,port=2002;urp;' --norestore --nologo --nodefault --invisible "
 
-		# load new   一个新文档
-		desktop = context.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", context)
-		document = desktop.loadComponentFromURL("private:factory/swriter", "_blank", 0, ())
-		cursor = document.Text.createTextCursor()
+			soffice=soffice + " >/dev/null 2>log &"
+			os.system(soffice)
 
+			sleep(1)  #稍等启动, 需要进行等待
 
-	if platform.system()=="Windows":
+			# connect   连接
+			local = uno.getComponentContext()
+			resolver = local.ServiceManager.createInstanceWithContext("com.sun.star.bridge.UnoUrlResolver", local)
+			context = resolver.resolve("uno:socket,host=localhost,port=2002;urp;StarOffice.ComponentContext")
 
-		#document=win32com.client.Dispatch('Word.Application')
-		document=win32com.client.DispatchEx('Word.Application')   ### 独立进程，不影响其它进程
-		#document=win32com.client.gencache.EnsureDispatch('Word.Application')       ### 这样可以引用 constants  ---这个不好用
+			# load new   一个新文档
+			desktop = context.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", context)
+			self.document = desktop.loadComponentFromURL("private:factory/swriter", "_blank", 0, ())
+			self.cursor = self.document.Text.createTextCursor()
 
-		document.Visible = 0        ## 默认为0    某些场景无效，原因不明
-		#document.WindowState = 2   #1表示正常，2表示最小化，3表示最大化
-		document.DisplayAlerts=0    ## 不进行提示，一切按默认进行
 
-		doc=document.Documents.Add()
+		if platform.system()=="Windows":
 
-		cursor=doc.Range(0,0)
+			#self.document=win32com.client.Dispatch('Word.Application')
+			#self.document=win32com.client.DispatchEx('Word.Application')   ### 独立进程，不影响其它进程
+			self.document=win32com.client.gencache.EnsureDispatch('Word.Application')       ### 这样可以引用 constants
 
+			self.document.Visible = 0        ## 默认为0    某些场景无效，原因不明
+			#self.document.WindowState = 2   #1表示正常，2表示最小化，3表示最大化
+			self.document.DisplayAlerts=0    ## 不进行提示，一切按默认进行
 
-	return(document,cursor)
+			doc=self.document.Documents.Add()
 
+			self.cursor=doc.Range(0,0)
 
-######  插入字符
 
-def doc_insertstring(document,cursor,strs):
 
-	if platform.system()=="Linux":
+	######  插入字符
 
-		document.Text.insertString(cursor, strs, 0)
+	def insert_text(self,strs):
 
-	if platform.system()=="Windows":
+		if platform.system()=="Linux":
 
-		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
-		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
+			self.document.Text.insertString(self.cursor, strs, 0)
 
-		cursor.InsertAfter(strs)
+		if platform.system()=="Windows":
 
+			#使用页尾，容易在分页处遇到问题
+			#page = self.document.Selection.GoTo(-1, 0, 0, Name="\Page")
+			#self.cursor=self.document.ActiveDocument.Range(page.End,page.End)  #当前页面尾部
 
-######  插入章节分隔符
+			page = self.document.Selection.GoTo(-1, 0, 0, Name="\Page")
+			pos1=page.End
+			pos2=self.document.ActiveDocument.Content.End-1
 
-def doc_insertbreak(document,cursor):
+			#print(pos1)
+			#print(pos2)
 
-	if platform.system()=="Linux":
+			self.cursor=self.document.ActiveDocument.Range(pos2,pos2)
 
-		xText = document.getText()
-		xText.insertControlCharacter(cursor, PARAGRAPH_BREAK, False)
+			self.cursor.InsertAfter(strs)
 
-	if platform.system()=="Windows":
 
-		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
-		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
+	######  插入章节分隔符
 
-		##cursor.Sections.Add()   ## 这是分页
-		cursor.Paragraphs.Add()
-		#cursor.InsertParagraphAfter()
+	def insert_break(self):
 
+		if platform.system()=="Linux":
 
+			xText = self.document.getText()
+			xText.insertControlCharacter(self.cursor, PARAGRAPH_BREAK, False)
 
-###### 插入图片
+		if platform.system()=="Windows":
 
-def doc_insertimg(document,cursor,imgpath,imgwidth=16000,imgheight=8000):
+			#使用页尾，容易在分页处遇到问题
+			#page = self.document.Selection.GoTo(-1, 0, 0, Name="\Page")
+			#self.cursor=self.document.ActiveDocument.Range(page.End,page.End)  #当前页面尾部
 
-	if platform.system()=="Linux":
+			page = self.document.Selection.GoTo(-1, 0, 0, Name="\Page")
+			pos1=page.End
+			pos2=self.document.ActiveDocument.Content.End-1
 
-		img = document.createInstance('com.sun.star.text.TextGraphicObject') 
+			#print(pos1)
+			#print(pos2)
 
-		img.GraphicURL = imgpath
-		img.Width = imgwidth
-		img.Height = imgheight
+			self.cursor=self.document.ActiveDocument.Range(pos2,pos2)
 
-		document.Text.insertTextContent(cursor, img, False)
+			##self.cursor.Sections.Add()   ## 这是分页
+			self.cursor.Paragraphs.Add()
+			#self.cursor.InsertParagraphAfter()
 
-	if platform.system()=="Windows":
 
-		#cursor.Collapse(0)  ## 更换为以下方法
-		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
-		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
 
-		#document.ActiveDocument.Shapes.AddPicture(imgpath,1,1)   ### 似乎无法以光标动态移动, 会盖住
-		#document.Selection.Range.InlineShapes.AddPicture(imgpath,1,1)
-		pic=cursor.InlineShapes.AddPicture(imgpath)
+	###### 插入图片
 
-		#### 换算比率
-		pic.Height = (imgheight/100)*2.60
-		pic.Width  = (imgwidth/100)*2.60
+	def insert_img(self,imgpath,imgwidth=16000,imgheight=8000):
 
-		doc_insertbreak(document,cursor)
+		if platform.system()=="Linux":
 
+			img = self.document.createInstance('com.sun.star.text.TextGraphicObject') 
 
+			img.GraphicURL = imgpath
+			img.Width = imgwidth
+			img.Height = imgheight
 
-####### 插入表格
+			self.document.Text.insert_textContent(self.cursor, img, False)
 
-def doc_inserttable(document,cursor,linecount,colcount):
+		if platform.system()=="Windows":
 
-	if platform.system()=="Linux":
+			#self.cursor.Collapse(0)  ## 更换为以下方法
 
-		mytable= document.createInstance("com.sun.star.text.TextTable")
-		mytable.initialize(linecount, colcount)
-		document.Text.insertTextContent(cursor, mytable, 0)
+			#使用页尾，容易在分页处遇到问题
+			#page = self.document.Selection.GoTo(-1, 0, 0, Name="\Page")
+			#self.cursor=self.document.ActiveDocument.Range(page.End,page.End)  #当前页面尾部
 
+			page = self.document.Selection.GoTo(-1, 0, 0, Name="\Page")
+			pos1=page.End
+			pos2=self.document.ActiveDocument.Content.End-1
 
-	if platform.system()=="Windows":
+			#print(pos1)
+			#print(pos2)
 
-		#cursor.Collapse(0)  ## 方法废弃
-		#document.selection.EndKey() ## 不可行
-		
-		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
-		cursor=document.ActiveDocument.Range(page.end,page.end)  #当前页面尾部
+			self.cursor=self.document.ActiveDocument.Range(pos2,pos2)
 
-		pos=document.selection.GoTo(constants.wdGoToHeading, constants.wdGoToNext, 10)
-		cursor=document.ActiveDocument.Range(pos.end,pos.end)  #表格仅仅到当前页面尾部是不够的	
+			#self.document.ActiveDocument.Shapes.AddPicture(imgpath,1,1)   ### 似乎无法以光标动态移动, 会盖住
+			#self.document.Selection.Range.InlineShapes.AddPicture(imgpath,1,1)
+			pic=self.cursor.InlineShapes.AddPicture(imgpath)
 
-		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
-		mytable.Style = u"网格型"
 
-	return mytable
+			#### 换算比率
+			pic.Height = (imgheight/100)*2.60
+			pic.Width  = (imgwidth/100)*2.60
 
+			self.insert_break()
 
-###### 表格插入字符
 
-def table_insertstring(table,pos,strs):
 
-	if platform.system()=="Linux":
+	####### 插入表格
 
-		table.getCellByName(pos).setString(strs)
+	def insert_table(self,linecount,colcount):
 
-	if platform.system()=="Windows":
+		if platform.system()=="Linux":
 
-		#### 表示模式替换
+			mytable= self.document.createInstance("com.sun.star.text.TextTable")
+			mytable.initialize(linecount, colcount)
+			self.document.Text.insert_textContent(self.cursor, mytable, 0)
 
-		x_str=pos[:1]
-		y_str=pos[1:]
 
-		az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"   ## 最多支持26列
-		azlist = list(az)
+		if platform.system()=="Windows":
 
-		for i in range(len(azlist)):
-			if azlist[i]==x_str:
-				break
+			#self.cursor.Collapse(0)  ## 方法废弃
+			#self.document.selection.EndKey() ## 不可行
+			
+			#使用页尾，容易在分页处遇到问题
+			#page = self.document.Selection.GoTo(-1, 0, 0, Name="\Page")
+			#self.cursor=self.document.ActiveDocument.Range(page.End,page.End)  #当前页面尾部
 
-		x=i+1
-		y=int(y_str)
+			page = self.document.Selection.GoTo(-1, 0, 0, Name="\Page")
+			pos1=page.End
+			pos2=self.document.ActiveDocument.Content.End-1
 
-		table.Cell(y,x).Range.Text = strs
+			#print(pos1)
+			#print(pos2)
 
+			self.cursor=self.document.ActiveDocument.Range(pos2,pos2)
+			mytable = self.document.ActiveDocument.Tables.Add(self.cursor, linecount, colcount)
 
-###### 表格设置属性
-# 颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的， rb位反转即可
+			mytable.Style = u"网格型"
 
-def table_setattr(table,pos,attrname,attrvalue):
 
-	if platform.system()=="Linux":
+		return mytable
 
-		table.getCellByName(pos).setPropertyValue(attrname, attrvalue)
 
-	if platform.system()=="Windows":
+	###### 表格插入字符
 
-		#### 表示模式替换
+	def insert_tabletext(self,table,pos,strs):
 
-		x_str=pos[:1]
-		y_str=pos[1:]
+		if platform.system()=="Linux":
 
-		az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"   ## 最多支持26列
-		azlist = list(az)
+			table.getCellByName(pos).setString(strs)
 
-		for i in range(len(azlist)):
-			if azlist[i]==x_str:
-				break
+		if platform.system()=="Windows":
 
-		x=i+1
-		y=int(y_str)
+			#### 表示模式替换
 
+			x_str=pos[:1]
+			y_str=pos[1:]
 
-		if attrname=="BackColor":  ### 背景色  , 字体为 ： table.Cell(y,x).Range.Font.Color
+			az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"   ## 最多支持26列
+			azlist = list(az)
 
-			#  颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的， rb位反转即可
-			#table.Cell(y,x).Range.cells.interior.color = attrvalue     ## 不可行
+			for i in range(len(azlist)):
+				if azlist[i]==x_str:
+					break
 
-			table.Cell(y,x).Range.Shading.BackgroundPatternColor= attrvalue
+			x=i+1
+			y=int(y_str)
 
+			table.Cell(y,x).Range.Text = strs
 
 
+	###### 表格设置属性
+	# 颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的， rb位反转即可
 
-####### 保存文档
+	def table_setattr(self,table,pos,attrname,attrvalue):
 
-def savetopdf(document,savename):
+		if platform.system()=="Linux":
 
+			table.getCellByName(pos).setPropertyValue(attrname, attrvalue)
 
-	# 保存
-	paths=sys.path[0]    #必须使用绝对路径
+		if platform.system()=="Windows":
 
-	if platform.system()=="Linux":  
+			#### 表示模式替换
 
-		# 转换  已经废弃
-		#document.storeAsURL("file://" +  paths + "/reports/" + savename + ".odt",())   
-		#os.system("python3 DocumentConverter.py  ./reports/"+ savename +".odt" + " " + "./reports/" + savename + ".pdf")
-		## 清理
-		#os.system("rm -f  ./reports/"+ savename +".odt")
+			x_str=pos[:1]
+			y_str=pos[1:]
 
+			az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"   ## 最多支持26列
+			azlist = list(az)
 
-		# 转换
-		property = (PropertyValue( "FilterName" , 0, "writer_pdf_Export" , 0 ),)
-		savenames="./reports/" + savename + ".pdf"
+			for i in range(len(azlist)):
+				if azlist[i]==x_str:
+					break
 
-		try:
-			document.storeToURL("file://" +  paths + "/" + savenames ,property)
-		except:
-			print(u"路径错误或文件无法写入")
+			x=i+1
+			y=int(y_str)
 
-		document.dispose()
 
+			if attrname=="BackColor":  ### 背景色  , 字体为 ： table.Cell(y,x).Range.Font.Color
 
-	if platform.system()=="Windows":
+				#  颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的， rb位反转即可
+				#table.Cell(y,x).Range.cells.interior.color = attrvalue     ## 不可行
 
-		savename= paths + "/reports/" + savename +".pdf"
+				table.Cell(y,x).Range.Shading.BackgroundPatternColor= attrvalue
 
-		try:
-			document.ActiveDocument.SaveAs(savename,FileFormat=17)
-		except:
-			print(u"路径错误或文件无法写入")
 
-		wc = win32com.client.constants
-		document.Documents.Close(0)
-		document.Quit()
+
+
+	####### 保存文档
+
+	def savetopdf(self,savename):
+
+
+		# 保存
+		paths=sys.path[0]    #必须使用绝对路径
+
+		if platform.system()=="Linux":  
+
+			# 转换  已经废弃
+			#document.storeAsURL("file://" +  paths + "/reports/" + savename + ".odt",())   
+			#os.system("python3 DocumentConverter.py  ./reports/"+ savename +".odt" + " " + "./reports/" + savename + ".pdf")
+			## 清理
+			#os.system("rm -f  ./reports/"+ savename +".odt")
+
+
+			# 转换
+			property = (PropertyValue( "FilterName" , 0, "writer_pdf_Export" , 0 ),)
+			savenames="./reports/" + savename + ".pdf"
+
+			try:
+				self.document.storeToURL("file://" +  paths + "/" + savenames ,property)
+			except:
+				print(u"路径错误或文件无法写入")
+
+			self.document.dispose()
+
+
+		if platform.system()=="Windows":
+
+			savename= paths + "/reports/" + savename +".pdf"
+
+			try:
+				self.document.ActiveDocument.SaveAs(savename,FileFormat=17)
+			except:
+				print(u"路径错误或文件无法写入")
+
+			wc = win32com.client.constants
+			self.document.Documents.Close(0)
+			self.document.Quit()
 
 
 ################################################  测试
 
 if __name__ == '__main__':  
 
+	paths=sys.path[0] 
 
+	####
 
-	savename="./reports/test"
+	savename="test"
 
-	(document,cursor)=openthedoc()
+	doc=openthedoc()
 
 	##### 插入字
 
-	doc_insertstring(document,cursor,"1111111111111")
-	doc_insertbreak(document,cursor)
-	doc_insertstring(document,cursor,"2222222222222")
+	doc.insert_text("1111111111111")
+	doc.insert_break()
+	doc.insert_text("2222222222222")
 	
 
 	#### 插入图片
-	paths=sys.path[0] 
+
 	path=paths+"/test/test.png"
-	doc_insertimg(document,cursor,path)
+	doc.insert_img(path)
 
 
 	#### 插入表格
-	table=doc_inserttable(document,cursor,3,2)
+	table=doc.insert_table(3,2)
 
 	#### 表格插入字符
-	table_insertstring(table,"A2","33333")
+	doc.insert_tabletext(table,"A2","33333")
 
 	#### 表格背景色
-	table_setattr(table,"A2","BackColor",0xff4500)
+	doc.table_setattr(table,"A2","BackColor",0xff4500)
 
-
-	savetopdf(document,savename)
+	doc.savetopdf(savename)
 
 

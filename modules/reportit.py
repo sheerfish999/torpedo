@@ -33,8 +33,7 @@ from dodoc import *  #### 用于文档处理
 
 
 class documents:
-	document=None   ## 文档句柄
-	cursor=None   ## 文档光标位置
+	doc=None   ## 文档句柄
 	ids=1   ## 用例号
 
 
@@ -123,18 +122,13 @@ def logs(aims, conditions, wants,  res, yesorno, others=""):
 	##### 报告标记位正常
 	if str(reports)!="0":
 
-		document=documents.document
-		cursor=documents.cursor
+		doc=documents.doc
 
-		doc_insertstring(document,cursor,"\n")
+		doc.insert_text("\n")
 
 		#   插入表格
 
-		#cursor.setPropertyValue("CharHeight", 12)    ### 似乎调整无效, 可能字体原因
-		#cursor.setPropertyValue("CharWeight", 150)  ### 似乎调整无效, 可能字体原因
-		#cursor.setPropertyValue("CharColor", 0x0000cd)   # 16进制转换：http://www.discoveryplayground.com/computer-programming-for-kids/rgb-colors/ , 或者 RGB(X,X,X) 格式
-
-		doc_insertstring(document,cursor,u"★ 用例及记录 " + str(documents.ids) + u" 判定")
+		doc.insert_text(u"★ 用例及记录 " + str(documents.ids) + u" 判定")
 
 
 
@@ -155,50 +149,49 @@ def logs(aims, conditions, wants,  res, yesorno, others=""):
 
 		######  结论 表格 在最上方
 
-		mytable0= doc_inserttable(document,cursor,3,1)
+		mytable0= doc.insert_table(3,1)
 
-		table_setattr(mytable0,"A1","BackColor",gray)
-		table_insertstring(mytable0,"A1",u"自动化判定结果")
+		doc.table_setattr(mytable0,"A1","BackColor",gray)
+		doc.insert_tabletext(mytable0,"A1",u"自动化判定结果")
 
 
 		#  时间
 		times=time.strftime('%Y-%m-%d %X', time.localtime())
-		table_insertstring(mytable0,"A2",times)
+		doc.insert_tabletext(mytable0,"A2",times)
 
 
 		if yesorno==0:    ### 错误时的突出显示
-			table_setattr(mytable0,"A3","BackColor",red)		 #  红色  
+			doc.table_setattr(mytable0,"A3","BackColor",red)		 #  红色  
 		if yesorno==1: 
-			table_setattr(mytable0,"A3","BackColor",green)		 # 绿色     
+			doc.table_setattr(mytable0,"A3","BackColor",green)		 # 绿色     
 		if yesorno==2: 
-			table_setattr(mytable0,"A3","BackColor",yellow)		#  黄色
+			doc.table_setattr(mytable0,"A3","BackColor",yellow)		#  黄色
 
 
-
-		table_insertstring(mytable0,"A3",yesornostr)
+		doc.insert_tabletext(mytable0,"A3",yesornostr)
 
 		#####  前提 表格
-		mytable1= doc_inserttable(document,cursor,2,2)
+		mytable1= doc.insert_table(2,2)
 
-		table_setattr(mytable1,"A1","BackColor",gray)
-		table_setattr(mytable1,"B1","BackColor",gray)
+		doc.table_setattr(mytable1,"A1","BackColor",gray)
+		doc.table_setattr(mytable1,"B1","BackColor",gray)
 
-		table_insertstring(mytable1,"A1",u"动作名称/目的")
-		table_insertstring(mytable1,"B1",u"前置条件/判断类型")
-		table_insertstring(mytable1,"A2",aims)
-		table_insertstring(mytable1,"B2",conditions)
+		doc.insert_tabletext(mytable1,"A1",u"动作名称/目的")
+		doc.insert_tabletext(mytable1,"B1",u"前置条件/判断类型")
+		doc.insert_tabletext(mytable1,"A2",aims)
+		doc.insert_tabletext(mytable1,"B2",conditions)
 
 
 		##### 预期和返回 表格
-		mytable2= doc_inserttable(document,cursor,2,2)
+		mytable2= doc.insert_table(2,2)
 
-		table_setattr(mytable2,"A1","BackColor",gray)
-		table_setattr(mytable2,"B1","BackColor",gray)
+		doc.table_setattr(mytable2,"A1","BackColor",gray)
+		doc.table_setattr(mytable2,"B1","BackColor",gray)
 
-		table_insertstring(mytable2,"A1",u"自动化用例预期")
-		table_insertstring(mytable2,"B1",u"自动化获取结果")
-		table_insertstring(mytable2,"A2",wants)
-		table_insertstring(mytable2,"B2",res)
+		doc.insert_tabletext(mytable2,"A1",u"自动化用例预期")
+		doc.insert_tabletext(mytable2,"B1",u"自动化获取结果")
+		doc.insert_tabletext(mytable2,"A2",wants)
+		doc.insert_tabletext(mytable2,"B2",res)
 
 		### 用例号
 		documents.ids=documents.ids+1
@@ -265,22 +258,17 @@ def infos(strs, crlf=0):    # 默认前面不换行
 	##### 报告标记位正常
 	if str(reports)!="0":
 
-		document=documents.document
-		cursor=documents.cursor
+		doc=documents.doc
 
 
 		#   插入表格
 		if crlf==1:   #换行
-			doc_insertstring(document,cursor,"\n")
+			doc.insert_text("\n")
 
-		#cursor.setPropertyValue("CharHeight", 12)    ### 似乎调整无效, 可能字体原因
-		#cursor.setPropertyValue("CharWeight", 150)  ### 似乎调整无效, 可能字体原因
-		#cursor.setPropertyValue("CharColor", 0x0000cd)   # 16进制转换：http://www.discoveryplayground.com/computer-programming-for-kids/rgb-colors/ , 或者 RGB(X,X,X) 格式
+		mytable3=doc.insert_table(1,1)
 
-		mytable3=doc_inserttable(document,cursor,1,1)
-
-		table_setattr(mytable3,"A1","BackColor",0xcdc9c9)   # 灰色
-		table_insertstring(mytable3,"A1",strs)
+		doc.table_setattr(mytable3,"A1","BackColor",0xcdc9c9)   # 灰色
+		doc.insert_tabletext(mytable3,"A1",strs)
 
 
 
@@ -291,8 +279,8 @@ def insertpic():
 
 	##################################################   报告输出
 
-	####  获得是否报告的标记位
-	reportf = open("./reportset", "r")   
+	#####  获得是否报告的标记位
+	reportf = open("./reportset", "r")
 	reports = reportf.readline()
 	reports=reports.strip('\n')
 	reportf.close()
@@ -302,21 +290,21 @@ def insertpic():
 
 	if str(reports)!="0":
 
-		document=documents.document
-		cursor=documents.cursor
+		doc=documents.doc
 
-		doc_insertstring(document,cursor,"\n")
-		#doc_insertstring(document,cursor,u"▼用例及记录 " + str(documents.ids) + " 自动截屏▼")   ### 可能有顺序错乱
-		doc_insertstring(document,cursor,u"▼上下文场景自动截屏▼")
+		doc.insert_text("\n")
+		#insert_text(u"▼用例及记录 " + str(documents.ids) + " 自动截屏▼")   ### 可能有顺序错乱
+		doc.insert_text(u"▼上下文场景自动截屏▼")
 
-		doc_insertbreak(document,cursor)
+		doc.insert_break()
 
 		#   插入图片
 
 		paths=sys.path[0]    #必须使用绝对路径
 		imgpath= 'file://'+ paths + '/reports/insertpic.jpg'
 
-		doc_insertimg(document,cursor,imgpath,16000,8000)
+		print(imgpath)
+		doc.insert_img(imgpath,16000,8000)
 
 
 ####  抓图并插入截图 
@@ -345,7 +333,8 @@ def opendoc():
 		return (None,None)
 
 
-	(document,cursor)=openthedoc()
+	doc=openthedoc()
+	documents.doc=doc
 
 
 	# 文档生成时间
@@ -353,10 +342,10 @@ def opendoc():
 	timeArray = time.localtime(now)
 	times = time.strftime("%Y%m%d%H%M%S", timeArray)
 
-	doc_insertstring(document,cursor,u"自动化测试报告-文档生成时间:" + times)
-	doc_insertstring(document,cursor,"\n")
+	doc.insert_text(u"自动化测试报告-文档生成时间:" + times)
+	doc.insert_text("\n")
 
-	return(document,cursor)
+	return doc
 
 
 ################  关闭文档的动作
@@ -372,16 +361,15 @@ def closedoc(savename):
 	if str(reports)=="0":        #不报告
 		return
 
-	document=documents.document
-	cursor=documents.cursor
+	doc=documents.doc
 
-	doc_insertstring(document,cursor,"\n")
-	doc_insertstring(document,cursor,u"报告结束")
+	doc.insert_text("\n")
+	doc.insert_text(u"报告结束")
 
 
 	######## 生成
 
-	savetopdf(document,savename)
+	doc.savetopdf(savename)
 
 	print("报告名称: " + savename)
 
@@ -468,7 +456,7 @@ if __name__ == '__main__':
 
 	##############################  生成报告
 
-	(documents.document,  documents.cursor)=opendoc()
+	doc=opendoc()
 
 	infos(u"响应时间: "+ "10.5s" )
 
@@ -482,7 +470,7 @@ if __name__ == '__main__':
 		infos(u"响应时间: "+ "10.5s",1 )
 		logs(u"这是一个文档测试3", "openoffice", u"输出文档",  u"输出了",  0)  
 	finally:
-		closedoc(documents.document,u"测试文档生成模块")
+		closedoc(u"测试文档生成模块")
 
 
 
