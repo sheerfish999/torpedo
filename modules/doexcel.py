@@ -12,14 +12,6 @@ sysstr = platform.system()   ### 判断操作系统类型   Windows   Linux    .
 
 
 if sysstr == "Linux":
-        import hues   ## pip install hues
-
-if sysstr == "Windows":
-        import winhues as hues
-
-
-
-if sysstr == "Linux":
 	####  关于 linux 平台的  uno
 	#  LINUX: python3 还是 python2 根据所在发行版的源中依赖包的支持决定， 一般只支持其中一个 （centos7 支持2 ， arch/ kali 支持 3, 2016.12）
 	#  具体安装过程 参考对应发行版的 uno 支持方法（不是 pip install uno , 会导致冲突）
@@ -54,7 +46,7 @@ def docsave(doc):    ###  文件保存  这里需要特别判断  有异常情�
 		if sysstr =="Windows":
 			doc.Save()
 	except:
-		hues.error("EXCEL结果文件可能为只读不可写,请对原用例文件'另存为'后再试.")        #####  注意目前只有这里
+		print(u"EXCEL结果文件可能为只读不可写,请对原用例文件'另存为'后再试.")        #####  注意目前只有这里
 		sys.exit()   ## 强行退出
 
 	
@@ -108,7 +100,7 @@ class openexcel():
 			self.document = desktop.loadComponentFromURL(self.full_path ,"_blank", 0, ())
 		
 			if self.document==None:
-				hues.error("文件类型无法识别，或文件已经被程序打开并独占, 请检查 " + localpath + filename )
+				print(u"文件类型无法识别，或文件已经被程序打开并独占, 请检查 " + localpath + filename )
 
 
 		if sysstr == "Windows":
@@ -124,7 +116,7 @@ class openexcel():
 			self.document=app.Workbooks.Open(self.full_path)
 			
 			if self.document==None:
-				hues.error("文件类型无法识别，请检查 " + self.full_path)
+				print(u"文件类型无法识别，请检查 " + self.full_path)
 			
 
 	#### 返回对应的值
@@ -298,7 +290,7 @@ class openexcel():
 					try:
 						sheets.Columns(column).ColumnWidth=width
 					except:
-						hues.warn(u"列宽数值设置错误")
+						print(u"列宽数值设置错误")
 
 				docsave(self.document)
 
@@ -339,7 +331,7 @@ class openexcel():
 						sheets.Rows(row).RowHeight=height
 
 					except:
-						hues.warn(u"行高数值设置错误")
+						print(u"行高数值设置错误")
                                                 
 				docsave(self.document)
 
