@@ -137,11 +137,27 @@ def logs(aims, conditions, wants,  res, yesorno, others=""):
 		doc_insertstring(document,cursor,u"★ 用例及记录 " + str(documents.ids) + u" 判定")
 
 
+
+		###### 颜色定义
+
+		gray=0xcdc9c9  #灰色
+
+		green=0x228b22 #绿色
+
+		if platform.system()=="Linux":
+			red=0xff4500   	  #红色
+			yellow=0xffd700   #黄色
+
+		if platform.system()=="Windows":
+			red=0x0045ff   	  #红色
+			yellow=0x00d7ff   #黄色
+
+
 		######  结论 表格 在最上方
 
 		mytable0= doc_inserttable(document,cursor,3,1)
 
-		table_setattr(mytable0,"A1","BackColor",0xcdc9c9)
+		table_setattr(mytable0,"A1","BackColor",gray)
 		table_insertstring(mytable0,"A1",u"自动化判定结果")
 
 
@@ -151,12 +167,12 @@ def logs(aims, conditions, wants,  res, yesorno, others=""):
 
 
 		if yesorno==0:    ### 错误时的突出显示
-			table_setattr(mytable0,"A3","BackColor",0xff4500)		 #  红色  
+			table_setattr(mytable0,"A3","BackColor",red)		 #  红色  
 		if yesorno==1: 
-			table_setattr(mytable0,"A3","BackColor",0x228b22)		 # 绿色     
+			table_setattr(mytable0,"A3","BackColor",green)		 # 绿色     
 		if yesorno==2: 
-			table_setattr(mytable0,"A3","BackColor",0xffd700)		#  黄色
-    
+			table_setattr(mytable0,"A3","BackColor",yellow)		#  黄色
+
 
 
 		table_insertstring(mytable0,"A3",yesornostr)
@@ -164,8 +180,8 @@ def logs(aims, conditions, wants,  res, yesorno, others=""):
 		#####  前提 表格
 		mytable1= doc_inserttable(document,cursor,2,2)
 
-		table_setattr(mytable1,"A1","BackColor",0xcdc9c9)
-		table_setattr(mytable1,"B1","BackColor",0xcdc9c9)
+		table_setattr(mytable1,"A1","BackColor",gray)
+		table_setattr(mytable1,"B1","BackColor",gray)
 
 		table_insertstring(mytable1,"A1",u"动作名称/目的")
 		table_insertstring(mytable1,"B1",u"前置条件/判断类型")
@@ -176,8 +192,8 @@ def logs(aims, conditions, wants,  res, yesorno, others=""):
 		##### 预期和返回 表格
 		mytable2= doc_inserttable(document,cursor,2,2)
 
-		table_setattr(mytable2,"A1","BackColor",0xcdc9c9)
-		table_setattr(mytable2,"B1","BackColor",0xcdc9c9)
+		table_setattr(mytable2,"A1","BackColor",gray)
+		table_setattr(mytable2,"B1","BackColor",gray)
 
 		table_insertstring(mytable2,"A1",u"自动化用例预期")
 		table_insertstring(mytable2,"B1",u"自动化获取结果")

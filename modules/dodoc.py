@@ -232,6 +232,7 @@ def table_insertstring(table,pos,strs):
 
 
 ###### 表格设置属性
+# 颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的，适当调节以便显示正确
 
 def table_setattr(table,pos,attrname,attrvalue):
 
@@ -259,7 +260,7 @@ def table_setattr(table,pos,attrname,attrvalue):
 
 		if attrname=="BackColor":  ### 背景色  , 字体为 ： table.Cell(y,x).Range.Font.Color
 
-			#  格式 0xff4500
+			#  颜色16进制格式 0xff4500 , 注意 windows 和 linux 下颜色 rgb 颜色顺序是不一致的，适当调节以便显示正确
 			#table.Cell(y,x).Range.cells.interior.color = attrvalue     ## 不可行
 
 			table.Cell(y,x).Range.Shading.BackgroundPatternColor= attrvalue
