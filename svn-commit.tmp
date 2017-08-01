@@ -1,0 +1,10 @@
+
+--This line, and those below, will be ignored--
+
+    __pycache__
+    support
+   support/IEDriverServer.exe
+   support/chromedriver.exe
+   support/geckodriver
+   support/geckodriver.exe
+   support/phantomjs.exe
