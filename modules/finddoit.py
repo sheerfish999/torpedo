@@ -161,6 +161,14 @@ def send_keys(browser,xpath, value):
 	except TimeoutException:
 		timeoutlog(browser,xpath, waittime)
 
+
+	## 等待元素可定位
+	try:
+		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
+	except TimeoutException:
+		timeoutlog(browser,xpath, waittime)
+
+
 	"""
 	#这种判断无效
 	if displayedwait==0 or displayedwait==2:   ## 仍然要判断元素是否已经存在     
@@ -277,6 +285,14 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
 	except TimeoutException:
 			timeoutlog(browser,xpath, waittime)
+
+
+	## 等待元素可定位
+	try:
+		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
+	except TimeoutException:
+		timeoutlog(browser,xpath, waittime)
+
 
 	## 最终用于操作的元素位置
 	location = lastele.location
@@ -574,6 +590,14 @@ def getvalues(browser,xpath,waittime=20):
 	except TimeoutException:
 		timeoutlog(browser,xpath, waittime)
 
+
+	## 等待元素可定位
+	try:
+		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
+	except TimeoutException:
+		timeoutlog(browser,xpath, waittime)
+
+
 	## 最终用于操作的元素位置
 	location = lastele.location
 
@@ -617,6 +641,14 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())    
 	except TimeoutException:
 		timeoutlog(browser,xpath, waittime)
+
+
+	## 等待元素可定位
+	try:
+		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
+	except TimeoutException:
+		timeoutlog(browser,xpath, waittime)
+
 
 	# 返回页面载入时间
 	timesend = datetime.datetime.now()
