@@ -200,7 +200,7 @@ def doc_inserttable(document,cursor,linecount,colcount):
 		#page = document.selection.GoTo(-1, 0, 0, Name="\Page")
 		#cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
 
-		document.selection.EndKey()
+		document.selection.EndKey(1,1)
 
 		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
 		mytable.Style = u"网格型"
