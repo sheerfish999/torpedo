@@ -100,7 +100,7 @@ def openthedoc():
 	if platform.system()=="Windows":
 
 		#document=win32com.client.Dispatch('Word.Application')
-		document=win32com.client.DispatchEx('Word.Application')   ### 独立进程，不影响其它进程
+		#document=win32com.client.DispatchEx('Word.Application')   ### 独立进程，不影响其它进程
 		document=win32com.client.gencache.EnsureDispatch('Word.Application')       ### 这样可以引用 constants
 
 		document.Visible = 0        ## 默认为0    某些场景无效，原因不明
