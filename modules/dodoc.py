@@ -178,6 +178,8 @@ def doc_insertimg(document,cursor,imgpath,imgwidth=16000,imgheight=8000):
 		pic.Height = (imgheight/100)*2.60
 		pic.Width  = (imgwidth/100)*2.60
 
+		doc_insertbreak(document,cursor)
+
 
 
 ####### 插入表格
