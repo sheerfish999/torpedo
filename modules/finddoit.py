@@ -87,7 +87,11 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 
 
 	## 最终用于操作的元素位置
-	location = lastele.location
+	try:		
+		location = lastele.location
+	except:			#### 有可能页面发生了改变 需要重新定位
+		lastele=browser.find_element_by_xpath(xpath)
+		location = lastele.location
 
 	#显示位置调整
 	y=location['y']-250
@@ -105,7 +109,13 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	except TimeoutException:
 		timeoutlog(browser,xpath, waittime)
 
-	location = lastele.location
+	## 最终用于操作的元素位置
+	try:		
+		location = lastele.location
+	except:			#### 有可能页面发生了改变 需要重新定位
+		lastele=browser.find_element_by_xpath(xpath)
+		location = lastele.location
+
 	recordpic(browser,location)
 
 
@@ -202,7 +212,11 @@ def send_keys(browser,xpath, value):
 	#browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果
 
 	## 最终用于操作的元素位置
-	location = lastele.location
+	try:		
+		location = lastele.location
+	except:			#### 有可能页面发生了改变 需要重新定位
+		lastele=browser.find_element_by_xpath(xpath)
+		location = lastele.location
 
 	#显示位置调整
 	y=location['y']-250
@@ -295,7 +309,11 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 
 
 	## 最终用于操作的元素位置
-	location = lastele.location
+	try:		
+		location = lastele.location
+	except:			#### 有可能页面发生了改变 需要重新定位
+		lastele=browser.find_element_by_xpath(xpath)
+		location = lastele.location
 
 	#显示位置调整
 	y=location['y']-250
@@ -599,7 +617,11 @@ def getvalues(browser,xpath,waittime=20):
 
 
 	## 最终用于操作的元素位置
-	location = lastele.location
+	try:		
+		location = lastele.location
+	except:			#### 有可能页面发生了改变 需要重新定位
+		lastele=browser.find_element_by_xpath(xpath)
+		location = lastele.location
 
 	#显示位置调整
 	y=location['y']-250
@@ -655,9 +677,9 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 	ret=str(round((timesend-timestart).total_seconds(),2))
 
 	## 最终用于操作的元素位置
-	try:
+	try:		
 		location = lastele.location
-	except:
+	except:			#### 有可能页面发生了改变 需要重新定位
 		lastele=browser.find_element_by_xpath(xpath)
 		location = lastele.location
 
