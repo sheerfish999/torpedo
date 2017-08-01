@@ -195,17 +195,15 @@ def doc_inserttable(document,cursor,linecount,colcount):
 
 	if platform.system()=="Windows":
 
-
-		#cursor.Collapse(0)  ## 更换为以下方法
-		page = document.selection.GoTo(-1, 0, 0, Name="\Last", count=99999)
-		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
-
-		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
-		mytable.Style = u"网格型"
-
+		#cursor.Collapse(0)  ## 方法废弃
+		
 		#page = document.selection.GoTo(-1, 0, 0, Name="\Page")
 		#cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
 
+		document.selection.EndKey()
+
+		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
+		mytable.Style = u"网格型"
 
 	return mytable
 
