@@ -3,6 +3,7 @@
 
 ###### 本脚本用于发送邮件
 
+import time
 
 import smtplib
 from email.mime.text import MIMEText
