@@ -202,6 +202,8 @@ def doc_inserttable(document,cursor,linecount,colcount):
 		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
 		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
 
+		doc_insertbreak(document,cursor)
+
 
 	return mytable
 
