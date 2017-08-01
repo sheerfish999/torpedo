@@ -197,7 +197,7 @@ def doc_inserttable(document,cursor,linecount,colcount):
 
 
 		#cursor.Collapse(0)  ## 更换为以下方法
-		page = document.selection.GoTo(-1, 0, 0, Name="\Last",99999)
+		page = document.selection.GoTo(-1, 0, 0, Name="\Last", count=99999)
 		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
 
 		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
