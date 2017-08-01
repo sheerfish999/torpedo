@@ -195,6 +195,8 @@ def doc_inserttable(document,cursor,linecount,colcount):
 
 	if platform.system()=="Windows":
 
+
+		cursor.Collapse(0)  
 		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
 		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
 
