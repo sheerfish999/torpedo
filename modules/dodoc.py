@@ -125,7 +125,7 @@ def doc_insertstring(document,cursor,strs):
 
 	if platform.system()=="Windows":
 
-		page = document.ActiveWindow.selection.GoTo(-1, 0, 0, Name="\Page")
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
 		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
 
 		cursor.InsertAfter(strs)
@@ -142,7 +142,7 @@ def doc_insertbreak(document,cursor):
 
 	if platform.system()=="Windows":
 
-		page = document.ActiveWindow.selection.GoTo(-1, 0, 0, Name="\Page")
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
 		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
 
 		##cursor.Sections.Add()   ## 这是分页
@@ -168,11 +168,11 @@ def doc_insertimg(document,cursor,imgpath,imgwidth=16000,imgheight=8000):
 	if platform.system()=="Windows":
 
 		#cursor.Collapse(0)  ## 更换为以下方法
-		page = document.ActiveWindow.selection.GoTo(-1, 0, 0, Name="\Page")
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
 		cursor=document.ActiveDocument.Range(page.end,page.end)  #尾部
 
 		#document.ActiveDocument.Shapes.AddPicture(imgpath,1,1)   ### 似乎无法以光标动态移动, 会盖住
-		#document.ActiveWindow.Selection.Range.InlineShapes.AddPicture(imgpath,1,1)
+		#document.Selection.Range.InlineShapes.AddPicture(imgpath,1,1)
 		pic=cursor.InlineShapes.AddPicture(imgpath)
 
 		#### 换算比率
@@ -199,10 +199,10 @@ def doc_inserttable(document,cursor,linecount,colcount):
 		#cursor.Collapse(0)  ## 方法废弃
 		#document.selection.EndKey() ## 不可行
 		
-		page = document.ActiveWindow.selection.GoTo(-1, 0, 0, Name="\Page")
+		page = document.selection.GoTo(-1, 0, 0, Name="\Page")
 		cursor=document.ActiveDocument.Range(page.end,page.end)  #当前页面尾部
 
-		pos=document.ActiveWindow.selection.GoTo(constants.wdGoToHeading, constants.wdGoToNext, 10)
+		pos=document.selection.GoTo(constants.wdGoToHeading, constants.wdGoToNext, 10)
 		cursor=document.ActiveDocument.Range(pos.end,pos.end)  #表格仅仅到当前页面尾部是不够的	
 
 		mytable = document.ActiveDocument.Tables.Add(cursor, linecount, colcount) 
