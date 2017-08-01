@@ -655,7 +655,11 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 	ret=str(round((timesend-timestart).total_seconds(),2))
 
 	## 最终用于操作的元素位置
-	location = lastele.location
+	try:
+		location = lastele.location
+	except:
+		lastele=browser.find_element_by_xpath(xpath)
+		location = lastele.location
 
 	#显示位置调整
 	y=location['y']-250
