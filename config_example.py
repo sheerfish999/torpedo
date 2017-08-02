@@ -47,6 +47,7 @@ get_type=1     # 本地 chrome       ####  目前推荐  调试使用  chromedri
 """
 
 注意远程仍需要安装  firefox  chrome  gecko  chromedriver phantomjs   等 （都可以通过 cnpm install -g 安装，不可行则官网下载源码编译）
+建议使用 selenium-alone 的容器，可避开包的依赖关系
 
 server:
 wget https://selenium-release.storage.googleapis.com/3.4/selenium-server-standalone-3.4.0.jar
