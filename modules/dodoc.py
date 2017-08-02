@@ -11,8 +11,10 @@ linux:
 同一个系统中(linux), 一般uno要么支持  python 2.7 , 要么支持 python 3
 这是因为系统源中的支持包被安装在了其中一个, 不取决于 pip 版本. 因此同一设备支持一个python版本即可
 
-例如；suse11
-zypper in openoffice-pyuno   ### 适合 pythno2
+例如；
+suse11: zypper in openoffice-pyuno   ### 适合 python2
+centos7: yum install python-openoffice  ### 适合 python2
+
 非以下
 #pip install pyoo
 #pip install unotools
