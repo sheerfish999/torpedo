@@ -28,7 +28,7 @@ get_report=0    #生成报告   0  不生成,  1 生成   (非linux不生成报�
 ######  模式见下文说明
 
 #get_type=0      # 本地 firefox    #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
-#get_type=1     # 本地 chrome       ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
+get_type=1     # 本地 chrome       ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
 #get_type=2     # 本地 ie          #### 需要将 ie 安全 "安全模式"，全部调整为相同（关闭或打开），某些产品只能使用该驱动。但速度较慢, 某些API不支持
 #get_type=5	    # 本地 phantomjs   ###### 服务器使用, 某些API不支持, js弹窗不支持，需要注入解决
 
@@ -36,7 +36,7 @@ get_report=0    #生成报告   0  不生成,  1 生成   (非linux不生成报�
 #get_type=11    # 本地 chrome 容器
 
 #get_type=20   # 远程 firefox
-get_type=21   # 远程 chrome
+#get_type=21   # 远程 chrome
 
 ######
 
@@ -45,6 +45,10 @@ get_type=21   # 远程 chrome
 ## 容器或远程地址,  可以适应不同的情况,  当不使用容器或远程时, 这些参数无效 
 
 """
+
+注意远程仍需要安装  firefox  chrome  gecko  chromedriver phantomjs   等 （都可以通过 cnpm install -g 安装，不可行则官网下载源码编译）
+
+server:
 wget https://selenium-release.storage.googleapis.com/3.4/selenium-server-standalone-3.4.0.jar
 启动 java -jar selenium-server-standalone-3.4.0.jar
 或者
@@ -52,7 +56,7 @@ npm install selenium-standalone@latest -g
 selenium-standalone install
 selenium-standalone start   # jdk 版本太低：java.lang.UnsupportedClassVersionError: org/openqa/grid/selenium/GridLauncherV3 : Unsupported major.minor version 52.0
 
-默认操作及控制台端口 http://ip:4444   注意远程仍需要安装  firefox  chrome  gecko  chromedriver phantomjs   等 （都可以通过 cnpm install 安装）
+默认操作及控制台端口 http://ip:4444   
 
 """
 
