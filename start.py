@@ -80,7 +80,7 @@ if __name__ == '__main__':
 			times = time.strftime("%Y%m%d%H%M%S", timeArray)
 
 			if get_type!=15 and get_type!=25:      #  htmlunit 不具备抓图模式
-				errorjpg="./logs/error"+ times +".png"
+				errorjpg="./logs/error"+ times +".jpg"
 				browser.save_screenshot(errorjpg)
 				time.sleep(1)   #等待文件生成
 

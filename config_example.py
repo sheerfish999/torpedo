@@ -1,5 +1,9 @@
 
 
+# 本文件改名为  config.py 即可使用
+
+
+
 ### 用于单独文件调试时的引用
 import random
 from randomid import *    #####  生成各种随机量唯一值
@@ -7,11 +11,11 @@ from frame import *         #####  取系统环境变量
 
 ################################################  测试的业务流
 
-testName="test"  ## 用于快速测试框架基本功能
+testName="test"  ## 用于快速测试框架基本功能.   如用例名称为  test.py 则  testName="test"
 
 ############ 涉及业务功能点操作的封装
 
-from testbaidu import *     #######  测试使用
+from testbaidu import *     #######  测试使用， 添加测试用例依赖的其它的 py
 
 # from XXXX import *
 
@@ -20,9 +24,9 @@ from testbaidu import *     #######  测试使用
 
 thetimes=1   #  循环次数    失败的话会 中断本个业务流, 然后继续下个循环
 
-get_record=0    #录像   0 不录像,  1 录像    (非linux不录像)   需要 ffmpeg 支持
-get_report=0    #生成报告   0  不生成,  1 生成   (非linux不生成报告)   需要 uno 支持 , 需要 python3.  
-			#支持报告即支持邮件. 邮件列表位于 maillists , #注释, 附件列表位于 attachlist, 内容 mailcontent
+get_record=0	#录像   0 不录像,  1 录像      需要 ffmpeg 支持
+get_report=0	#生成报告   0  不生成,  1 生成  linux 需要 openoffice + pyuno 支持 ; windows 需要 ms-office  
+				#支持报告即支持邮件. 邮件列表位于 maillists , #注释, 附件列表位于 attachlist, 内容 mailcontent
 
 
 ######  模式见下文说明

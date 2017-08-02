@@ -3,8 +3,12 @@
 import sys,os
 import codecs
 
-########################  本脚本用于载入变量设置和业务用例
+import glob
 
+########################  本脚本用于载入变量设置和业务用例 等通用操作
+
+
+######  载入文本内容
 
 def openfiles(filename):
 
@@ -26,7 +30,38 @@ def  drivertype():
 	return(drivertypes)
 
 
-######  获得环境变量
+######  获得是否进行报告的标记
+
+def get_reports_tag():
+
+	####  获得是否报告的标记位
+	reportf = open("./reportset", "r")   
+	reports = reportf.readline()
+	reports=reports.strip('\n')
+
+	reports=int(reports)
+
+	reportf.close()
+
+	return reports
+
+
+######  获得是否进行录像的标记
+
+def get_records_tag():
+
+	recordf = open("./recordset", "r")   
+	records = recordf.readline()
+	records=records.strip('\n')
+
+	records=int(records)
+
+	recordf.close()
+
+	return records
+
+
+######  获得环境变量 (一般 jenkins 使用)
 
 def getenvs(string):
 
@@ -36,6 +71,20 @@ def getenvs(string):
 	except:
 		return ""	   
 
+
+#####  删除某个路径下通配符匹配的文件
+
+# delete_files('./1/', '*.txt')
+
+def files(curr_dir, ext ):
+
+    for i in glob.glob(os.path.join(curr_dir, ext)):
+        yield i
+
+def delete_files(curr_dir, ext):
+
+	for i in files(curr_dir, ext):
+		os.remove(i)
 
 
 

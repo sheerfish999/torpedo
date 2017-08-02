@@ -37,7 +37,6 @@ class documents:
 	ids=1   ## 用例号
 
 
-
 """
 关于路径混淆:  
 有意使用了  reports文件夹和 reportit 模块文件名进行区分
@@ -113,14 +112,11 @@ def logs(aims, conditions, wants,  res, yesorno, others=""):
 	##################################################   报告输出
 
 	####  获得是否报告的标记位
-	reportf = open("./reportset", "r")   
-	reports = reportf.readline()
-	reports=reports.strip('\n')
-	reportf.close()
+	reports=get_reports_tag()
 
 
 	##### 报告标记位正常
-	if str(reports)!="0":
+	if reports!=0:
 
 		doc=documents.doc
 
@@ -215,7 +211,7 @@ def timeoutlog(browser,xpath, waittime):
 		sys.setdefaultencoding('utf-8')
 
 	#  保存超时页面的截图
-	browser.save_screenshot("./logs/timeout.png")
+	browser.save_screenshot("./logs/timeout.jpg")
 
 	#  动作名称/目的, 前置条件, 预期, 实际结果, 判定
 	logs(u"返回时间判断", u"预定时间: " + str(waittime) + u"s" , str(waittime) + u"s 内找到元素", u"元素 " + xpath + u" 没有在指定时间返回, 请查找元素所在的测试用例" , 0)
@@ -248,15 +244,11 @@ def infos(strs, crlf=0):    # 默认前面不换行
 	##################################################   报告输出
 
 	####  获得是否报告的标记位
-	reportf = open("./reportset", "r")   
-	reports = reportf.readline()
-	reports=reports.strip('\n')
-	reportf.close()
-
+	reports=get_reports_tag()
 
 
 	##### 报告标记位正常
-	if str(reports)!="0":
+	if reports!=0:
 
 		doc=documents.doc
 
@@ -279,16 +271,13 @@ def insertpic():
 
 	##################################################   报告输出
 
-	#####  获得是否报告的标记位
-	reportf = open("./reportset", "r")
-	reports = reportf.readline()
-	reports=reports.strip('\n')
-	reportf.close()
+	####  获得是否报告的标记位
+	reports=get_reports_tag()
 
 
 	##### 报告标记位正常
 
-	if str(reports)!="0":
+	if reports!=0:
 
 		doc=documents.doc
 
@@ -324,12 +313,9 @@ def insertthepic(browser,location,size=0):    #size!=0   调用的是第二种�
 def opendoc():
 
 	####  获得是否报告的标记位
-	reportf = open("./reportset", "r")   
-	reports = reportf.readline()
-	reports=reports.strip('\n')
-	reportf.close()
+	reports=get_reports_tag()
 
-	if str(reports)=="0":        #不报告
+	if reports==0:        #不报告
 		return (None,None)
 
 
@@ -352,13 +338,12 @@ def opendoc():
 
 def closedoc(savename):
 
-	####  获得是否报告的标记位
-	reportf = open("./reportset", "r")   
-	reports = reportf.readline()
-	reports=reports.strip('\n')
-	reportf.close()
 
-	if str(reports)=="0":        #不报告
+	####  获得是否报告的标记位
+	reports=get_reports_tag()
+
+
+	if reports==0:        #不报告
 		return
 
 	doc=documents.doc
@@ -395,13 +380,10 @@ def tosendmaill(mail_host,mail_user,mail_pass,mail_postfix, mailto_list, sub,con
 #按列表发送   邮件服务器位置, 用户名, 密码, 邮箱后缀,   标题, 内容
 def sendmaillist(mail_host,mail_user,mail_pass,mail_postfix, sub):
 
-	####  获得是否报告的标记位         不报告则不涉及发送邮件
-	reportf = open("./reportset", "r")   
-	reports = reportf.readline()
-	reports=reports.strip('\n')
-	reportf.close()
+	####  获得是否报告的标记位
+	reports=get_reports_tag()
 
-	if str(reports)=="0":        #不报告
+	if reports==0:        #不报告
 		return
 
 	#### 发送的邮件信息

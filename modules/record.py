@@ -24,6 +24,9 @@ if sys.version_info.major==3:
 import multiprocessing
 
 
+from frame import *         #####  取系统环境变量
+
+
 '''  由于抓图需要进行一定的对象控制, 所以需要在内部使用异步
 
 各项效率对比, reguser  到 绑卡环节:
@@ -34,6 +37,9 @@ import multiprocessing
 4  使用multiprocessing    1:36-:45   目前手段中相对较快的
 
 '''
+
+
+######################################
 
 
 ##########  录像抓图,    需要首先创建 pic 文件夹
@@ -129,16 +135,9 @@ def catchthepics2(browser,location,savepath,size):
 def recordpicthread(browser,location):    
 
 	####  获得是否录像的标记位
-	recordf = open("./recordset", "r")   
-	records = recordf.readline()
-	records=records.strip('\n')
-	recordf.close()
+	records=get_records_tag()
 
-	if str(records)=="0":        #不录像
-		return(0)
-
-	##### 非LINUX不支持录像输出
-	if platform.system()!="Linux":
+	if records==0:        #不录像
 		return(0)
 
 
@@ -162,7 +161,7 @@ def recordpicthread(browser,location):
 	PICIDtr=str(recidlong)
 	savepath=PICIDtr.zfill(8)    # 8位补齐
 	  
-	savepath="./pic/temp" + savepath +".png"
+	savepath="./pic/temp" + savepath +".jpg"
 	#print(savepath)
 
 	#### 抓图:
@@ -198,17 +197,11 @@ def recordpic(browser,location):
 def catchpicsave(savename):
 
 	####  获得是否录像的标记位
-	recordf = open("./recordset", "r")   
-	records = recordf.readline()  
-	records=records.strip('\n')
-	recordf.close()
+	records=get_records_tag()
 
-	if str(records)=="0":        #不录像
+	if records==0:        #不录像
 		return(0)
 
-	##### 非LINUX不支持录像输出
-	if platform.system()!="Linux":
-		return(0)
 
 	"""
 	# 以下方式无法判断 htmlunit
@@ -221,21 +214,33 @@ def catchpicsave(savename):
 	time.sleep(3)   ### 等待文件写回
 
 	# 生成
-	savename=  "./reports/" + savename + ".flv"
+	savename=  "./reports/" + savename + ".mp4"
 
-	os.system("ffmpeg  -framerate 3  -loglevel -8 -i ./pic/temp%08d.png ./"  + savename )     # 8位文件名补齐的图片,  数字表示每秒几帧图片
+	### framerate 越小，显示越慢 
+	### 尺寸相当于 -s 1600*800
+
+	cmd="ffmpeg  -framerate 3  -loglevel -8 -i ./pic/temp%08d.jpg ./"  + savename     
+	#print(cmd)
+
+	os.system(cmd)     # 8位文件名补齐的图片,  数字表示每秒几帧图片
 	print("录像名称: " +savename)
 
 	## 清理环境
-	os.system("rm -rf ./pic/*.png")
+	'''
+	os.system("rm -rf ./pic/*.jpg")
 	os.system("rm -rf ./pic/id")
+	'''
+
+	delete_files('./pic/',"*.jpg")
+	delete_files('./pic/',"id")	
+
 
 
 ##########  抓取指定对象的截图, 用于保存用于识别等
 
 def catchelepic(browser,xpathstr,savename):
 
-	savepath="./pic/" +  savename + ".png"
+	savepath="./pic/" +  savename + ".jpg"
 
 	imgelement = browser.find_element_by_xpath(xpathstr)  
 	location = imgelement.location

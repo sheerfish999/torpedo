@@ -209,7 +209,7 @@ def send_keys(browser,xpath, value):
 	
 	delattrbyjs(browser,xpath,"display")
 	delattrbyjs(browser,xpath,"readonly")	
-	#browser.save_screenshot("./logs/runjs.png")    # 调试js执行效果
+	#browser.save_screenshot("./logs/runjs.jpg")    # 调试js执行效果
 
 	## 最终用于操作的元素位置
 	try:		

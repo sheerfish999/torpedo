@@ -65,12 +65,16 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report , get_type):
 	if os.path.exists("./pic") ==False:
 		os.makedirs("./pic")
 
+	'''
 	if platform.system()=="Linux":
 		os.system("rm -rf ./pic/*.jpg")
 		os.system("rm -rf ./pic/id")
 	if platform.system()=="Windows":
 		os.system("del pic\*.jpg")
 		os.system("del pic\id")
+	'''
+	delete_files('./pic/', '*.jpg')
+	delete_files('./pic/', 'id')
 
 	os.system("echo 1 > ./pic/id")
 

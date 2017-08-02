@@ -335,7 +335,9 @@ class openthedoc():
 			#document.storeAsURL("file://" +  paths + "/reports/" + savename + ".odt",())   
 			#os.system("python3 DocumentConverter.py  ./reports/"+ savename +".odt" + " " + "./reports/" + savename + ".pdf")
 			## 清理
-			#os.system("rm -f  ./reports/"+ savename +".odt")
+			##os.system("rm -f  ./reports/"+ savename +".odt")
+			#delete_files('./reports/', savename +'.odt')
+
 
 
 			# 转换
