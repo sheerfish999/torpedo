@@ -12,8 +12,12 @@ import glob
 
 def openfiles(filename):
 
+
 	paths=os.getcwd()    #绝对路径  , os.getcwd()  代替  sys.path[0]
 	all_the_text = codecs.open(paths + "/"+ filename,'r','utf-8').read( )
+
+	if sys.version_info.major==2: 
+		all_the_text=all_the_text.encode('utf8','ignore')    ### windows 下编写的用例可能需要转码
 
 	return(all_the_text)
 

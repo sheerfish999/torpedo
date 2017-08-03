@@ -41,9 +41,10 @@ if __name__ == '__main__':
 
 	#####  初始化
 
-	if platform.system()=="Linux" and getenvs('DISPLAY')=="":    ## 没获取到, 异常, 就是 linux 服务器终端模式
-		print("识别为服务器模式,使用 Phantomjs 驱动运行.")
-		get_type=5
+	if platform.system()=="Linux":
+		if get_type<20 and getenvs('DISPLAY')=="":    ## 没获取到, 异常, 就是 linux 服务器终端模式, 同时非远程模式，即只能使用无头模式
+			print(u"#### 识别为服务器脚本模式") 
+			get_type=5   # 无头
 	
 	(browser,timestart)=initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type)            ###   每个业务流脚本都需要初始化一次
 
@@ -91,7 +92,8 @@ if __name__ == '__main__':
 			#当时的页面源码存储到文件
 			source=browser.page_source
 			sourcelog='./logs/source'+ times +'.log'
-			fo = open(sourcelog, "w",encoding = 'utf-8')
+			#fo = open(sourcelog, "w",encoding = 'utf-8')
+			fo = open(sourcelog, "w")
 			fo.writelines(source)
 			fo.close()
 

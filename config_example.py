@@ -31,14 +31,17 @@ get_report=0	#生成报告   0  不生成,  1 生成  linux 需要 openoffice + 
 
 ######  模式见下文说明
 
+# 0-10 本地浏览器
 #get_type=0      # 本地 firefox    #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
 get_type=1     # 本地 chrome       ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
 #get_type=2     # 本地 ie          #### 需要将 ie 安全 "安全模式"，全部调整为相同（关闭或打开），某些产品只能使用该驱动。但速度较慢, 某些API不支持
 #get_type=5	    # 本地 phantomjs   ###### 服务器使用, 某些API不支持, js弹窗不支持，需要注入解决
 
+# 10-19 本地容器
 #get_type=10    # 本地 firefox 容器   , 通常情况下, 调试与演示建议使用10, 因为0 firefox 模式后台创建产品存在500问题,   远程自动模式推荐  5 phantomjs 
 #get_type=11    # 本地 chrome 容器
 
+# 20-30 远程模式
 #get_type=20   # 远程 firefox
 #get_type=21   # 远程 chrome
 

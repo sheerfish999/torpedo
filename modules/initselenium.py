@@ -175,8 +175,10 @@ def trytoconnect(remotedriverip, get_type):
 		profile = FirefoxProfile()
 		#profile=profileset(profile,  getimgflash, get_type)
 		profile.set_preference("capability.policy.default.Window.frameElement.get","allAccess")   # 避免一些权限问题 如 gecko 驱动的问题
-		browser = webdriver.Firefox(profile)  
+		browser = webdriver.Firefox(profile)
 		#browser = webdriver.Firefox()    ## 这里没有使用配置文件
+
+		print(u"#### 驱动模式: 【本地 Firefox】")
 		return(browser)
 
 	if get_type==1:   ## chrome   http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
@@ -190,14 +192,19 @@ def trytoconnect(remotedriverip, get_type):
 
 		browser = webdriver.Chrome(executable_path=chromedriver, chrome_options=chromeOptions)
 
+		print(u"#### 驱动模式: 【本地 Chrome】")
 		return(browser)
 
 	if get_type==2:   ### ie
 		browser = webdriver.Ie()
+
+		print(u"#### 驱动模式: 【本地 Internet Explorer】")
 		return(browser)
 
 	if get_type==5:         ##  本地 PhantomJS    注意不支持 系统 js 弹出alert 的业务流
 		browser = webdriver.PhantomJS()
+
+		print(u"#### 驱动模式: 【本地 PhantomJS】")
 		return(browser)
 
 
@@ -223,7 +230,8 @@ def trytoconnect(remotedriverip, get_type):
 			traceback.print_exc()
 			return(0)
 		else:
-		    	return(browser)   #成功
+			print(u"#### 驱动模式: 【远程 Firefox】")
+			return(browser)   #成功
 
 
 
@@ -246,7 +254,8 @@ def trytoconnect(remotedriverip, get_type):
 			traceback.print_exc()
 			return(0)
 		else:
-		    	return(browser)   #成功
+			print(u"#### 驱动模式: 【远程 Chrome】")
+			return(browser)   #成功
 
 
 
@@ -258,7 +267,8 @@ def trytoconnect(remotedriverip, get_type):
 			traceback.print_exc()
 			return(0)
 		else:
-		    	return(browser)   #成功
+			print(u"#### 驱动模式: 【远程 HtmlUnit】")
+			return(browser)   #成功
 
 
 
