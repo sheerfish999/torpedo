@@ -95,7 +95,7 @@ class openthedoc():
 			soffice=soffice + " >/dev/null 2>log &"
 			os.system(soffice)
 
-			sleep(1)  #稍等启动, 需要进行等待
+			time.sleep(1)  #稍等启动, 需要进行等待
 
 			# connect   连接
 			local = uno.getComponentContext()
