@@ -13,4 +13,6 @@ pip install -U python-xlib
 pip install -U pillow
 
 yum install python-devel zbar-devel  # centos
-pip install -U zbarlight  
+pip install -U zbarlight
+
+ 

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo rm ./reports/*.pdf
 sudo rm ./reports/*.mp4
 sudo rm ./reports/*.flv
