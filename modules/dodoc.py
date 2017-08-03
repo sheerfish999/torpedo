@@ -77,6 +77,19 @@ fc-cache -fv
 ########################################################
 
 
+######## 判断是否含有元素某属性，用于解决版本差异
+
+def hasAttr(pele,ele_str):
+
+	strs=str(dir(pele))
+
+	if strs.find(ele_str) == -1:
+		return 0
+
+	return 1
+
+
+
 ######## 新建文档
 
 class openthedoc():
@@ -192,8 +205,13 @@ class openthedoc():
 			img.Width = imgwidth
 			img.Height = imgheight
 
-			self.document.Text.insert_textContent(self.cursor, img, False)
 
+			if hasAttr(self.document.Text,"insert_textContent")==1:   ### 解决版本问题
+				self.document.Text.insert_textContent(self.cursor, img, False)
+			else:
+				self.document.Text.insertTextContent(self.cursor, img, False)	
+
+			
 		if platform.system()=="Windows":
 
 			#self.cursor.Collapse(0)  ## 更换为以下方法
@@ -232,7 +250,11 @@ class openthedoc():
 
 			mytable= self.document.createInstance("com.sun.star.text.TextTable")
 			mytable.initialize(linecount, colcount)
-			self.document.Text.insert_textContent(self.cursor, mytable, 0)
+
+			if hasAttr(self.document.Text,"insert_textContent")==1:   ### 解决版本问题
+				self.document.Text.insert_textContent(self.cursor, mytable, 0)
+			else:
+				self.document.Text.insertTextContent(self.cursor, mytable, 0)				
 
 
 		if platform.system()=="Windows":
