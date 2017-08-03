@@ -12,9 +12,17 @@ sysstr = platform.system()   ### 判断操作系统类型   Windows   Linux    .
 
 
 if sysstr == "Linux":
+
+	"""
 	####  关于 linux 平台的  uno
 	#  LINUX: python3 还是 python2 根据所在发行版的源中依赖包的支持决定， 一般只支持其中一个 （centos7 支持2 ， arch/ kali 支持 3, 2016.12）
 	#  具体安装过程 参考对应发行版的 uno 支持方法（不是 pip install uno , 会导致冲突）
+
+	例如；
+	suse11: zypper in openoffice-pyuno   ### 适合 python2
+	centos7: yum install python-openoffice  ### 适合 python2
+
+	"""
 
 	import uno   
 	from com.sun.star.beans import PropertyValue

@@ -2,9 +2,8 @@
 
 #####
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/libreoffice/program
-
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/libreoffice/program
 
 ##### 
 
-python3.6 start.py
+python start.py

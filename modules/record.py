@@ -2,8 +2,7 @@
 
 #####################  本脚本用于录像 , 生成的录像  建议使用 mplayer 播放, smplayer 可能会出错
 
-# pip install pillow
-from PIL import Image
+from PIL import Image  # pip install pillow
 #from PIL import ImageGrab
 from PIL import ImageDraw
 from PIL import ImageFont

@@ -23,7 +23,7 @@ from PIL import Image
 import platform
 
 if platform.system()=="Linux":   ## windows 支持较为复杂，需要 mingw 编译，可以略过 
-	import zbarlight   # pip install zbarlight , yum install zbar-devel  win: https://gist.github.com/Zephor5/aea563808d80f488310869b69661f330
+	import zbarlight   # pip install zbarlight , yum install python-devel zbar-devel  win: https://gist.github.com/Zephor5/aea563808d80f488310869b69661f330
 
 #import qrcode ## pip install PyQRCode  这个是识别
 #import zbar   ## pacman -S zabr , pip install zbar.   python3 支持不好
