@@ -39,6 +39,8 @@ ImportError: dynamic module does not define module export function  说明python
 
 import sys,os
 
+import time
+
 import platform
 
 if platform.system()=="Linux":
