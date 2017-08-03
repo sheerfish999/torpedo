@@ -95,14 +95,22 @@ def catchthepics(browser,location,savepath, size=0):
 	#  mkfontdir
 	#  fc-cache -fv
 
-	font = ImageFont.truetype("arial.ttf",size=12)   # 字体大小设定无效   
+	#font = ImageFont.truetype("arial.ttf",size=12)   # 字体大小设定无效  ， 且需要安装字体
 	times=str(datetime.datetime.now())
 	draw = ImageDraw.Draw(im)
 	draw.text((0, 0),times,(255,0,0))
 	draw = ImageDraw.Draw(im)
 
 	##保存
-	im.save(savepath, "JPEG",quality=100)  
+
+	# 解决一个pillow兼容性问题 IOError: cannot write mode RGBA as JPEG
+
+	if im.mode in ('RGBA', 'LA'):
+		im = im.convert("RGB")
+
+	im.save(savepath, "JPEG",quality=100)
+
+
 	#调整到指定大小可能非常模糊
 	"""
 	w=800

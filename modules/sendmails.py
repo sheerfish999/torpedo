@@ -45,7 +45,7 @@ def sendmaill(mail_host,mail_user,mail_pass,mail_postfix, to_list, sub,content):
 	me="Auto-Report"+"<"+mail_user+"@"+mail_postfix+">"   #发送人姓名
 	msg['Subject'] = sub    #设置主题
 	msg['From'] = me
-	msg['To'] = ";".join(to_list)  
+	msg['To'] = to_list.strip(';').split(';')[0]    #直接为 string 会被拆分成单个字符  如 ";".join(to_list)   
 
 	### 附件列表
 

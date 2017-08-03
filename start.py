@@ -94,6 +94,7 @@ if __name__ == '__main__':
 			sourcelog='./logs/source'+ times +'.log'
 			#fo = open(sourcelog, "w",encoding = 'utf-8')
 			fo = open(sourcelog, "w")
+			source=source.replace(u'\xa0', u' ')  # 页面的一些特殊字符会影响写入
 			fo.writelines(source)
 			fo.close()
 
