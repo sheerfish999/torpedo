@@ -1,9 +1,9 @@
 # torpedo web UI 测试框架
 ## 本框架基于 selenium 封装以下功能：
 
-1)  同时兼容 linux 及 windows ,  python2.7 与 python3
+1） 同时兼容 linux 及 windows ,  python2.7 与 python3
 
-2)  基础操作增强鲁棒性, 各类操作重新封装
+2） 基础操作重新封装, 鲁棒性成倍增强
 
 3） 健全的日志输出及报告生成能力、录像能力, 报告完成后的邮件发送
 

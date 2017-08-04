@@ -245,11 +245,7 @@ def trytoconnect(remotedriverip, get_type):
 
 
 		try:    ## 反复重试
-			if get_type==11:	
-				browser =webdriver.Remote(command_executor=command_executors, desired_capabilities=capabilities)		
-			if get_type==21:	
-				browser =webdriver.Remote(command_executor=command_executors, desired_capabilities=capabilities)
-			
+			browser =webdriver.Remote(command_executor=command_executors, desired_capabilities=capabilities)
 		except:
 			traceback.print_exc()
 			return(0)
