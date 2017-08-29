@@ -11,12 +11,9 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
-# xvfb 没涉及
-#from xvfbwrapper import Xvfb  # pip install xvfbwrapper
-#vdisplay = Xvfb()
-#vdisplay.start()
-#vdisplay.close()
-
+# 虚拟界面终端
+from xvfbwrapper import Xvfb  # pip install xvfbwrapper
+xvfb = Xvfb()
 
 sys.path.append(sys.path[0] + "/modules/")    #python 2.7 对   modules.  的方式兼容不好
 
@@ -171,7 +168,11 @@ def profileset(profile, getimgflash, get_type):
 ## 初始化并连接
 def trytoconnect(remotedriverip, get_type):
 
-	if get_type==0:   ## firefox
+	if get_type==0 or get_type==6:   ## firefox
+
+		if get_type==6:
+			xvfb.start()   # 虚拟界面终端
+
 		profile = FirefoxProfile()
 		#profile=profileset(profile,  getimgflash, get_type)
 		profile.set_preference("capability.policy.default.Window.frameElement.get","allAccess")   # 避免一些权限问题 如 gecko 驱动的问题
@@ -181,11 +182,17 @@ def trytoconnect(remotedriverip, get_type):
 		print(u"#### 驱动模式: 【本地 Firefox】")
 		return(browser)
 
-	if get_type==1:   ## chrome   http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
+	if get_type==1 or get_type==7 or get_type==8:   ## chrome   http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
 		chromeOptions = webdriver.ChromeOptions()
 		#chromeOptions=profileset(chromeOptions, getimgflash, get_type)
 		chromeOptions.add_argument("--privileged")
 		chromeOptions.add_argument("--no-sandbox")
+
+		if get_type==7:
+			xvfb.start()   # 虚拟界面终端
+
+		if get_type==8:
+			chromeOptions.add_argument("--headless")    ### 无头模式   chrome 59 以后支持
 
 		chromedriver = "chromedriver"   ## path()
 		#os.environ["webdriver.chrome.driver"] = chromedriver
@@ -279,6 +286,11 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 
 	savename=""
 	savename=  savenamestr + times
+
+	###################  关闭虚拟界面终端
+	if get_type==6 or get_type==7：
+		xvfb.stop()
+
 
 	###################  生成录像
 	if get_type!=15 and get_type!=25:      # docker htmlunit 或远程 htmlunit 不支持 录像

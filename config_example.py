@@ -29,7 +29,7 @@ get_report=0	#生成报告   0  不生成,  1 生成  linux 需要 openoffice + 
 				#支持报告即支持邮件. 邮件列表位于 maillists , #注释, 附件列表位于 attachlist, 内容 mailcontent
 
 
-######  模式见下文说明
+######  可用驱动配置，模式依赖及更多模式见下文说明
 
 # 0-10 本地浏览器
 #get_type=0      # 本地 firefox    #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
@@ -83,6 +83,9 @@ dockerinitsh=""
 1  本地 chrome     (需要chromedriver)  
 2  本地 ie  		(需要IEDriverServer)
 5  本地 phantomjs   (需要phantomjs)    #  注意:  半支持系统 js 弹出alert , 需要针对性的调试
+6  本地 Firefox 虚拟界面终端 (需要xvfb)   # 暂时没有明确测试
+7  本地 Chrome 虚拟界面终端 (需要xvfb)    # 暂时没有明确测试
+8  本地 Chrome 无头模式 (chrome>59)		  # 暂时没有明确测试
 
 容器模式:  避免了driver 版本以及 python 库\浏览器的版本对应关系造成出现的莫名其妙的问题, 可供日常显示调试和演示
 10  本地firefox容器  (容器需要docker支持和设置)   

@@ -53,7 +53,7 @@ if platform.system()=="Linux":
 	sys.path.append('/usr/lib64/ooo3/basis3.2/program')
 	"""
 
-	import uno   
+	import uno
 	from com.sun.star.beans import PropertyValue
 	from com.sun.star.text.ControlCharacter import PARAGRAPH_BREAK
 

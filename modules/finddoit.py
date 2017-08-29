@@ -39,6 +39,25 @@ from frame import *   ## 用于获得驱动类型
 ########################  所有的基础动作, 都建议用该脚本中的封装方法,  减少问题,  并提供更多的内置框架功能
 
 
+################     特别情况下设置鼠标位置 及一些位置属性, 注意屏幕坐标和浏览器坐标是不同的
+
+class mouse():   #http://blog.chinaunix.net/uid-52437-id-3068595.html
+	'''mouse class which contains couple of mouse methods'''
+	def __init__(browser):
+		browser.display = ds.Display()
+
+	def goto_xy(browser,x, y):   
+		'''move to position x y'''
+		xtest.fake_input(browser.display, X.MotionNotify, x = x, y = y)
+		browser.display.flush()
+
+	def pos(browser):
+		'''get mouse position'''
+		coord = browser.display.screen().root.query_pointer()._data
+		return (coord["root_x"],coord["root_y"])
+
+
+
 #################  一些必要的封装函数.  若使用继承扩展的方法, 情况可能较多, 而且可能会产生混乱,  所以不采用继承
 
 
