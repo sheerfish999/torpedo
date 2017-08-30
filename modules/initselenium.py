@@ -172,6 +172,7 @@ def trytoconnect(remotedriverip, get_type):
 
 		if get_type==6:
 			xvfb.start()   # 虚拟界面终端
+			print(u"#### 尝试进入虚拟界面终端")
 
 		profile = FirefoxProfile()
 		#profile=profileset(profile,  getimgflash, get_type)
@@ -180,19 +181,23 @@ def trytoconnect(remotedriverip, get_type):
 		#browser = webdriver.Firefox()    ## 这里没有使用配置文件
 
 		print(u"#### 驱动模式: 【本地 Firefox】")
+
 		return(browser)
 
-	if get_type==1 or get_type==7 or get_type==8:   ## chrome   http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
+	if get_type==1 or get_type==7 or get_type==1.1:   ## chrome   http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
+
+		if get_type==7:
+			xvfb.start()   # 虚拟界面终端
+			print(u"#### 尝试进入虚拟界面终端")
+
 		chromeOptions = webdriver.ChromeOptions()
 		#chromeOptions=profileset(chromeOptions, getimgflash, get_type)
 		chromeOptions.add_argument("--privileged")
 		chromeOptions.add_argument("--no-sandbox")
 
-		if get_type==7:
-			xvfb.start()   # 虚拟界面终端
-
-		if get_type==8:
+		if get_type==1.1:
 			chromeOptions.add_argument("--headless")    ### 无头模式   chrome 59 以后支持
+			print(u"#### Chrome 无头模式")
 
 		chromedriver = "chromedriver"   ## path()
 		#os.environ["webdriver.chrome.driver"] = chromedriver
@@ -200,12 +205,7 @@ def trytoconnect(remotedriverip, get_type):
 		browser = webdriver.Chrome(executable_path=chromedriver, chrome_options=chromeOptions)
 
 		print(u"#### 驱动模式: 【本地 Chrome】")
-		return(browser)
 
-	if get_type==2:   ### ie
-		browser = webdriver.Ie()
-
-		print(u"#### 驱动模式: 【本地 Internet Explorer】")
 		return(browser)
 
 	if get_type==5:         ##  本地 PhantomJS    注意不支持 系统 js 弹出alert 的业务流
@@ -214,8 +214,29 @@ def trytoconnect(remotedriverip, get_type):
 		print(u"#### 驱动模式: 【本地 PhantomJS】")
 		return(browser)
 
+	if get_type==2:   ### ie
+		browser = webdriver.Ie()
 
-	#####################
+		print(u"#### 驱动模式: 【本地 Internet Explorer】")
+		return(browser)
+
+	if get_type==3 or get_type==8:   ### Opera
+
+		if get_type==8:
+			xvfb.start()   # 虚拟界面终端
+			print(u"#### 尝试进入虚拟界面终端")
+
+		browser = webdriver.Opera()
+
+		print(u"#### 驱动模式: 【本地 Opera】")
+		return(browser)		
+
+	if get_type==4:   ### Safari
+		browser = webdriver.Safari()
+
+		print(u"#### 驱动模式: 【本地 Safari】")
+		return(browser)
+
 
 
 	########################  容器或远程服务连接
@@ -261,7 +282,6 @@ def trytoconnect(remotedriverip, get_type):
 			return(browser)   #成功
 
 
-
 	if get_type==15 or get_type==25:      # docker htmlunit 或远程 htmlunit
 
 		try:    ## 反复重试
@@ -288,7 +308,7 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 	savename=  savenamestr + times
 
 	###################  关闭虚拟界面终端
-	if get_type==6 or get_type==7：
+	if get_type>5 and get_type<10:
 		xvfb.stop()
 
 

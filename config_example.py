@@ -31,19 +31,24 @@ get_report=0	#生成报告   0  不生成,  1 生成  linux 需要 openoffice + 
 
 ######  可用驱动配置，模式依赖及更多模式见下文说明
 
-# 0-10 本地浏览器
-#get_type=0      # 本地 firefox    #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
-get_type=1     # 本地 chrome       ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
-#get_type=2     # 本地 ie          #### 需要将 ie 安全 "安全模式"，全部调整为相同（关闭或打开），某些产品只能使用该驱动。但速度较慢, 某些API不支持
-#get_type=5	    # 本地 phantomjs   ###### 服务器使用, 某些API不支持, js弹窗不支持，需要注入解决
+if getenvs('get_type')!="":   ## 使用环境变量地址
 
-# 10-19 本地容器
-#get_type=10    # 本地 firefox 容器   , 通常情况下, 调试与演示建议使用10, 因为0 firefox 模式后台创建产品存在500问题,   远程自动模式推荐  5 phantomjs 
-#get_type=11    # 本地 chrome 容器
+	# 0-10 本地浏览器
+	#get_type=0      # 本地 firefox    #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
+	get_type=1     # 本地 chrome       ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
+	#get_type=2     # 本地 ie  windows #### 需要将 ie 安全 "安全模式"，全部调整为相同（关闭或打开），某些产品只能使用该驱动。但速度较慢, 某些API不支持
+	#get_type=5	    # 本地 phantomjs   ###### 服务器使用, 某些API不支持, js弹窗不支持，需要注入解决
 
-# 20-30 远程模式
-#get_type=20   # 远程 firefox
-#get_type=21   # 远程 chrome
+	# 10-19 本地容器
+	#get_type=10    # 本地 firefox 容器   , 通常情况下, 调试与演示建议使用10, 因为0 firefox 模式后台创建产品存在500问题,   远程自动模式推荐  5 phantomjs 
+	#get_type=11    # 本地 chrome 容器
+
+	# 20-30 远程模式
+	#get_type=20   # 远程 firefox
+	#get_type=21   # 远程 chrome
+
+else:
+	get_type=float(getenvs('get_type'))
 
 ######
 
@@ -68,7 +73,7 @@ selenium-standalone start   # jdk 版本太低：java.lang.UnsupportedClassVersi
 
 """
 
-remotedriverip="192.168.4.126"     
+remotedriverip="192.168.4.126"
 remotedriverport="4444"
 remotedriverip=remotedriverip+":" + remotedriverport    ## 完整地址
 
@@ -80,15 +85,20 @@ dockerinitsh=""
 """  测试模式和驱动说明    get_type   注意已经定义的, 勿修改, 涉及较多位置关联
 本地模式:
 0  本地 firefox  (3.0 以上版本 firefox需要geckodriver, 并且较新 注意版本与浏览器的匹配会影响操作: https://github.com/mozilla/geckodriver/releases/)
-1  本地 chrome     (需要chromedriver)  
-2  本地 ie  		(需要IEDriverServer)
+1  本地 Chrome  (需要chromedriver)
+1.1 本地 Chrome 无头模式 (chrome>59)   # 暂时没有明确测试
+2  本地 Ie  	(需要IEDriverServer windows)
+3  本地 Opera  	(需要operadriver)      # 暂时没有明确测试, 且不推荐使用，受支持较少
+4  本地 Safari  					   # 暂时没有明确测试
 5  本地 phantomjs   (需要phantomjs)    #  注意:  半支持系统 js 弹出alert , 需要针对性的调试
+
+虚拟界面终端模式：  linux 特有
 6  本地 Firefox 虚拟界面终端 (需要xvfb)   # 暂时没有明确测试
 7  本地 Chrome 虚拟界面终端 (需要xvfb)    # 暂时没有明确测试
-8  本地 Chrome 无头模式 (chrome>59)		  # 暂时没有明确测试
+8  本地 Opera  虚拟界面终端 (需要xvfb)    # 暂时没有明确测试
 
 容器模式:  避免了driver 版本以及 python 库\浏览器的版本对应关系造成出现的莫名其妙的问题, 可供日常显示调试和演示
-10  本地firefox容器  (容器需要docker支持和设置)   
+10  本地firefox容器  (容器需要docker支持和设置)  
 11  本地chrome容器   (容器需要docker支持和设置)   	
 15  本地htmlunit 容器 不显示页面, 速度更快    ### 暂时没有明确测试
 
@@ -103,11 +113,6 @@ dockerinitsh=""
 # jar 包权限:  644,   java -cp htmlunit-driver-standalone-2.21.jar:selenium-server-standalone-2.53.0.jar org.openqa.grid.selenium.GridLauncher
 
 
-不打算支持:
-Opera (本地的驱动不好找, 远程意义不大, 浏览器份额较小,  selenium 和 Opera 官方似乎都不再明确支持对应驱动)
-
-还未支持：
-safari
 
 """
 

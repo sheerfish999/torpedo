@@ -29,11 +29,9 @@ from randomid import *    #####  生成各种随机量唯一值
 
 if __name__ == '__main__':  
 
-
 	if sys.version_info.major==2: 
 		reload(sys)
 		sys.setdefaultencoding('utf-8')
-
 
 	##### 载入配置变量
 	config=openfiles("config.py")
@@ -42,11 +40,18 @@ if __name__ == '__main__':
 	#####  初始化
 
 	if platform.system()=="Linux":
-		if get_type<20 and getenvs('DISPLAY')=="":    ## 没获取到, 异常, 就是 linux 服务器终端模式, 同时非远程模式，即只能使用无头模式
+		if get_type<5 and get_type.isdigit()==True and getenvs('DISPLAY')=="":    ## 没获取到, 异常, 就是 linux 服务器终端模式, 同时非远程模式，即只能使用无头模式
 			print(u"#### 识别为服务器脚本模式") 
-			get_type=5   # 无头
+			get_type=5   # 转为无头  phantomjs
 	
-	(browser,timestart)=initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type)            ###   每个业务流脚本都需要初始化一次
+	(browser,timestart)=initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type)    ###   每个业务流脚本都需要初始化一次
+
+	## 记录受测浏览器类型（供兼容测试）
+	version=browser.capabilities['version']
+	types=browser.capabilities['browserName']
+	types=types+ " " + version
+	infos(u"浏览器版本:" + types )
+
 
 	###################  起始
 
