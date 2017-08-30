@@ -1,13 +1,13 @@
 # torpedo web UI 测试框架
 ## 本框架基于 selenium 封装以下功能：
 
-###1） 同时兼容 linux 及 windows ,  python2.7 与 python3
+### 1） 同时兼容 linux 及 windows ,  python2.7 与 python3
 
-###2） 基础操作重新封装, 鲁棒性成倍增强
+### 2） 基础操作重新封装, 鲁棒性成倍增强
 
-###3） 健全的日志输出及报告生成能力、录像能力, 报告完成后的邮件发送
+### 3） 健全的日志输出及报告生成能力、录像能力, 报告完成后的邮件发送
 
-###4） 多种浏览器、无头浏览器的快捷切换支持
+### 4） 多种浏览器、无头浏览器的快捷切换支持
 
 
 	0  本地 firefox
@@ -34,20 +34,20 @@
 	21  远程chrome
 	25  远程 htmlunit
 
-5） jenkins支持:
+### 5） jenkins支持:
 
 	maillists 收件人
 	get_type 指定浏览器驱动类型，方便进行兼容测试
 
 
 
-#安装：
+# 安装：
 
-1)
+## 1)  基础安装
 	setup.sh  linux
 	setup.bat  windows
 
-2)
+## 2)  配置文件
 	config_example.py 更名为 config.py
 
 
