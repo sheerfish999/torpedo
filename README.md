@@ -9,7 +9,7 @@
 
 ### 4） 多种浏览器、无头浏览器的快捷切换支持
 
-
+	本地模式：
 	0  本地 firefox
 	1  本地 Chrome
 	1.1 本地 Chrome 无头模式 (chrome>59)
@@ -29,7 +29,6 @@
 	15  本地htmlunit 容器
 
 	远程模式: 
-
 	20  远程firefox
 	21  远程chrome
 	25  远程 htmlunit
