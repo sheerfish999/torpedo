@@ -118,10 +118,12 @@ def catchthepics(browser,location,savepath, size=0):
 
 
 	#调整到指定大小, 解决 ffmpeg 问题
-	print(browser.get_window_size())
-	
-	w=800
-	h=550
+
+	wh=browser.get_window_size()
+
+	w=wh["width"]
+	h=wh["height"]
+
 	im.resize((w, h)).save(savepath, "JPEG",quality=100)  
 	
 
