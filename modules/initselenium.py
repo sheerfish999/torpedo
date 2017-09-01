@@ -12,8 +12,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
 # 虚拟界面终端
-from xvfbwrapper import Xvfb  # pip install xvfbwrapper
-xvfb = Xvfb()
+try:
+	from xvfbwrapper import Xvfb  # pip install xvfbwrapper   only linux
+	xvfb = Xvfb()
+except:
+	pass
 
 sys.path.append(sys.path[0] + "/modules/")    #python 2.7 对   modules.  的方式兼容不好
 
