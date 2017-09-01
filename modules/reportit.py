@@ -211,7 +211,7 @@ def timeoutlog(browser,xpath, waittime):
 		sys.setdefaultencoding('utf-8')
 
 	#  保存超时页面的截图
-	browser.save_screenshot("./logs/timeout.jpg")
+	browser.save_screenshot("./logs/timeout.png")
 
 	#  动作名称/目的, 前置条件, 预期, 实际结果, 判定
 	logs(u"返回时间判断", u"预定时间: " + str(waittime) + u"s" , str(waittime) + u"s 内找到元素", u"元素 " + xpath + u" 没有在指定时间返回, 请查找元素所在的测试用例" , 0)
@@ -266,7 +266,7 @@ def infos(strs, crlf=0):    # 默认前面不换行
 
 #################  向报告中插入截图 
 
-### 插入指定位置的图片  图片位置  ./reports/insertpic.jpg
+### 插入指定位置的图片  图片位置  ./reports/insertpic.png
 def insertpic():   
 
 	##################################################   报告输出
@@ -290,7 +290,7 @@ def insertpic():
 		#   插入图片
 
 		paths=sys.path[0]    #必须使用绝对路径
-		imgpath= 'file://'+ paths + '/reports/insertpic.jpg'
+		imgpath= 'file://'+ paths + '/reports/insertpic.png'
 
 		print(imgpath)
 		doc.insert_img(imgpath,16000,8000)
@@ -300,7 +300,7 @@ def insertpic():
 def insertthepic(browser,location,size=0):    #size!=0   调用的是第二种方法抓图, 不依赖于 selenium的元素定位
 
 	paths=sys.path[0]    #必须使用绝对路径
-	savepath=paths + '/reports/insertpic.jpg'
+	savepath=paths + '/reports/insertpic.png'
 	catchthepics(browser,location,savepath,size)
 
 	sleep(0.5)  ## 写入

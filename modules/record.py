@@ -168,7 +168,7 @@ def recordpicthread(browser,location):
 	PICIDtr=str(recidlong)
 	savepath=PICIDtr.zfill(8)    # 8位补齐
 	  
-	savepath="./pic/temp" + savepath +".jpg"
+	savepath="./pic/temp" + savepath +".png"
 	#print(savepath)
 
 	#### 抓图:
@@ -235,10 +235,12 @@ def catchpicsave(savename):
 	## 清理环境
 	'''
 	os.system("rm -rf ./pic/*.jpg")
+	os.system("rm -rf ./pic/*.png")
 	os.system("rm -rf ./pic/id")
 	'''
 
 	delete_files('./pic/',"*.jpg")
+	delete_files('./pic/',"*.png")
 	delete_files('./pic/',"id")	
 
 
@@ -247,7 +249,7 @@ def catchpicsave(savename):
 
 def catchelepic(browser,xpathstr,savename):
 
-	savepath="./pic/" +  savename + ".jpg"
+	savepath="./pic/" +  savename + ".png"
 
 	imgelement = browser.find_element_by_xpath(xpathstr)  
 	location = imgelement.location
