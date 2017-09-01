@@ -108,6 +108,7 @@ def catchthepics(browser,location,savepath, size=0):
 	if im.mode in ('RGBA', 'LA'):
 		im = im.convert("RGB")
 
+	print(savepath)
 
 	pos=savepath.find(".")
 	filename=savepath[:pos]
