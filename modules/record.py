@@ -110,6 +110,7 @@ def catchthepics(browser,location,savepath, size=0):
 
 	pos=savepath.find('.')
 
+	print(savepath)
 	print(pos)
 
 	filename=savepath[:pos]
