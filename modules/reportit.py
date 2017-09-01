@@ -396,7 +396,7 @@ def sendmaillist(mail_host,mail_user,mail_pass,mail_postfix, sub):
 
 	##### 支持外部临时环境变量的发送地址, 以便支持诸如 jenkins
 
-	if getenvs('maillist')=="":    ## 使用配置文件列表地址
+	if len(getenvs('maillist'))==0:    ## 使用配置文件列表地址
 		#### 逐行提取邮件列表
 		maillist = "maillists"          	     ###  默认的邮件收件人列表文件, 可以维护该文件
 
@@ -417,9 +417,7 @@ def sendmaillist(mail_host,mail_user,mail_pass,mail_postfix, sub):
 
 		file_object.close()  
 
-
-
-	if getenvs('maillist')!="":   ## 使用环境变量地址
+	else:   ## 使用环境变量地址
 
 		mailto_list=getenvs('maillist')
 
