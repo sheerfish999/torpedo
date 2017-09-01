@@ -108,18 +108,13 @@ def catchthepics(browser,location,savepath, size=0):
 	if im.mode in ('RGBA', 'LA'):
 		im = im.convert("RGB")
 
-	pos=savepath.find('.')
-
-	print(savepath)
-	print(pos)
+	pos=savepath.find('.png')
 
 	filename=savepath[:pos]
 
 	savepath=filename+".jpg"
 
 	im.save(savepath, "JPEG",quality=100)
-
-	print(savepath)
 
 
 	#调整到指定大小可能非常模糊
