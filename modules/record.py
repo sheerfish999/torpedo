@@ -117,7 +117,8 @@ def catchthepics(browser,location,savepath, size=0):
 	#im.save(savepath, "JPEG",quality=100)
 
 
-	#调整到指定大小可能非常模糊
+	#调整到指定大小, 解决 ffmpeg 问题
+	print(driver.get_window_size())
 	
 	w=800
 	h=550
