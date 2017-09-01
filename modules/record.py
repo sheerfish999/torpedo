@@ -71,7 +71,7 @@ def catchthepics(browser,location,savepath, size=0):
 
 		width, height = im.size
 
-		"""
+		
 		howmuch=250    #调整的尺寸
 	
 		#当前位置的上下
@@ -87,7 +87,7 @@ def catchthepics(browser,location,savepath, size=0):
 			#top=top-howmuch   ##这句由于动画问题, 可能会产生错误
 
 		im = im.crop((0,top,width,bottom))        
-		"""
+		
 
 	### 打印测试时间
 	#  cp arial.ttf /usr/share/fonts/
@@ -109,14 +109,11 @@ def catchthepics(browser,location,savepath, size=0):
 	if im.mode in ('RGBA', 'LA'):
 		im = im.convert("RGB")
 
-	pos=savepath.find('.png')
-
+	pos=savepath.find('.png')  ## 切换文件名
 	filename=savepath[:pos]
-
 	savepath=filename+".jpg"
 
 	#im.save(savepath, "JPEG",quality=100)
-
 
 	#调整到指定大小, 不清晰
 	#wh=browser.get_window_size()
@@ -255,9 +252,9 @@ def catchpicsave(savename):
 	os.system("rm -rf ./pic/id")
 	'''
 
-	#delete_files('./pic/',"*.jpg")
-	#delete_files('./pic/',"*.png")
-	#delete_files('./pic/',"id")	
+	delete_files('./pic/',"*.jpg")
+	delete_files('./pic/',"*.png")
+	delete_files('./pic/',"id")	
 
 
 
