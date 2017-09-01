@@ -116,6 +116,8 @@ def catchthepics(browser,location,savepath, size=0):
 
 	im.save(savepath, "JPEG",quality=100)
 
+	print(savepath)
+
 
 	#调整到指定大小可能非常模糊
 	"""
@@ -140,7 +142,7 @@ def catchthepics2(browser,location,savepath,size):
 	y2=y1+height
 	im = ImageGrab.grab(bbox=(x1,y1,x2,y2))
 
-	im.save(savepath,'jpeg')
+	im.save(savepath,'png')
 
 
 
