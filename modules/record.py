@@ -117,15 +117,20 @@ def catchthepics(browser,location,savepath, size=0):
 	#im.save(savepath, "JPEG",quality=100)
 
 
-	#调整到指定大小, 解决 ffmpeg 问题
+	#调整到指定大小, 不清晰
+	#wh=browser.get_window_size()
+	#w=wh["width"]
+	#h=wh["height"]
 
-	wh=browser.get_window_size()
 
-	w=wh["width"]
-	h=wh["height"]
+	####  重新处理长宽, 解决 ffmpeg的宽高比不能除2问题
+
+	width, height = im.size
+	w=int(width/2)*2
+	h=int(height/2)*2
 
 	im.resize((w, h)).save(savepath, "JPEG",quality=100)  
-	
+
 
 ####  抓图动作方法2 , 不依赖 selenium 和 元素坐标
 def catchthepics2(browser,location,savepath,size):
