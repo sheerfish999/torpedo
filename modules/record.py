@@ -234,7 +234,7 @@ def catchpicsave(savename):
 	### 尺寸相当于 -s 1600*800
 
 	cmd="ffmpeg  -framerate 3  -loglevel -8 -i ./pic/temp%08d.jpg ./"  + savename
-	#print(cmd)
+	print(cmd)
 
 	os.system(cmd)     # 8位文件名补齐的图片,  数字表示每秒几帧图片
 	print("录像名称: " +savename)
