@@ -71,6 +71,7 @@ def catchthepics(browser,location,savepath, size=0):
 
 		width, height = im.size
 
+		"""
 		howmuch=250    #调整的尺寸
 	
 		#当前位置的上下
@@ -86,7 +87,7 @@ def catchthepics(browser,location,savepath, size=0):
 			#top=top-howmuch   ##这句由于动画问题, 可能会产生错误
 
 		im = im.crop((0,top,width,bottom))        
-
+		"""
 
 	### 打印测试时间
 	#  cp arial.ttf /usr/share/fonts/
