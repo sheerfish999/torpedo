@@ -114,15 +114,15 @@ def catchthepics(browser,location,savepath, size=0):
 
 	savepath=filename+".jpg"
 
-	im.save(savepath, "JPEG",quality=100)
+	#im.save(savepath, "JPEG",quality=100)
 
 
 	#调整到指定大小可能非常模糊
-	"""
+	
 	w=800
 	h=550
 	im.resize((w, h)).save(savepath, "JPEG",quality=100)  
-	"""
+	
 
 ####  抓图动作方法2 , 不依赖 selenium 和 元素坐标
 def catchthepics2(browser,location,savepath,size):
@@ -233,7 +233,7 @@ def catchpicsave(savename):
 	### framerate 越小，显示越慢 
 	### 尺寸相当于 -s 1600*800
 
-	cmd="ffmpeg  -framerate 3  -loglevel -8 -i ./pic/temp%08d.jpg ./"  + savename
+	cmd="ffmpeg  -framerate 3  -loglevel -8 -i ./pic/temp%08d.jpg "  + savename
 	print(cmd)
 
 	os.system(cmd)     # 8位文件名补齐的图片,  数字表示每秒几帧图片
