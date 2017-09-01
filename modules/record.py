@@ -63,7 +63,8 @@ def catchthepics(browser,location,savepath, size=0):
 	im = Image.open(savepath)
 
 	if location!=0:   # selenium 抓取的屏幕太长, 是整个浏览器的
-		###   转换 JPEG  , 不压缩和转换格式的话, 合成录像有问题
+
+		###   转换 JPEG  , 不压缩和转换格式的话, 合成录像有问题. selenium 输出为 png格式， ffmpeg需求为 jpg格式
 
 
 		####  必须要处理长宽, 以便合成的视频宽比是对的
@@ -104,9 +105,14 @@ def catchthepics(browser,location,savepath, size=0):
 	##保存
 
 	# 解决一个pillow兼容性问题 IOError: cannot write mode RGBA as JPEG
-
 	if im.mode in ('RGBA', 'LA'):
 		im = im.convert("RGB")
+
+
+	pos=savepath.find(".")
+	filename=savepath[:pos]
+
+	savepath=filename+"jpg"
 
 	im.save(savepath, "JPEG",quality=100)
 
@@ -203,6 +209,7 @@ def recordpic(browser,location):
 
 def catchpicsave(savename):
 
+
 	####  获得是否录像的标记位
 	records=get_records_tag()
 
@@ -226,7 +233,7 @@ def catchpicsave(savename):
 	### framerate 越小，显示越慢 
 	### 尺寸相当于 -s 1600*800
 
-	cmd="ffmpeg  -framerate 3  -loglevel -8 -i ./pic/temp%08d.jpg ./"  + savename     
+	cmd="ffmpeg  -framerate 3  -loglevel -8 -i ./pic/temp%08d.jpg ./"  + savename
 	#print(cmd)
 
 	os.system(cmd)     # 8位文件名补齐的图片,  数字表示每秒几帧图片
