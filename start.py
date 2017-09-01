@@ -40,7 +40,7 @@ if __name__ == '__main__':
 	#####  初始化
 
 	if platform.system()=="Linux":
-		if get_type<5 and get_type.isdigit()==True and getenvs('DISPLAY')=="":    ## 没获取到, 异常, 就是 linux 服务器终端模式, 同时非远程模式，即只能使用无头模式
+		if get_type<5 and get_type!=1.1 and getenvs('DISPLAY')=="":    ## 本地DISPLAY没获取到, 就是 linux 服务器终端模式, 同时非远程模式，即只能使用无头模式
 			print(u"#### 识别为服务器脚本模式") 
 			get_type=5   # 转为无头  phantomjs
 	
