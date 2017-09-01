@@ -31,7 +31,7 @@ get_report=0	#生成报告   0  不生成,  1 生成  linux 需要 openoffice + 
 
 ######  可用驱动配置，模式依赖及更多模式见下文说明
 
-if getenvs('get_type')!="":   ## 使用环境变量地址
+if getenvs('get_type')=="":   ## 使用环境变量地址
 
 	# 0-10 本地浏览器
 	#get_type=0      # 本地 firefox    #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
