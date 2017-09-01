@@ -112,7 +112,7 @@ def catchthepics(browser,location,savepath, size=0):
 	pos=savepath.find(".")
 	filename=savepath[:pos]
 
-	savepath=filename+"jpg"
+	savepath=filename+".jpg"
 
 	im.save(savepath, "JPEG",quality=100)
 
@@ -246,9 +246,9 @@ def catchpicsave(savename):
 	os.system("rm -rf ./pic/id")
 	'''
 
-	delete_files('./pic/',"*.jpg")
-	delete_files('./pic/',"*.png")
-	delete_files('./pic/',"id")	
+	#delete_files('./pic/',"*.jpg")
+	#delete_files('./pic/',"*.png")
+	#delete_files('./pic/',"id")	
 
 
 
