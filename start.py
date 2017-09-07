@@ -11,6 +11,8 @@ import traceback
 
 import platform
 
+import codecs
+
 ############## 基础框架
 
 sys.path.append(sys.path[0] + "/modules/")    #python 2.7 对   modules.  的方式兼容不好
@@ -47,11 +49,14 @@ if __name__ == '__main__':
 	(browser,timestart)=initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type)    ###   每个业务流脚本都需要初始化一次
 
 	## 记录受测浏览器类型（供兼容测试）
-	version=browser.capabilities['version']
-	types=browser.capabilities['browserName']
-	types=types+ " " + version
-	infos(u"浏览器版本:" + types )
 
+	try:
+		version=browser.capabilities['version']
+		types=browser.capabilities['browserName']
+		types=types+ " " + version
+		infos(u"浏览器版本:" + types )
+	except:
+		pass
 
 	###################  起始
 
@@ -98,7 +103,7 @@ if __name__ == '__main__':
 			source=browser.page_source
 			sourcelog='./logs/source'+ times +'.log'
 			#fo = open(sourcelog, "w",encoding = 'utf-8')
-			fo = open(sourcelog, "w")
+			fo = codecs.open(sourcelog, "w","UTF-8")
 			source=source.replace(u'\xa0', u' ')  # 页面的一些特殊字符会影响写入
 			fo.writelines(source)
 			fo.close()

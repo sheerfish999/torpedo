@@ -368,8 +368,12 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 	except:
 		pass
 
-	browser.quit()
+	try:
+		browser.quit()
+	except:
+		pass
 
+		
 	####
 
 	sys.exit() 

@@ -69,6 +69,10 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	waittime=20  ### 元素超时时间
 	timeouts=20  ### 默认页面重试的超时时间, 考虑到情况复杂, 加长时间
 
+
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
+
 	## 等待元素出现
 	
 	timestart = datetime.datetime.now()
@@ -149,6 +153,11 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	 # 操作
 	browser.set_page_load_timeout(timeouts)
 
+
+	#展现操作位置
+	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
+
+
 	try:     ### 出问题则重试
 		lastele.click()
 	except:    ### 不仅仅是TimeoutException 的情况  
@@ -171,6 +180,9 @@ def send_keys(browser,xpath, value):
 	drivertypes = drivertype()
 
 	waittime=20
+
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
 
 	## 等待元素出现
 	browser.implicitly_wait(waittime)
@@ -265,6 +277,10 @@ def send_keys(browser,xpath, value):
 		pass
 
 
+	#展现操作位置
+	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
+
+
 	if sys.version_info.major!=3:   ## python2 编码问题
 		reload( sys )
 		sys.setdefaultencoding('utf-8')   ##必须使用, 否则偶尔出错, 原因未知
@@ -272,6 +288,7 @@ def send_keys(browser,xpath, value):
 		browser.find_element_by_xpath(xpath).send_keys(valuestr)
 	else:
 		browser.find_element_by_xpath(xpath).send_keys(value)
+
 
 	## 操作之后的录像抓图
 	recordpic(browser,location)
@@ -281,6 +298,9 @@ def send_keys(browser,xpath, value):
 
 def click_enter(browser,xpath):
 
+	## 等待页面完全载入完成
+	wait_for_page_load(browser) 
+
 	send_keys(browser,xpath,Keys.DOWN) 
 	send_keys(browser,xpath,Keys.ENTER) 
 
@@ -289,6 +309,9 @@ def click_enter(browser,xpath):
 ##  not working in geckodriver  (firefox)
 
 def click_action(browser,xpath): 
+
+	## 等待页面完全载入完成
+	wait_for_page_load(browser) 
 
 	lastele=browser.find_element_by_xpath(xpath)
 	hov = ActionChains(browser).click(lastele)
@@ -302,6 +325,9 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 
 	## 等待元素出现
 	waittime=20
+
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
 
 	## 等待元素出现
 	browser.implicitly_wait(waittime)
@@ -352,9 +378,14 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 	except:
 		pass
 
+
+	#展现操作位置
+	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
+
 	# 操作
 	select = Select(browser.find_element_by_xpath(xpath))
 	select.select_by_value(value)
+
 
 	## 操作之后的录像抓图
 	recordpic(browser,location)
@@ -368,6 +399,9 @@ def clicks_multi_list(browser,inputxpath, comboboxxpath, ids):
 
 
 	waittime=20  ### 元素超时时间
+
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
 
 
 	####################
@@ -456,6 +490,10 @@ def loads(browser,Url,timeouts=8,alerts=1):   # 默认页面重试的超时时�
 		loads(browser,Url,timeouts,alerts)
 
 
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
+
+
 	## 实际鼠标减少误触   goto_xy(0,0)
 	# 以下方式无法判断 htmlunit
 	types=str(browser)
@@ -486,6 +524,11 @@ def loads(browser,Url,timeouts=8,alerts=1):   # 默认页面重试的超时时�
 #########  exists   元素存在的时间内即时判断
 
 def exists(browser,xpath,timesouts):
+
+
+	## 等待页面完全载入完成
+	#wait_for_page_load(browser)   #由于目标是时间段内判断，所以不能阻塞
+
 
 	try:
 
@@ -522,6 +565,10 @@ level=2  从当前下搜索，失败后退到当前
 """
 
 def search_switch_to_frametype(browser,xpath,frametype,level=0,timeouts=3):
+
+	## 等待页面完全载入完成
+	wait_for_page_load(browser) 
+
 
 	if level==0:
 		browser.switch_to_default_content()   #### 最上层
@@ -572,7 +619,7 @@ def search_switch_to_frame(browser,xpath,level=0,timeouts=3):      #### 存在�
 	if ret==1:
 		return
 
-	############## iframe
+	############## frame
 
 	frametype="//frame"
 
@@ -609,6 +656,10 @@ def getlinkxpath(linkstr, eletypes="a",parentPath="//"):    # eletypes 默认元
 #########  getvalues     取值的封装
 
 def getvalues(browser,xpath,waittime=20):
+
+
+	## 等待页面完全载入完成
+	wait_for_page_load(browser) 
 
 
 	## 等待元素出现
@@ -653,6 +704,9 @@ def getvalues(browser,xpath,waittime=20):
 	## 录像抓图
 	recordpic(browser,location)
 
+	# 展现操作位置
+	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
+
 	# 得到
 	values=browser.find_element_by_xpath(xpath).text   
 
@@ -664,6 +718,9 @@ def getvalues(browser,xpath,waittime=20):
 def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表示完全匹配; 1 , 部分匹配即可
 
 	timestart = datetime.datetime.now()
+
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
 
 
 	## 等待元素出现
@@ -710,6 +767,10 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 	js="var q=document.documentElement.scrollTop=" + str(y) +";"
 	browser.execute_script(js)   
 
+
+	#展现操作位置
+	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
+
 	## 录像抓图
 	recordpic(browser,location)
 
@@ -741,6 +802,9 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 
 def existrefreshs(browser,xpath,timeout):
 
+	## 等待页面完全载入完成
+	#wait_for_page_load(browser)  ## 目标是强刷 所以不能阻塞
+
 	Url=browser.current_url
 
 	while exists(browser,xpath,timeout) ==0:     
@@ -754,6 +818,10 @@ def existrefreshs(browser,xpath,timeout):
 
 ### 正常判断并点击
 def getalert(browser, location=0, size=0):   #需要抓图时传入这两个参数, 出现alert时再获得会出错
+
+
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
 
 	texts=""
 
@@ -794,6 +862,9 @@ def getalert(browser, location=0, size=0):   #需要抓图时传入这两个参�
 ### 可能弹出的窗体并点击, 如果超时就继续操作
 def maybealert(browser, timeout):
 
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
+
 	texts=""
 
 	####  获得 driver 属性
@@ -823,6 +894,12 @@ def maybealert(browser, timeout):
 
 def changeattrbyjs(browser,xpath,attrname,attrvalue):
 
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
+
+	## 必须替换 " 为 '
+	xpath=xpath.replace("\"","'")
+
 
 	#print(xpath)   #在浏览器中调试一下 ,  是否js作用的元素对了
 
@@ -841,6 +918,12 @@ def changeattrbyjs(browser,xpath,attrname,attrvalue):
 
 def delattrbyjs(browser,xpath,attrname):
 
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
+
+	## 必须替换 " 为 '
+	xpath=xpath.replace("\"","'")
+
 	jsstr=u"function getElementByXpath(path) {return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;}"
 	jsstr=jsstr + u"var thatisattr = getElementByXpath(" + u"\"" +xpath + u"\"" + u"); thatisattr.removeAttribute(\"" + attrname + u"\")"
 	#print(jsstr)
@@ -852,6 +935,9 @@ def delattrbyjs(browser,xpath,attrname):
 
 def acceptbyalert_beforedo_ghostdriver(browser):
 
+	## 等待页面完全载入完成
+	wait_for_page_load(browser)
+
 	####  获得 driver 属性
 	drivertypes = drivertype()
 
@@ -861,6 +947,26 @@ def acceptbyalert_beforedo_ghostdriver(browser):
 		browser.execute_script(js)
 
 
+
+########## 等待页面载入完成的另类方法
+
+def is_page_loaded(browser):
+
+	if browser.execute_script("return document.readyState") == "complete":
+		return True
+	else:
+		return False
+
+
+def wait_for_page_load(browser, freq=5):
+
+	while True:
+
+		if is_page_loaded(browser)==True:
+			break
+
+		print("Wait for load...")
+		time.sleep(freq)
 
 
 
