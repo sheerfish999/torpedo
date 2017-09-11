@@ -76,7 +76,8 @@ def getcardid_2():
 	for i in range(0,len(id)): 
 		count = count +int(id[i])*weight[i] 
 		id = id + checkcode[str(count%11)] #算出校验码 
-		return id
+
+	return id
 
 
 ################  身份证号  3.0   未测试 
@@ -96,7 +97,8 @@ def getcardid_3():
 	for i in range(n): 
 		count = count +int(id[i])*weight[i] #求出身份证号前17位数字，每一位数字与权重相乘后的总和
 	#     print count    
-	id = id + checkcode[str(count%11)] #总和对11取余数，根据余数映射的验证码字典，得出校验码 
+		id = id + checkcode[str(count%11)] #总和对11取余数，根据余数映射的验证码字典，得出校验码
+
 	return id
 
 
