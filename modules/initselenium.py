@@ -363,15 +363,7 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 
 	#time.sleep(3)
 
-	try:   ##关闭页面是否出现异常,没有任何捕获意义
-		browser.close()
-	except:
-		pass
-
-	try:
-		browser.quit()
-	except:
-		pass
+	browser.quit()
 
 		
 	####

@@ -139,8 +139,10 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 		lastele=browser.find_element_by_xpath(xpath)
 		location = lastele.location
 
-	recordpic(browser,location)
+	#展现操作位置
+	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
 
+	recordpic(browser,location)
 
 	## 页面中认为的焦点移到对应的元素上方, 减少误触, 并且模拟实际焦点情况
 	action = ActionChains(browser)
@@ -154,16 +156,15 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	browser.set_page_load_timeout(timeouts)
 
 
-	#展现操作位置
-	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
-
-
 	try:     ### 出问题则重试
 		lastele.click()
 	except:    ### 不仅仅是TimeoutException 的情况  
 		#traceback.print_exc()
 		#print("Error in:" + xpath)
 		clicks(browser,xpath)    ## 再次尝试, 这里不排除会在这里出现问题, 比如上一步点击后, 原元素已经找不到了,  今后考虑可以使用 url, 再次失败则 log
+
+	#删除展现操作位置
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
 
 
 	# 返回页面载入时间
@@ -257,6 +258,8 @@ def send_keys(browser,xpath, value):
 	js="var q=document.documentElement.scrollTop=" + str(y) +";"
 	browser.execute_script(js)
 
+	#展现操作位置
+	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
 
 	## 录像抓图
 	recordpic(browser,location)
@@ -277,10 +280,6 @@ def send_keys(browser,xpath, value):
 		pass
 
 
-	#展现操作位置
-	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
-
-
 	if sys.version_info.major!=3:   ## python2 编码问题
 		reload( sys )
 		sys.setdefaultencoding('utf-8')   ##必须使用, 否则偶尔出错, 原因未知
@@ -292,6 +291,9 @@ def send_keys(browser,xpath, value):
 
 	## 操作之后的录像抓图
 	recordpic(browser,location)
+
+	#删除展现操作位置
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
 
 
 #########  click_enter          # 另一种点击, 通过转到焦点后回车,  适用于一些能找到元素,  click 点击无效的情况
@@ -335,7 +337,7 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 
     # 向下滑动直到找到元素(如果有滑块)
 	try:
-		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+		browser.execute_script("arguments[0].scrollIntoView(true);",lastele)
 	except:
 		pass
 
@@ -368,6 +370,9 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 	js="var q=document.documentElement.scrollTop=" + str(y) +";"
 	browser.execute_script(js)   
 
+	#展现操作位置
+	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
+
 	## 录像抓图
 	recordpic(browser,location)
 
@@ -379,9 +384,6 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 		pass
 
 
-	#展现操作位置
-	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
-
 	# 操作
 	select = Select(browser.find_element_by_xpath(xpath))
 	select.select_by_value(value)
@@ -389,6 +391,9 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 
 	## 操作之后的录像抓图
 	recordpic(browser,location)
+
+	#删除展现操作位置
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
 
 
 
@@ -419,7 +424,7 @@ def clicks_multi_list(browser,inputxpath, comboboxxpath, ids):
 
     # 向下滑动直到找到元素(如果有滑块)
 	try:
-		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+		browser.execute_script("arguments[0].scrollIntoView(true);",lastele)
 	except:
 		pass
 
@@ -538,7 +543,7 @@ def exists(browser,xpath,timesouts):
 
 	    # 向下滑动直到找到元素(如果有滑块)
 		try:
-			browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+			browser.execute_script("arguments[0].scrollIntoView(true);",lastele)
 		except:
 			pass
 
@@ -546,9 +551,9 @@ def exists(browser,xpath,timesouts):
 		WebDriverWait(browser, timesouts).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())
 
 	except:
-	    	return(0)
+	    return(0)
 	else:
-	    	return(1)   #存在
+	    return(1)   #存在
 
 
 
@@ -668,7 +673,7 @@ def getvalues(browser,xpath,waittime=20):
 
     # 向下滑动直到找到元素(如果有滑块)
 	try:
-		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+		browser.execute_script("arguments[0].scrollIntoView(true);",lastele)
 	except:
 		pass
 
@@ -701,14 +706,17 @@ def getvalues(browser,xpath,waittime=20):
 	js="var q=document.documentElement.scrollTop=" + str(y) +";"
 	browser.execute_script(js)   
 
+	# 展现操作位置
+	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
+
 	## 录像抓图
 	recordpic(browser,location)
 
-	# 展现操作位置
-	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
-
 	# 得到
-	values=browser.find_element_by_xpath(xpath).text   
+	values=browser.find_element_by_xpath(xpath).text
+
+	#删除展现操作位置
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
 
 	return(values)
 
@@ -729,7 +737,7 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 
     # 向下滑动直到找到元素(如果有滑块)
 	try:
-		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+		browser.execute_script("arguments[0].scrollIntoView(true);",lastele)
 	except:
 		pass
 
@@ -769,10 +777,13 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 
 
 	#展现操作位置
-	browser.execute_script("arguments[0].style.border=\"5px solid red\";", lastele)
+	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
 
 	## 录像抓图
 	recordpic(browser,location)
+
+	#删除展现操作位置
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
 
 	## 截图插入报告
 	insertthepic(browser,location)
@@ -952,7 +963,7 @@ def acceptbyalert_beforedo_ghostdriver(browser):
 
 def is_page_loaded(browser):
 
-	if browser.execute_script("return document.readyState") == "complete":
+	if browser.execute_script("return document.readyState;") == "complete":
 		return True
 	else:
 		return False
