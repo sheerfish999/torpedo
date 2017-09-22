@@ -127,8 +127,21 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report , get_type):
 	reports=reports.strip('\n')
 	reportf.close()
 
-	if str(reports)!="0":
+	if str(reports)!="0":  ### 进行记录报告
+
 		reportit.documents.doc=reportit.opendoc()
+
+		##### windows 下 psr 辅助操作记录，selnium 之外记录一些内容操作
+		if platform.system()=="Windows":
+
+			os.system("psr.exe /stop")
+
+			paths=os.getcwd()    #绝对路径  , os.getcwd()  代替  sys.path[0]
+			outputpath="\"" + paths +"\\reports\\psrassist.zip\""
+			cmd="psr.exe /start /gui 0 /output " + outputpath
+
+			#os.system(cmd)  # 阻塞
+			os.popen(cmd)
 
 
 	##########  清空附件列表文件
@@ -327,8 +340,13 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 	reports=reports.strip('\n')
 	reportf.close()
 
-	if str(reports)!="0":
+	if str(reports)!="0":  ##  进行记录
 		reportit.closedoc(savename)
+
+		##### windows 下 psr 辅助操作记录，selnium 之外记录一些内容操作
+		if platform.system()=="Windows":
+			os.system("psr.exe /stop")
+
 
 	##################  发送邮件
 
