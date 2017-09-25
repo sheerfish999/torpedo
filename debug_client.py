@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import socket
 
+sys.path.append(sys.path[0] + "/modules/")    #python 2.7 对   modules.  的方式兼容不好
 from frame import *   #### 用于载入变量设置和业务用例
 
 ##### 载入配置变量

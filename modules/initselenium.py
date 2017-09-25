@@ -40,28 +40,30 @@ from frame import *   #### 用于载入变量设置和业务用例
 
 def remote_cmd(socks,browser):
 
-	connection,address = socks.accept()
+	while True:
 
-	try:
-		data=""
-		data=connection.recv(1024)
-	except:
-		traceback.print_exc()
-
-	if data:
-
-		msgdata=data
-		msgdata=msgdata.decode('utf-8').strip('\n')   
-		msgdata=msgdata.strip('\r')
-
-		#print(msgdata)
+		connection,address = socks.accept()
 
 		try:
-			exec(msgdata)
+			data=""
+			data=connection.recv(1024)
 		except:
 			traceback.print_exc()
 
-		connection.close()
+		if data:
+
+			msgdata=data
+			msgdata=msgdata.decode('utf-8').strip('\n')   
+			msgdata=msgdata.strip('\r')
+
+			#print(msgdata)
+
+			try:
+				exec(msgdata)
+			except:
+				traceback.print_exc()
+
+			connection.close()
 
 
 ############################################   初始化环境的判断
