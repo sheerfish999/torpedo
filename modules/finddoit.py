@@ -980,6 +980,20 @@ def wait_for_page_load(browser, freq=5):
 		time.sleep(freq)
 
 
+######### 临时显示元素位置
+
+def show_where(browser,xpath):
+
+	lastele=browser.find_element_by_xpath(xpath)
+
+  # 向下滑动直到找到元素(如果有滑块)
+	try:
+		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
+	except:
+		pass
+		
+	#展现操作位置
+	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)	
 
 
 
