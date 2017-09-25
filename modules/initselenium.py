@@ -189,8 +189,10 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type, d
 	socks.bind(("0.0.0.0",debug_port)) 
 	socks.listen(500)
 
+	global thread_remote_cmd
 	thread_remote_cmd =threading.Thread(target=remote_cmd,args=(socks,browser,))
-	thread_remote_cmd.start()	
+	thread_remote_cmd.setDaemon(True)  ### 不检查即可退出
+	thread_remote_cmd.start()
 
 
 	##效率计算
