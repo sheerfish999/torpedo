@@ -46,7 +46,7 @@ if __name__ == '__main__':
 			print(u"#### 识别为服务器脚本模式") 
 			get_type=5   # 转为无头  phantomjs
 	
-	(browser,timestart)=initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type)    ###   每个业务流脚本都需要初始化一次
+	(browser,timestart)=initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type, degbug_host, debug_port)   ###   每个业务流脚本都需要初始化一次
 
 	## 记录受测浏览器类型（供兼容测试）
 

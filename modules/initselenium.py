@@ -66,7 +66,7 @@ def remote_cmd(socks,browser):
 
 ############################################   初始化环境的判断
 
-def initdriver(dockerinitsh, remotedriverip, get_record, get_report , get_type):
+def initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type, degbug_host, debug_port):
 
 	####  将模式保存到文件,便于根据该情况进行判断
 	os.system("echo " + str(get_type) + " > drivertype")
