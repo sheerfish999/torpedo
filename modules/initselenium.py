@@ -6,6 +6,9 @@ import os,time,datetime,sys
 import subprocess
 import traceback
 
+import socket
+import threading
+
 from selenium import webdriver    
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
@@ -30,6 +33,36 @@ import platform
 
 
 from frame import *   #### 用于载入变量设置和业务用例
+
+
+#################  远程调试模式
+
+
+def remote_cmd(socks,browser):
+
+	connection,address = socks.accept()
+
+	try:
+		data=""
+		data=connection.recv(1024)
+	except:
+		traceback.print_exc()
+
+	if data:
+
+		msgdata=data
+		msgdata=msgdata.decode('utf-8').strip('\n')   
+		msgdata=msgdata.strip('\r')
+
+		#print(msgdata)
+
+		try:
+			exec(msgdata)
+		except:
+			traceback.print_exc()
+
+		connection.close()
+
 
 ############################################   初始化环境的判断
 
@@ -147,6 +180,17 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report , get_type):
 	##########  清空附件列表文件
 	attachlist=open('attachlist','w')   ## 邮件附件清单文件
 	attachlist.close()
+
+
+	#########  开启远程调试模式
+
+	socks = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+	socks.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)   # 端口重用, 同一进程内有效
+	socks.bind(("0.0.0.0",debug_port)) 
+	socks.listen(500)
+
+	thread_remote_cmd =threading.Thread(target=remote_cmd,args=(socks,browser,))
+	thread_remote_cmd.start()	
 
 
 	##效率计算

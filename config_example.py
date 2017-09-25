@@ -52,6 +52,11 @@ else:
 
 ######
 
+## 用于动态调试的地址   执行：debug_client.py   调试：debug_content.py
+degbug_host="127.0.0.1"
+debug_port=18000
+
+######
 
 
 ## 容器或远程地址,  可以适应不同的情况,  当不使用容器或远程时, 这些参数无效 

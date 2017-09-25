@@ -92,6 +92,12 @@ def delete_files(curr_dir, ext):
 
 
 
+######### 临时断点当前代码，用于远程调试
+
+def pause():
+
+	while True:
+		pass
 
 
 
