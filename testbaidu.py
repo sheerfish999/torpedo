@@ -33,7 +33,7 @@ def searchbaidu(browser,testUrl):
 	reportit.logs(u"框架功能测试",  u"百度操作"  ,  u"操作预期" ,  u"操作结果"  ,1)
 
 	
-
+	#pause()  ## 可用于远程调试
 
 
 

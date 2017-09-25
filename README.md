@@ -39,6 +39,9 @@
 	get_type 指定浏览器驱动类型，方便进行兼容测试
 
 
+### 6） 远程动态调试支持:
+	设定 degbug_host 以及 debug_port
+	动态修改 debug_content.py 执行 debug_client.py 完成调试
 
 # 安装：
 

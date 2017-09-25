@@ -6,6 +6,8 @@
 
 browser.get("http://www.baidu.com")
 
+show_where(browser,".//*[@id='su']")
+
 
 
 
