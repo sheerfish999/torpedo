@@ -63,6 +63,14 @@ def remote_cmd(socks,browser):
 			except:
 				traceback.print_exc()
 
+				backlog=traceback.format_exc()
+				try:
+					connection.send(bytes(backlog, encoding = "utf8")) 
+				except:
+					pass
+
+
+
 			connection.close()
 
 

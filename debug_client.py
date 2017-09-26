@@ -18,6 +18,15 @@ cmdstr=openfiles("debug_content.py")
 cmd=bytes(cmdstr,encoding='utf-8')
 
 mysocket.send(cmd) 
+
+try:
+	data=""
+	data=str(mysocket.recv(20480),encoding = "utf-8")
+except:
+	pass
+
+print(data)
+
 mysocket.close()
 
 
