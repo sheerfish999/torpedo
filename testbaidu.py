@@ -34,7 +34,7 @@ def searchbaidu(browser,testUrl):
 
 	
 	#pause()  ## 中断后可用于远程调试
-	#unpause()  ## 继续运行
+
 
 
 

@@ -107,6 +107,9 @@ def pause():
 			break
 
 
+	debug_thread_tag=""
+	
+
 def unpause():
 
 	global debug_thread_tag

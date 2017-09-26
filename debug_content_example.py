@@ -9,5 +9,5 @@ browser.get("http://www.baidu.com")
 show_where(browser,".//*[@id='su']")
 
 
-
+#unpause()  ## 继续运行
 
