@@ -93,11 +93,26 @@ def delete_files(curr_dir, ext):
 
 
 ######### 临时断点当前代码，用于远程调试
+## 来自网络调试线程函数，利用公共标记位进行处理
+
+debug_thread_tag=""      # 网络调试进程获得内部消息的标记位，供各个函数临时处理
 
 def pause():
 
+	global debug_thread_tag
+
 	while True:
-		pass
+
+		if debug_thread_tag=="unpause":
+			break
+
+
+def unpause():
+
+	global debug_thread_tag
+
+	debug_thread_tag="unpause"
+
 
 
 
