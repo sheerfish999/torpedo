@@ -9,6 +9,12 @@ import random
 from randomid import *    #####  生成各种随机量唯一值
 from frame import *         #####  取系统环境变量
 
+try:
+	sys.path.append(sys.path[0] + "/../")   # 涉及一些特殊情况的路径包含，比如调试模式
+except:
+	pass
+
+
 ################################################  测试的业务流
 
 testName="test"  ## 用于快速测试框架基本功能.   如用例名称为  test.py 则  testName="test"

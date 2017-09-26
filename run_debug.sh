@@ -1,5 +1,7 @@
 #!/bin/bash
 
-python debug_client.py
+python modules/debug_client.py
+
+
 
 
