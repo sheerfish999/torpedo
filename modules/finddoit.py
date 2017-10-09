@@ -164,7 +164,8 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 		clicks(browser,xpath)    ## 再次尝试, 这里不排除会在这里出现问题, 比如上一步点击后, 原元素已经找不到了,  今后考虑可以使用 url, 再次失败则 log
 
 	#删除展现操作位置
-	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
 
 
 	# 返回页面载入时间
@@ -282,7 +283,7 @@ def send_keys(browser,xpath, value):
 
 	if sys.version_info.major!=3:   ## python2 编码问题
 		reload( sys )
-		sys.setdefaultencoding('utf-8')   ##必须使用, 否则偶尔出错, 原因未知
+		sys.setdefaultencoding('utf-8')
 		valuestr=str(value).decode('utf-8')
 		browser.find_element_by_xpath(xpath).send_keys(valuestr)
 	else:
@@ -293,7 +294,8 @@ def send_keys(browser,xpath, value):
 	recordpic(browser,location)
 
 	#删除展现操作位置
-	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
 
 
 #########  click_enter          # 另一种点击, 通过转到焦点后回车,  适用于一些能找到元素,  click 点击无效的情况
@@ -393,7 +395,8 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 	recordpic(browser,location)
 
 	#删除展现操作位置
-	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
 
 
 
@@ -716,7 +719,8 @@ def getvalues(browser,xpath,waittime=20):
 	values=browser.find_element_by_xpath(xpath).text
 
 	#删除展现操作位置
-	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
 
 	return(values)
 
@@ -783,7 +787,8 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 	recordpic(browser,location)
 
 	#删除展现操作位置
-	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
 
 	## 截图插入报告
 	insertthepic(browser,location)

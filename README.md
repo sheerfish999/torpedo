@@ -41,7 +41,7 @@
 
 ### 6） 远程动态调试支持:
 	设定 degbug_host 以及 debug_port
-	动态修改 debug_content.py 执行 debug_client.py 完成调试
+	动态修改 debug_content.py 执行 run_debug.sh / run_debug.bat 完成调试
 
 # 安装：
 
