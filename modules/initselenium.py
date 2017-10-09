@@ -35,13 +35,35 @@ import platform
 from frame import *   #### 用于载入变量设置和业务用例
 
 
-#################  远程调试模式
+################################  远程调试模式
+
+#  重写输出缓冲的类，用于给调试端返回信息
+class TextArea(object):
+
+	lastbuffer = ""
+
+	def __init__(self):  
+		self.buffer = "" 
+
+	def write(self, *args, **kwargs):
+
+		self.buffer=args
+		self.lastbuffer=self.buffer
+
+		text_area, sys.stdout = sys.stdout, stdout    ## 释放
+		print(self.buffer[0], end='')
+		connection.send(bytes(self.buffer[0], encoding = "utf8"))  	 ### 正常情况远程提供输出 
+		sys.stdout = self			## 收集
+
+	def flush(self):
+		pass
 
 
 def remote_cmd(socks,browser):
 
 	while True:
 
+		global connection   ### 连接提供给其他方法，以供对调试客户端输出信息使用
 		connection,address = socks.accept()
 
 		try:
@@ -58,18 +80,24 @@ def remote_cmd(socks,browser):
 
 			#print(msgdata)
 
+			global stdout    ### 输出进行缓冲控制，以便两端均能获得输出信息
+			stdout = sys.stdout  
+			sys.stdout = TextArea()    ## 收集缓冲
+
 			try:
 				exec(msgdata)
 			except:
+				text_area, sys.stdout = sys.stdout, stdout    ## 停止收集缓冲
 				traceback.print_exc()
 
 				backlog=traceback.format_exc()
 				try:
-					connection.send(bytes(backlog, encoding = "utf8")) 
+					connection.send(bytes(backlog, encoding = "utf8"))         ### 远程提供异常信息
 				except:
 					pass
 
 
+			text_area, sys.stdout = sys.stdout, stdout    ## 停止收集缓冲
 
 			connection.close()
 

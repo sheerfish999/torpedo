@@ -16,15 +16,22 @@ cmdstr=openfiles("debug_content.py")
 
 cmd=bytes(cmdstr,encoding='utf-8')
 
-mysocket.send(cmd) 
+mysocket.send(cmd)
 
-try:
-	data=""
-	data=str(mysocket.recv(20480),encoding = "utf-8")
-except:
-	pass
 
-print(data)
+while 1:
+	try:
+		data=""
+		data=str(mysocket.recv(20480),encoding = "utf-8")
+
+		if data:
+			print(data, end='')
+		else:
+			break   ## 为空 则代表断开
+
+	except:
+		pass
+
 
 mysocket.close()
 

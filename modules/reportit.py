@@ -10,10 +10,10 @@ import platform
 sysstr = platform.system()   
 
 if sysstr == "Linux":
-        import hues   ## pip install hues
+	import hues   ## pip install hues
 
 if sysstr == "Windows":
-        import winhues as hues
+	import winhues as hues
 
 
 sys.path.append(os.getcwd() + "/modules/")   #python 2.7 对   modules.  的方式兼容不好;    os.getcwd()   取代  sys.path[0] 

@@ -551,9 +551,9 @@ def exists(browser,xpath,timesouts):
 		WebDriverWait(browser, timesouts).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())
 
 	except:
-	    return(0)
+		return(0)
 	else:
-	    return(1)   #存在
+		return(1)   #存在
 
 
 
