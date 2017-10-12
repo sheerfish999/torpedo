@@ -14,10 +14,8 @@ pip install -U python-xlib
 pip install -U pillow
 
 
-rem zbarlight: https://gist.github.com/Zephor5/aea563808d80f488310869b69661f330
-
-
-pip install -U zbarlight
 pip install psutil
+
+rem zbarlight:  read "support/zbarlight in windows.txt"  how to install it
 
 
