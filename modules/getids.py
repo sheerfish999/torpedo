@@ -24,8 +24,11 @@ import platform
 
 # pip install zbarlight , yum install python-devel zbar-devel
 ## windows zbarlight 支持较为复杂，可查阅 "support/zbarlight in windows.txt"
-import zbarlight   
 
+try:
+	import zbarlight   
+except:
+	pass
 
 #import qrcode ## pip install PyQRCode  这个是识别
 #import zbar   ## pacman -S zabr , pip install zbar.   python3 支持不好

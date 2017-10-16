@@ -74,15 +74,8 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	wait_for_page_load(browser)
 
 	## 等待元素出现
-	
 	timestart = datetime.datetime.now()
 	
-	if alerts==1:   #忽略弹出窗体, 如果出现就 accept
-		try:
-			WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())    
-		except UnexpectedAlertPresentException:
-			maybealert(browser, 0.5)
-
 
 	## 等待元素出现
 	browser.implicitly_wait(waittime)
@@ -95,6 +88,13 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	except:
 		pass
 
+	try:
+		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())    
+	except UnexpectedAlertPresentException:
+		if alerts==1:   #忽略弹出窗体, 如果出现就 accept
+			maybealert(browser, 0.5)
+	except:
+		timeoutlog(browser,xpath, waittime)		
 
 	## 等待元素可定位
 	try:

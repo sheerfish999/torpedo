@@ -10,18 +10,23 @@ from frame import *   #### 用于载入变量设置和业务用例
 config=openfiles("config.py")
 exec(config)
 
-mysocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-mysocket.connect((degbug_host,debug_port))
-
-cmdstr=openfiles("debug_content.py")
-
-cmd=bytes(cmdstr,encoding='utf-8')
-
-mysocket.send(cmd)
-
 
 while 1:
 	try:
+
+		try:  #网络类错误直接退出
+			mysocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+			mysocket.connect((degbug_host,debug_port))
+		except:
+			traceback.print_exc() 
+			break
+
+		## send
+		cmdstr = input("Selenium Command >>> ")
+		cmd=bytes(cmdstr,encoding='utf-8')
+		mysocket.send(cmd)
+
+		## recv
 		data=""
 		data=str(mysocket.recv(20480),encoding = "utf-8")
 
@@ -32,6 +37,8 @@ while 1:
 
 	except:
 		traceback.print_exc() 
+
+	mysocket.close()
 
 
 mysocket.close()
