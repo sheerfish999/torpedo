@@ -17,6 +17,8 @@ pip install -U zbarlight
 
 #apt install xdg-utils xvfb x11-xkb-utils  # debian
 yum install xdg-utils xorg-x11-server-Xvfb xorg-x11-xkb-utils # centos
-pip install xvfbwrapper
+pip install -U xvfbwrapper
+
+pip install -U imagehash
 
 

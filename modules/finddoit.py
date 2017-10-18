@@ -164,8 +164,8 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 		clicks(browser,xpath)    ## 再次尝试, 这里不排除会在这里出现问题, 比如上一步点击后, 原元素已经找不到了,  今后考虑可以使用 url, 再次失败则 log
 
 	#删除展现操作位置
-	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
-	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")  #会影响图像比较
 
 
 	# 返回页面载入时间
@@ -294,8 +294,8 @@ def send_keys(browser,xpath, value):
 	recordpic(browser,location)
 
 	#删除展现操作位置
-	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
-	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")  #会影响图像比较
 
 
 #########  click_enter          # 另一种点击, 通过转到焦点后回车,  适用于一些能找到元素,  click 点击无效的情况
@@ -395,8 +395,8 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 	recordpic(browser,location)
 
 	#删除展现操作位置
-	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
-	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")  #会影响图像比较
 
 
 
@@ -663,7 +663,7 @@ def getlinkxpath(linkstr, eletypes="a",parentPath="//"):    # eletypes 默认元
 
 #########  getvalues     取值的封装
 
-def getvalues(browser,xpath,waittime=20):
+def getvalues(browser,xpath,waittime=20,types="text"):   # types 为所需获得的属性，默认为中间的文本
 
 
 	## 等待页面完全载入完成
@@ -715,12 +715,16 @@ def getvalues(browser,xpath,waittime=20):
 	## 录像抓图
 	recordpic(browser,location)
 
+
 	# 得到
-	values=browser.find_element_by_xpath(xpath).text
+	if types=="text":
+		values=lastele.text
+	else:
+		values=lastele.get_attribute(types)
 
 	#删除展现操作位置
-	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
-	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")  #会影响图像比较
 
 	return(values)
 
@@ -787,8 +791,8 @@ def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表�
 	recordpic(browser,location)
 
 	#删除展现操作位置
-	#browser.execute_script("arguments[0].style.border=\"\";", lastele)
-	browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")
+	browser.execute_script("arguments[0].style.border=\"\";", lastele)
+	#browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")  #会影响图像比较
 
 	## 截图插入报告
 	insertthepic(browser,location)

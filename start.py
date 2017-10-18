@@ -92,21 +92,29 @@ if __name__ == '__main__':
 
 			if get_type!=15 and get_type!=25:      #  htmlunit 不具备抓图模式
 				errorjpg="./logs/error"+ times +".png"
-				browser.save_screenshot(errorjpg)
+
+				try: #避免 driver 已经退出
+					browser.save_screenshot(errorjpg)
+				except:
+					print(u"驱动可能已经异常退出，无法保存最后截图.")
+
 				time.sleep(1)   #等待文件生成
 
-			 #异常存储到文件
-			errorlog='./logs/error'+ times +'.log'
-			traceback.print_exc(file=open(errorlog,"w"))  
+			try: #避免 driver 已经退出
+				 #异常存储到文件
+				errorlog='./logs/error'+ times +'.log'
+				traceback.print_exc(file=open(errorlog,"w"))
 
-			#当时的页面源码存储到文件
-			source=browser.page_source
-			sourcelog='./logs/source'+ times +'.log'
-			#fo = open(sourcelog, "w",encoding = 'utf-8')
-			fo = codecs.open(sourcelog, "w","UTF-8")
-			source=source.replace(u'\xa0', u' ')  # 页面的一些特殊字符会影响写入
-			fo.writelines(source)
-			fo.close()
+				#当时的页面源码存储到文件
+				source=browser.page_source
+				sourcelog='./logs/source'+ times +'.log'
+				#fo = open(sourcelog, "w",encoding = 'utf-8')
+				fo = codecs.open(sourcelog, "w","UTF-8")
+				source=source.replace(u'\xa0', u' ')  # 页面的一些特殊字符会影响写入
+				fo.writelines(source)
+				fo.close()
+			except:
+				print(u"驱动可能已经异常退出，无法保存最后网页代码.")			
 
 			errstrings=u"测试提前结束, 请查阅 logs目录: " + errorjpg  + u" 及 " + errorlog 
 			print(errstrings + u" 错误触发操作位置:")

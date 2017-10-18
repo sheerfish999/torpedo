@@ -4,6 +4,7 @@ import sys,os
 import codecs
 
 import glob
+import time
 
 ########################  本脚本用于载入变量设置和业务用例 等通用操作
 
@@ -105,6 +106,8 @@ def pause():
 
 		if debug_thread_tag=="unpause":
 			break
+
+		time.sleep(2)  # 否则会占用大量的cpu时间（同局锁）
 
 
 	debug_thread_tag=""

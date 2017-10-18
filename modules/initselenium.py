@@ -25,6 +25,7 @@ sys.path.append(sys.path[0] + "/modules/")    #python 2.7 对   modules.  的方
 
 from record import *    ##  用于录像
 from finddoit import *    ##  用于基础动作
+from imgext import *    ## 用于图像扩展操作
 
 ## 用于报告, 使用公共变量
 import reportit
@@ -206,7 +207,7 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type, d
 		if platform.system()=="Windows":
 
 			os.system("psr.exe /stop")
-
+			
 			paths=os.getcwd()    #绝对路径  , os.getcwd()  代替  sys.path[0]
 			outputpath="\"" + paths +"\\reports\\psrassist.zip\""
 			cmd="psr.exe /start /gui 0 /output " + outputpath
@@ -232,7 +233,8 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type, d
 	thread_remote_cmd.setDaemon(True)  ### 不检查即可退出
 	thread_remote_cmd.start()
 
-
+	
+	
 	##效率计算
 	timestart = datetime.datetime.now()
 	return(browser,timestart)
@@ -430,6 +432,7 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 		##### windows 下 psr 辅助操作记录，selnium 之外记录一些内容操作
 		if platform.system()=="Windows":
 			os.system("psr.exe /stop")
+			os.system("taskkill /F /IM psr.exe")
 
 
 	##################  发送邮件
@@ -465,8 +468,15 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 
 	#time.sleep(3)
 
-	browser.quit()
+	try:  #可能已经异常退出
+		browser.close()
+	except:
+		pass
 
+	try:
+		browser.quit()
+	except:
+		pass
 		
 	####
 

@@ -39,18 +39,25 @@
 	get_type 指定浏览器驱动类型，方便进行兼容测试
 
 
-### 6） 远程动态调试支持:
+### 6） 测试过程中远程动态调试支持:
+
 	设定 degbug_host 以及 debug_port
 	修改 debug_content.py 执行 debug_content.sh / debug_content.bat 完成动态调试
 	或直接使用单行命令行模式： debug_cmdline.sh / debug_cmdline.bat
 
+### 7） 扩展的按图索骥功能：
+
+	根据特殊需要。根据图片查找位置，并能够进行输入和点击
+
 # 安装：
 
 ## 1)  基础安装
+
 	setup.sh  linux
 	setup.bat  windows
 
 ## 2)  配置文件
+
 	config_example.py 更名为 config.py
 
 
