@@ -16,6 +16,9 @@ import reportit				## 用于报告, 使用公共变量
 
 def searchbaidu(browser,testUrl):
 
+
+	### 示例一  基本操作  并生成报告（需要配置文件打开报告模式）
+
 	loads(browser,testUrl)  
 
 	send_keys(browser,".//*[@id='kw']","123")   #正确情况
@@ -32,8 +35,31 @@ def searchbaidu(browser,testUrl):
 	#  动作名称/目的, 前置条件, 预期, 实际结果, 判定
 	reportit.logs(u"框架功能测试",  u"百度操作"  ,  u"操作预期" ,  u"操作结果"  ,1)
 
+
+
+	### 示例二   按图搜索
+
+	loads(browser,"https://www.baidu.com/")
+
+	#imgele=getpic_pos_fromdriver(browser,"./test/getimg2.png")    # 整个页面中搜索
+	imgele=getpic_pos_fromdriver(browser,"./test/getimg2.png",block=3,parent_element_xpath="//*[@id='head']/div/div[1]/div")  # 某个范围下搜索
+
+	imgele.click()
+
+
+
+	### 示例三   动态调试
+
+	"""
+	修改 debug_content.py 执行 debug_content.sh / debug_content.bat 完成动态调试
+	或直接使用单行命令行模式： debug_cmdline.sh / debug_cmdline.bat
+
+	"""
+
+	# pause()  ## 中断后可用于远程调试
+
 	
-	#pause()  ## 中断后可用于远程调试
+
 
 
 

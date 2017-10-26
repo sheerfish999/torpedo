@@ -20,7 +20,7 @@ from finddoit import *
 
 """
 在 img2 中查找 img1 ;  
-block 查找像素跳跃度，越低越慢精度越高. 一般按钮需要3-4，有时更高能准确识别则可以使用更高，这个数字和被识别的对象的大小有关，越大越容易识别，块往往可越大; 
+block 查找像素跳跃度，越低越慢精度越高. 一般按钮需要3-4，有时更高能准确识别但时间更长，这个数字和被识别的对象的大小有关，越大、像素越明显越容易识别，块跳跃往往可越大; 
 pre 可接受精度, 最大为1 完全匹配，最低为0，一般默认在0.8以上才能认为相同，在可接受精度内没有发现，则返回为 (-1,-1), 否则返回最优的坐标 (x,y)， 默认为 0.8
 zoom 缩放提高效率比，越大速度越快，识别率越低, 默认>=1 , 完全不压缩则 =1
 onlyonce 是否选择第一个达到匹配的对象，默认为1 速度最快但可能出错， 反之为0，表示选择范围内最匹配对象 
@@ -160,29 +160,56 @@ class img_ele():
 				pass
 
 
-def getpic_pos_fromdriver(browser,imgfile,block=4,pre=0.8,zoom=1.2,onlyonce=1):
+# parent_element 是父对象的xpath, 如果能找到这个对象将极大提升查找对应图片的查找速度
+def getpic_pos_fromdriver(browser,imgfile,block=4,pre=0.8,zoom=1.2,onlyonce=1, parent_element_xpath=""):
 
 	wholepic="./logs/wholeget.png"
 	browser.save_screenshot(wholepic)
+
+	left=0
+	top=0
+
+	if parent_element_xpath!="":   # 某个元素范围内查找
+
+		### 可能是隐形范围，不需要 located displayed
+		#lastele=waitfor_ele(browser,parent_element_xpath)
+		#location=showfor_record(browser,lastele,parent_element_xpath)
+
+		lastele=browser.find_element_by_xpath(parent_element_xpath)
+		location = lastele.location		
+
+
+		im = Image.open(wholepic)
+
+		size = lastele.size
+		left = location['x']
+		top = location['y']
+		right = left + size['width']
+		bottom = location['y'] + size['height']
+		im = im.crop((left,top,right,bottom))
+		im.save(wholepic)	
+
 
 	img1=Image.open(imgfile)
 	img2=Image.open(wholepic)
 
 	(x,y)=getpic_pos(img1,img2,block,pre,zoom,onlyonce)
 
-	(x1,y1)=img1.size   # 大图片
+	if x!=-1:  # 否则返回空元素
 
-	imgele=img_ele()
-	imgele.left=x
-	imgele.top=y
-	imgele.width=x1
-	imgele.height=y1
-	imgele.driver=browser
+		(x1,y1)=img1.size   # 大图片
 
-	tempid=show_where_imgele(browser,imgele)   # 显示并 返回 id
-	imgele.xpath="//*[@id='"+tempid + "']"
+		imgele=img_ele()
+		imgele.left=x+left   # 加上相对位置
+		imgele.top=y+top   # 加上相对位置
+		imgele.width=x1
+		imgele.height=y1
+		imgele.driver=browser
 
-	return imgele
+		tempid=show_where_imgele(browser,imgele)   # 显示并 返回 id
+		imgele.xpath="//*[@id='"+tempid + "']"
+
+		return imgele
 
 
 

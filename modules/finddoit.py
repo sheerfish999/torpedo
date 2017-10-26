@@ -58,29 +58,20 @@ class mouse():   #http://blog.chinaunix.net/uid-52437-id-3068595.html
 
 
 
-#################  一些必要的封装函数.  若使用继承扩展的方法, 情况可能较多, 而且可能会产生混乱,  所以不采用继承
+#################  一些必要的封装函数
 
 
+######### 基础等待
 
-#########  click   按照 xpath 
-
-def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体,  针对一些场景
-
-	waittime=20  ### 元素超时时间
-	timeouts=20  ### 默认页面重试的超时时间, 考虑到情况复杂, 加长时间
-
+#### 查找等待元素出现 并挪到对应位置
+def findfor_ele(browser,xpath,waittime=20,alerts=0):   # alerts==1:   #忽略弹出窗体,  针对一些场景
 
 	## 等待页面完全载入完成
 	wait_for_page_load(browser)
 
 	## 等待元素出现
-	timestart = datetime.datetime.now()
-	
-
-	## 等待元素出现
 	browser.implicitly_wait(waittime)
 	lastele=browser.find_element_by_xpath(xpath)
-
 
     # 向下滑动直到找到元素(如果有滑块)
 	try:
@@ -88,6 +79,25 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	except:
 		pass
 
+	return lastele
+
+
+#### 等待渲染完成
+def waitfor_ele(browser,xpath,waittime=20,alerts=0):   # alerts==1:   #忽略弹出窗体,  针对一些场景
+
+	## 等待元素出现
+	lastele=findfor_ele(browser,xpath,waittime=waittime,alerts=alerts)
+
+	"""
+	#这种判断无效
+	if displayedwait==0 or displayedwait==2:   ## 仍然要判断元素是否已经存在     
+		try:
+			WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath))     # ------  这种判断无效
+		except TimeoutException:
+			timeoutlog(browser,xpath, waittime)
+	"""
+
+	## 等待显示
 	try:
 		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())    
 	except UnexpectedAlertPresentException:
@@ -102,12 +112,11 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	except TimeoutException:
 		timeoutlog(browser,xpath, waittime)
 
-	## 等待元素可点击
-	try:
-		WebDriverWait(browser,waittime).until(expected_conditions.element_to_be_clickable((By.XPATH,xpath)))
-	except TimeoutException:
-		timeoutlog(browser,xpath, waittime)
+	return lastele
 
+
+## 调整到可供录像位置，并标识	
+def showfor_record(browser,lastele,xpath,waittime=20):
 
 	## 最终用于操作的元素位置
 	try:		
@@ -122,9 +131,8 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 		y=0
 
 	js="var q=document.documentElement.scrollTop=" + str(y) +";"
-	browser.execute_script(js)   
+	browser.execute_script(js)
 
-	### 录像抓图
 
 	## 等待元素可再次定位
 	try:
@@ -138,10 +146,36 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 	except:			#### 有可能页面发生了改变 需要重新定位
 		lastele=browser.find_element_by_xpath(xpath)
 		location = lastele.location
+	
 
 	#展现操作位置
 	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
 
+	return location
+
+
+#########  click   按照 xpath 
+
+def clicks(browser,xpath,alert=0,waittime=20):           # alerts==1:   #忽略弹出窗体,  针对一些场景
+
+
+	## 等待元素出现
+	timestart = datetime.datetime.now()
+	
+	## 等待出现并渲染完成
+	lastele=waitfor_ele(browser,xpath,alerts=alert,waittime=waittime)
+
+	## 等待元素可点击
+	try:
+		WebDriverWait(browser,waittime).until(expected_conditions.element_to_be_clickable((By.XPATH,xpath)))
+	except TimeoutException:
+		timeoutlog(browser,xpath, waittime)
+
+
+	## 调整到可供录像位置，并标识
+	location=showfor_record(browser,lastele,xpath,waittime)	
+
+	### 录像抓图
 	recordpic(browser,location)
 
 	## 页面中认为的焦点移到对应的元素上方, 减少误触, 并且模拟实际焦点情况
@@ -153,7 +187,7 @@ def clicks(browser,xpath,alerts=0):           # alerts==1:   #忽略弹出窗体
 		pass
 
 	 # 操作
-	browser.set_page_load_timeout(timeouts)
+	browser.set_page_load_timeout(waittime)
 
 
 	try:     ### 出问题则重试
@@ -181,45 +215,8 @@ def send_keys(browser,xpath, value):
 	#  获得 driver 属性
 	drivertypes = drivertype()
 
-	waittime=20
-
-	## 等待页面完全载入完成
-	wait_for_page_load(browser)
-
-	## 等待元素出现
-	browser.implicitly_wait(waittime)
-	lastele=browser.find_element_by_xpath(xpath)
-
-    # 向下滑动直到找到元素(如果有滑块)
-	try:
-		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
-	except:
-		pass
-
-
-	## 等待元素出现
-
-	try:
-		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
-	except TimeoutException:
-		timeoutlog(browser,xpath, waittime)
-
-
-	## 等待元素可定位
-	try:
-		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
-	except TimeoutException:
-		timeoutlog(browser,xpath, waittime)
-
-
-	"""
-	#这种判断无效
-	if displayedwait==0 or displayedwait==2:   ## 仍然要判断元素是否已经存在     
-		try:
-			WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath))     # ------  这种判断无效
-		except TimeoutException:
-			timeoutlog(browser,xpath, waittime)
-	"""
+	## 等待出现并渲染完成
+	lastele=waitfor_ele(browser,xpath)
 
 
 	""" 
@@ -244,23 +241,10 @@ def send_keys(browser,xpath, value):
 	delattrbyjs(browser,xpath,"readonly")	
 	#browser.save_screenshot("./logs/runjs.jpg")    # 调试js执行效果
 
-	## 最终用于操作的元素位置
-	try:		
-		location = lastele.location
-	except:			#### 有可能页面发生了改变 需要重新定位
-		lastele=browser.find_element_by_xpath(xpath)
-		location = lastele.location
 
-	#显示位置调整
-	y=location['y']-250
-	if y<0 :
-		y=0
+	## 调整到可供录像位置，并标识	
+	location=showfor_record(browser,lastele,xpath)
 
-	js="var q=document.documentElement.scrollTop=" + str(y) +";"
-	browser.execute_script(js)
-
-	#展现操作位置
-	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
 
 	## 录像抓图
 	recordpic(browser,location)
@@ -302,9 +286,6 @@ def send_keys(browser,xpath, value):
 
 def click_enter(browser,xpath):
 
-	## 等待页面完全载入完成
-	wait_for_page_load(browser) 
-
 	send_keys(browser,xpath,Keys.DOWN) 
 	send_keys(browser,xpath,Keys.ENTER) 
 
@@ -314,10 +295,9 @@ def click_enter(browser,xpath):
 
 def click_action(browser,xpath): 
 
-	## 等待页面完全载入完成
-	wait_for_page_load(browser) 
+	## 等待出现并渲染完成
+	lastele=waitfor_ele(browser,xpath)
 
-	lastele=browser.find_element_by_xpath(xpath)
 	hov = ActionChains(browser).click(lastele)
 	hov.perform()
 
@@ -326,54 +306,11 @@ def click_action(browser,xpath):
 
 def selects(browser,xpath, value):       ########  列表选择 ,  注意  value 可能是里面显示的 txt, 可能是个id ， 要具体看html
 
+	## 等待出现并渲染完成
+	lastele=waitfor_ele(browser,xpath)
 
-	## 等待元素出现
-	waittime=20
-
-	## 等待页面完全载入完成
-	wait_for_page_load(browser)
-
-	## 等待元素出现
-	browser.implicitly_wait(waittime)
-	lastele=browser.find_element_by_xpath(xpath)
-
-    # 向下滑动直到找到元素(如果有滑块)
-	try:
-		browser.execute_script("arguments[0].scrollIntoView(true);",lastele)
-	except:
-		pass
-
-
-	try:
-		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
-	except TimeoutException:
-			timeoutlog(browser,xpath, waittime)
-
-
-	## 等待元素可定位
-	try:
-		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
-	except TimeoutException:
-		timeoutlog(browser,xpath, waittime)
-
-
-	## 最终用于操作的元素位置
-	try:		
-		location = lastele.location
-	except:			#### 有可能页面发生了改变 需要重新定位
-		lastele=browser.find_element_by_xpath(xpath)
-		location = lastele.location
-
-	#显示位置调整
-	y=location['y']-250
-	if y<0 :
-		y=0
-
-	js="var q=document.documentElement.scrollTop=" + str(y) +";"
-	browser.execute_script(js)   
-
-	#展现操作位置
-	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
+	## 调整到可供录像位置，并标识
+	location=showfor_record(browser,lastele,xpath)
 
 	## 录像抓图
 	recordpic(browser,location)
@@ -406,30 +343,13 @@ def selects(browser,xpath, value):       ########  列表选择 ,  注意  value
 def clicks_multi_list(browser,inputxpath, comboboxxpath, ids):
 
 
-	waittime=20  ### 元素超时时间
-
-	## 等待页面完全载入完成
-	wait_for_page_load(browser)
-
-
-	####################
-
 	clicks(browser,inputxpath)
 	list_xpath=comboboxxpath+"/div[" + str(ids) + "]"
 
 
-    # 定位到checkbox
-
+	# 定位到checkbox
 	## 等待元素出现
-	browser.implicitly_wait(waittime)
-	hiddmenu=browser.find_element_by_xpath(list_xpath)
-
-
-    # 向下滑动直到找到元素(如果有滑块)
-	try:
-		browser.execute_script("arguments[0].scrollIntoView(true);",lastele)
-	except:
-		pass
+	lastele=findfor_ele(browser,list_xpath)
 
 	menu=browser.find_element_by_xpath(inputxpath)
 	ActionChains(browser).move_to_element(menu).click(hiddmenu).perform()
@@ -518,7 +438,7 @@ def loads(browser,Url,timeouts=8,alerts=1):   # 默认页面重试的超时时�
 
 	#恢复默认时间, 避免影响元素操作
 	#这个属性会影响点击操作或链接操作后, 页面载入的超时时间判断, 不仅是 get
-	browser.set_page_load_timeout(20)    
+	browser.set_page_load_timeout(20) 
 
 	# 返回页面载入时间
 	timesend = datetime.datetime.now()
@@ -532,7 +452,6 @@ def loads(browser,Url,timeouts=8,alerts=1):   # 默认页面重试的超时时�
 #########  exists   元素存在的时间内即时判断
 
 def exists(browser,xpath,timesouts):
-
 
 	## 等待页面完全载入完成
 	#wait_for_page_load(browser)   #由于目标是时间段内判断，所以不能阻塞
@@ -663,54 +582,13 @@ def getlinkxpath(linkstr, eletypes="a",parentPath="//"):    # eletypes 默认元
 
 #########  getvalues     取值的封装
 
-def getvalues(browser,xpath,waittime=20,types="text"):   # types 为所需获得的属性，默认为中间的文本
+def getvalues(browser,xpath,waittimes=20,types="text"):   # types 为所需获得的属性，默认为中间的文本
 
+	## 等待出现并渲染完成
+	lastele=waitfor_ele(browser,xpath,waittime=waittimes)
 
-	## 等待页面完全载入完成
-	wait_for_page_load(browser) 
-
-
-	## 等待元素出现
-	browser.implicitly_wait(waittime)
-	lastele=browser.find_element_by_xpath(xpath)
-
-    # 向下滑动直到找到元素(如果有滑块)
-	try:
-		browser.execute_script("arguments[0].scrollIntoView(true);",lastele)
-	except:
-		pass
-
-	## 等待元素出现
-	try:
-		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())     
-	except TimeoutException:
-		timeoutlog(browser,xpath, waittime)
-
-
-	## 等待元素可定位
-	try:
-		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
-	except TimeoutException:
-		timeoutlog(browser,xpath, waittime)
-
-
-	## 最终用于操作的元素位置
-	try:		
-		location = lastele.location
-	except:			#### 有可能页面发生了改变 需要重新定位
-		lastele=browser.find_element_by_xpath(xpath)
-		location = lastele.location
-
-	#显示位置调整
-	y=location['y']-250
-	if y<0 :
-		y=0
-
-	js="var q=document.documentElement.scrollTop=" + str(y) +";"
-	browser.execute_script(js)   
-
-	# 展现操作位置
-	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
+	## 调整到可供录像位置，并标识
+	location=showfor_record(browser,lastele,xpath,waittimes)
 
 	## 录像抓图
 	recordpic(browser,location)
@@ -731,61 +609,19 @@ def getvalues(browser,xpath,waittime=20,types="text"):   # types 为所需获得
 
 #########  checks   检查核对动作, 直接进入报告
 
-def checks(browser,xpath,txt,name,waittime=20,include=0):     # include=0, 表示完全匹配; 1 , 部分匹配即可
+def checks(browser,xpath,txt,name,waittimes=20,include=0):     # include=0, 表示完全匹配; 1 , 部分匹配即可
 
 	timestart = datetime.datetime.now()
 
-	## 等待页面完全载入完成
-	wait_for_page_load(browser)
-
-
-	## 等待元素出现
-	browser.implicitly_wait(waittime)
-	lastele=browser.find_element_by_xpath(xpath)
-
-    # 向下滑动直到找到元素(如果有滑块)
-	try:
-		browser.execute_script("arguments[0].scrollIntoView(true);",lastele)
-	except:
-		pass
-
-
-	## 等待元素出现
-	try:
-		WebDriverWait(browser, waittime).until(lambda the_driver: the_driver.find_element_by_xpath(xpath).is_displayed())    
-	except TimeoutException:
-		timeoutlog(browser,xpath, waittime)
-
-
-	## 等待元素可定位
-	try:
-		WebDriverWait(browser, waittime).until(EC.presence_of_element_located((By.XPATH, xpath)))
-	except TimeoutException:
-		timeoutlog(browser,xpath, waittime)
-
+	## 等待出现并渲染完成
+	lastele=waitfor_ele(browser,xpath,waittime=waittimes)
 
 	# 返回页面载入时间
 	timesend = datetime.datetime.now()
 	ret=str(round((timesend-timestart).total_seconds(),2))
 
-	## 最终用于操作的元素位置
-	try:		
-		location = lastele.location
-	except:			#### 有可能页面发生了改变 需要重新定位
-		lastele=browser.find_element_by_xpath(xpath)
-		location = lastele.location
-
-	#显示位置调整
-	y=location['y']-250
-	if y<0 :
-		y=0
-
-	js="var q=document.documentElement.scrollTop=" + str(y) +";"
-	browser.execute_script(js)   
-
-
-	#展现操作位置
-	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)
+	## 调整到可供录像位置，并标识
+	location=showfor_record(browser,lastele,xpath,waittimes)
 
 	## 录像抓图
 	recordpic(browser,location)
@@ -993,13 +829,8 @@ def wait_for_page_load(browser, freq=5):
 
 def show_where(browser,xpath):
 
-	lastele=browser.find_element_by_xpath(xpath)
-
-  # 向下滑动直到找到元素(如果有滑块)
-	try:
-		browser.execute_script("arguments[0].scrollIntoView(true)",lastele)
-	except:
-		pass
+	## 等待出现并渲染完成
+	lastele=waitfor_ele(browser,xpath)
 		
 	#展现操作位置
 	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)	
