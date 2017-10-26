@@ -194,12 +194,9 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type, d
 	###########  uno 文档生成的初始化
 
 	####  获得是否报告的标记位
-	reportf = open("./reportset", "r")   
-	reports = reportf.readline()
-	reports=reports.strip('\n')
-	reportf.close()
+	reports=get_reports_tag()
 
-	if str(reports)!="0":  ### 进行记录报告
+	if reports!=0:  ### 进行记录报告
 
 		reportit.documents.doc=reportit.opendoc()
 
@@ -421,12 +418,9 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 	##################  生成文档
 
 	####  获得是否报告的标记位
-	reportf = open("./reportset", "r")   
-	reports = reportf.readline()
-	reports=reports.strip('\n')
-	reportf.close()
+	reports=get_reports_tag()
 
-	if str(reports)!="0":  ##  进行记录
+	if reports!=0:  ##  进行记录
 		reportit.closedoc(savename)
 
 		##### windows 下 psr 辅助操作记录，selnium 之外记录一些内容操作
@@ -456,7 +450,7 @@ def cleanenv(browser,Urls,timestart,savenamestr,get_type):
 	exec(config)
 
 	### 存在报告标记
-	if str(reports)!="0":
+	if reports!=0:  ##  进行记录
 		sendmaillist(mail_host,mail_user,mail_pass,mail_postfix, u"自动化测试报告 [本报告自动触发,请勿直接回复,疑问请联系测试人员]")	
 
 	##################

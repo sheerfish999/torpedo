@@ -43,6 +43,7 @@ def get_reports_tag():
 	reportf = open("./reportset", "r")   
 	reports = reportf.readline()
 	reports=reports.strip('\n')
+	reports=reports.strip(' ')
 
 	reports=int(reports)
 
@@ -55,9 +56,10 @@ def get_reports_tag():
 
 def get_records_tag():
 
-	recordf = open("./recordset", "r")   
+	recordf = open("./recordset", "r")
 	records = recordf.readline()
 	records=records.strip('\n')
+	records=records.strip(' ')
 
 	records=int(records)
 

@@ -10,6 +10,7 @@ from getids import *    	####  获得各种服务器脚本映射到页面的信�
 from finddoit import *    	#####   用于封装基础的元素判断操作
 from randomid import *    	#####  生成各种随机量唯一值
 import reportit				## 用于报告, 使用公共变量
+from imgext import *		### 用于图片处理
 
 
 ######################################  百度基本操作
