@@ -21,4 +21,7 @@ pip install -U xvfbwrapper
 
 pip install -U imagehash
 
+pip install request
+pip install -U jsonpath_rw
+
 

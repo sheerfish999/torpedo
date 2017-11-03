@@ -127,6 +127,13 @@ dockerinitsh=""
 
 """
 
+########################################### 百度云OCR
+
+# 通过百度云创建OCR应用获得 (免费日500)
+ocr_client_id="3567is0MyuhRQeUP0QdYgMZt"
+ocr_client_secret="scbzdg9mMsZLEaL7nd8s2DxItD50OKLH"
+
+
 
 ###########################################  测试框架用的一些变量  ###############
 

@@ -10,6 +10,8 @@ import time,datetime
 from randomid import *
 from finddoit import *
 
+from baiduocr import *
+
 ########## 在图像对象中查找图像的坐标 （对象需要相同的分辨率下抓取的对象）
 
 """
@@ -160,7 +162,8 @@ class img_ele():
 				pass
 
 
-# parent_element 是父对象的xpath, 如果能找到这个对象将极大提升查找对应图片的查找速度
+############################### 根据图片找图片， parent_element 是父对象的xpath, 如果能找到这个对象将极大提升查找对应图片的查找速度
+
 def getpic_pos_fromdriver(browser,imgfile,block=4,pre=0.8,zoom=1.2,onlyonce=1, parent_element_xpath=""):
 
 	wholepic="./logs/wholeget.png"
@@ -213,6 +216,93 @@ def getpic_pos_fromdriver(browser,imgfile,block=4,pre=0.8,zoom=1.2,onlyonce=1, p
 
 
 
+############################### 根据文字OCR生成虚拟对象，  parent_element 是父对象的xpath, 如果能找到这个对象将极大提升查找对应文字的查找速度
+
+def gettext_pos_fromdriver(browser,text,parent_element_xpath=""):
+
+	wholepic="./logs/wholeget.png"
+	browser.save_screenshot(wholepic)
+
+	left=0
+	top=0
+
+
+	if parent_element_xpath!="":   # 某个元素范围内查找
+
+		### 可能是隐形范围，不需要 located displayed
+		#lastele=waitfor_ele(browser,parent_element_xpath)
+		#location=showfor_record(browser,lastele,parent_element_xpath)
+
+		lastele=browser.find_element_by_xpath(parent_element_xpath)
+		location = lastele.location		
+
+		im = Image.open(wholepic)
+
+		size = lastele.size
+		left = location['x']
+		top = location['y']
+		right = left + size['width']
+		bottom = location['y'] + size['height']
+		im = im.crop((left,top,right,bottom))
+		im.save(wholepic)
+
+	textlist=getocr(wholepic)
+
+	for i in range(0,len(textlist)):
+
+		if text in textlist[i][0]:
+
+			#[text,top,left,height,width]
+			imgele=img_ele()
+			imgele.left=textlist[i][2]+left   # 加上相对位置
+			imgele.top=textlist[i][1]+top   # 加上相对位置
+			imgele.width=textlist[i][4]
+			imgele.height=textlist[i][3]
+			imgele.driver=browser
+
+			tempid=show_where_imgele(browser,imgele)   # 显示并 返回 id
+			imgele.xpath="//*[@id='"+tempid + "']"
+
+			return imgele
+
+
+############## OCR识别对应位置的字符串
+
+def ocr_fromdriver(browser,parent_element_xpath):
+
+	wholepic="./logs/wholeget.png"
+	browser.save_screenshot(wholepic)
+
+	left=0
+	top=0
+
+	### 可能是隐形范围，不需要 located displayed
+	#lastele=waitfor_ele(browser,parent_element_xpath)
+	#location=showfor_record(browser,lastele,parent_element_xpath)
+
+	lastele=browser.find_element_by_xpath(parent_element_xpath)
+	location = lastele.location		
+
+	im = Image.open(wholepic)
+
+	size = lastele.size
+	left = location['x']
+	top = location['y']
+	right = left + size['width']
+	bottom = location['y'] + size['height']
+	im = im.crop((left,top,right,bottom))
+	im.save(wholepic)
+
+	textlist=getocr(wholepic)
+
+	if len(textlist)>0:
+		return  textlist[0][0]
+	else:
+		return ""
+
+
+
+
 #### 使用坐标显示某个坐标范围 或已经识别的对象  增加一个透明的 div 元素
 
 def show_where(browser,left,top,width,height):
@@ -236,6 +326,34 @@ def show_where(browser,left,top,width,height):
 
 	return tempid
 
+
+
+
+#### 使用坐标显示某个坐标范围 或已经识别的对象  增加一个透明的 div 元素
+
+def show_where(browser,left,top,width,height):
+
+	tempid='img'+getname()  ## 设定id 用于操作
+
+	### 边距在外、 最下，避免无法操作实际元素
+	if left-5>0:
+		left=left-5
+
+	if top-5>0:
+		top=top-5
+
+	js="var Odiv=document.createElement('div');Odiv.setAttribute('id','"+tempid+"');"
+	js=js+"Odiv.style.cssText='width:" + str(width+10) + "px;height:" + str(height+10) +"px;left:" + str(left) + "px;top:" + str(top) +"px;position:absolute;border:1px solid #F00;z-index:0';"
+	js=js+"document.body.appendChild(Odiv);"
+
+	#print(js)
+
+	browser.execute_script(js)
+
+	return tempid
+
+
+### 显示图片位置
 
 def show_where_imgele(browser,imgele):
 	
