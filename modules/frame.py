@@ -13,6 +13,7 @@ import time
 
 def openfiles(filename):
 
+
 	paths=os.getcwd()    #绝对路径  , os.getcwd()  代替  sys.path[0]
 	all_the_text = codecs.open(paths + "/"+ filename,'r','utf-8').read( )
 
