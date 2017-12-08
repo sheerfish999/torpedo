@@ -10,6 +10,8 @@ import time,datetime
 from randomid import *
 from finddoit import *
 
+from baiduocr import *
+
 ########## 在图像对象中查找图像的坐标 （对象需要相同的分辨率下抓取的对象）
 
 """
@@ -223,6 +225,92 @@ def getpic_pos_fromdriver(browser,imgfile,block=4,pre=0.8,zoom=1.2,onlyonce=1, p
 		imgele.xpath="//*[@id='"+tempid + "']"
 
 		return imgele
+
+
+
+
+
+def gettext_pos_fromdriver(browser,text,parent_element_xpath=""):
+
+	wholepic="./logs/wholeget.png"
+	browser.save_screenshot(wholepic)
+
+	left=0
+	top=0
+
+
+	if parent_element_xpath!="":   # 某个元素范围内查找
+
+		### 可能是隐形范围，不需要 located displayed
+		#lastele=waitfor_ele(browser,parent_element_xpath)
+		#location=showfor_record(browser,lastele,parent_element_xpath)
+
+		lastele=browser.find_element_by_xpath(parent_element_xpath)
+		location = lastele.location		
+
+		im = Image.open(wholepic)
+
+		size = lastele.size
+		left = location['x']
+		top = location['y']
+		right = left + size['width']
+		bottom = location['y'] + size['height']
+		im = im.crop((left,top,right,bottom))
+		im.save(wholepic)
+
+	textlist=getocr(wholepic)
+
+	for i in range(0,len(textlist)):
+
+		if text in textlist[i][0]:
+
+			#[text,top,left,height,width]
+			imgele=img_ele()
+			imgele.left=textlist[i][2]+left   # 加上相对位置
+			imgele.top=textlist[i][1]+top   # 加上相对位置
+			imgele.width=textlist[i][4]
+			imgele.height=textlist[i][3]
+			imgele.driver=browser
+
+			tempid=show_where_imgele(browser,imgele)   # 显示并 返回 id
+			imgele.xpath="//*[@id='"+tempid + "']"
+
+			return imgele
+
+
+############## OCR识别对应位置的字符串
+
+def ocr_fromdriver(browser,parent_element_xpath):
+
+	wholepic="./logs/wholeget.png"
+	browser.save_screenshot(wholepic)
+
+	left=0
+	top=0
+
+	### 可能是隐形范围，不需要 located displayed
+	#lastele=waitfor_ele(browser,parent_element_xpath)
+	#location=showfor_record(browser,lastele,parent_element_xpath)
+
+	lastele=browser.find_element_by_xpath(parent_element_xpath)
+	location = lastele.location		
+
+	im = Image.open(wholepic)
+
+	size = lastele.size
+	left = location['x']
+	top = location['y']
+	right = left + size['width']
+	bottom = location['y'] + size['height']
+	im = im.crop((left,top,right,bottom))
+	im.save(wholepic)
+
+	textlist=getocr(wholepic)
+
+	if len(textlist)>0:
+		return  textlist[0][0]
+	else:
+		return ""
 
 
 
