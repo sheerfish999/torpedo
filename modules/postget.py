@@ -45,9 +45,6 @@ cookie=cookielib.CookieJar()
 
 def posts(urls,data="",cookieadd="",timeouts=0,header=[]):          #   目前支持 xml   json  urlencode  
 
-	if sys.version_info.major==2:   ## 3 默认 utf-8
-		reload(sys)
-		sys.setdefaultencoding('utf-8')
 
 
 	### 中文处理

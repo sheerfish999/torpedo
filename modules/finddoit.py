@@ -67,7 +67,10 @@ class mouse():   #http://blog.chinaunix.net/uid-52437-id-3068595.html
 def findfor_ele(browser,xpath,waittime=20,alerts=0):   # alerts==1:   #忽略弹出窗体,  针对一些场景
 
 	## 等待页面完全载入完成
-	wait_for_page_load(browser)
+	try:
+		wait_for_page_load(browser)
+	except:
+		pass
 
 	## 等待元素出现
 	browser.implicitly_wait(waittime)
@@ -197,9 +200,12 @@ def clicks(browser,xpath,alert=0,waittime=20):           # alerts==1:   #忽略�
 		#print("Error in:" + xpath)
 		clicks(browser,xpath)    ## 再次尝试, 这里不排除会在这里出现问题, 比如上一步点击后, 原元素已经找不到了,  今后考虑可以使用 url, 再次失败则 log
 
-	#删除展现操作位置
-	browser.execute_script("arguments[0].style.border=\"\";", lastele)
-	#browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")  #会影响图像比较
+	#删除展现操作位置  有可能页面已经发生跳转
+	try:
+		browser.execute_script("arguments[0].style.border=\"\";", lastele)
+		#browser.execute_script("arguments[0].style=arguments[1]", lastele, "border: 1px dashed black")  #会影响图像比较
+	except:
+		pass
 
 
 	# 返回页面载入时间
@@ -419,7 +425,10 @@ def loads(browser,Url,timeouts=8,alerts=1):   # 默认页面重试的超时时�
 
 
 	## 等待页面完全载入完成
-	wait_for_page_load(browser)
+	try:
+		wait_for_page_load(browser)
+	except:
+		pass
 
 
 	## 实际鼠标减少误触   goto_xy(0,0)
@@ -453,9 +462,14 @@ def loads(browser,Url,timeouts=8,alerts=1):   # 默认页面重试的超时时�
 
 def exists(browser,xpath,timesouts):
 
-	## 等待页面完全载入完成
-	#wait_for_page_load(browser)   #由于目标是时间段内判断，所以不能阻塞
+	## 等待页面完全载入完成  #由于目标是时间段内判断，所以不能阻塞
 
+	"""
+	try:
+		wait_for_page_load(browser)
+	except:
+		pass  
+	"""
 
 	try:
 
@@ -494,8 +508,10 @@ level=2  从当前下搜索，失败后退到当前
 def search_switch_to_frametype(browser,xpath,frametype,level=0,timeouts=3):
 
 	## 等待页面完全载入完成
-	wait_for_page_load(browser) 
-
+	try:
+		wait_for_page_load(browser) 
+	except:
+		pass
 
 	if level==0:
 		browser.switch_to_default_content()   #### 最上层
@@ -659,7 +675,13 @@ def checks(browser,xpath,txt,name,waittimes=20,include=0):     # include=0, 表�
 def existrefreshs(browser,xpath,timeout):
 
 	## 等待页面完全载入完成
-	#wait_for_page_load(browser)  ## 目标是强刷 所以不能阻塞
+	# ## 目标是强刷 所以不能阻塞
+	"""
+	try:
+		wait_for_page_load(browser)  
+	except:
+		pass
+	"""
 
 	Url=browser.current_url
 
@@ -677,7 +699,10 @@ def getalert(browser, location=0, size=0):   #需要抓图时传入这两个参�
 
 
 	## 等待页面完全载入完成
-	wait_for_page_load(browser)
+	try:
+		wait_for_page_load(browser)
+	except:
+		pass
 
 	texts=""
 
@@ -719,7 +744,10 @@ def getalert(browser, location=0, size=0):   #需要抓图时传入这两个参�
 def maybealert(browser, timeout):
 
 	## 等待页面完全载入完成
-	wait_for_page_load(browser)
+	try:
+		wait_for_page_load(browser)
+	except:
+		pass
 
 	texts=""
 
@@ -751,7 +779,10 @@ def maybealert(browser, timeout):
 def changeattrbyjs(browser,xpath,attrname,attrvalue):
 
 	## 等待页面完全载入完成
-	wait_for_page_load(browser)
+	try:
+		wait_for_page_load(browser)
+	except:
+		pass
 
 	## 必须替换 " 为 '
 	xpath=xpath.replace("\"","'")
@@ -775,7 +806,10 @@ def changeattrbyjs(browser,xpath,attrname,attrvalue):
 def delattrbyjs(browser,xpath,attrname):
 
 	## 等待页面完全载入完成
-	wait_for_page_load(browser)
+	try:
+		wait_for_page_load(browser)
+	except:
+		pass
 
 	## 必须替换 " 为 '
 	xpath=xpath.replace("\"","'")
@@ -792,7 +826,10 @@ def delattrbyjs(browser,xpath,attrname):
 def acceptbyalert_beforedo_ghostdriver(browser):
 
 	## 等待页面完全载入完成
-	wait_for_page_load(browser)
+	try:
+		wait_for_page_load(browser)
+	except:
+		pass
 
 	####  获得 driver 属性
 	drivertypes = drivertype()
@@ -804,7 +841,7 @@ def acceptbyalert_beforedo_ghostdriver(browser):
 
 
 
-########## 等待页面载入完成的另类方法
+########## 等待页面载入完成的另类方法   并不适合页面发生点击后跳转情况, 需要 try: pass
 
 def is_page_loaded(browser):
 
