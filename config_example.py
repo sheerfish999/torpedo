@@ -41,9 +41,11 @@ if getenvs('get_type')=="":   ## 使用环境变量地址
 
 	# 0-10 本地浏览器
 	#get_type=0      # 本地 firefox    #####   gecko  驱动例如点击, 抓图等环节很多还不稳定  Action 不支持
-	get_type=1     # 本地 chrome       ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
+	#get_type=0.1    # 本地 firefox 无头模式
+	get_type=1     	 # 本地 chrome       ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
+	#get_type=1.1    # 本地 chrome 无头模式
 	#get_type=2     # 本地 ie  windows #### 需要将 ie 安全 "安全模式"，全部调整为相同（关闭或打开），某些产品只能使用该驱动。但速度较慢, 某些API不支持
-	#get_type=5	    # 本地 phantomjs   ###### 服务器使用, 某些API不支持, js弹窗不支持，需要注入解决
+	#get_type=5	    # 本地 phantomjs   ###### 服务器使用, 某些API不支持, js弹窗不支持，需要注入解决.  selenium 官方已经不再推荐
 
 	# 10-19 本地容器
 	#get_type=10    # 本地 firefox 容器   , 通常情况下, 调试与演示建议使用10, 因为0 firefox 模式后台创建产品存在500问题,   远程自动模式推荐  5 phantomjs 
@@ -96,8 +98,9 @@ dockerinitsh=""
 """  测试模式和驱动说明    get_type   注意已经定义的, 勿修改, 涉及较多位置关联
 本地模式:
 0  本地 firefox  (3.0 以上版本 firefox需要geckodriver, 并且较新 注意版本与浏览器的匹配会影响操作: https://github.com/mozilla/geckodriver/releases/)
+0.1 本地 firefix 无头模式 (firefox>56)
 1  本地 Chrome  (需要chromedriver)
-1.1 本地 Chrome 无头模式 (chrome>59)   # 暂时没有明确测试
+1.1 本地 Chrome 无头模式 (chrome>59) 
 2  本地 Ie  	(需要IEDriverServer windows)
 3  本地 Opera  	(需要operadriver)      # 暂时没有明确测试, 且不推荐使用，受支持较少
 4  本地 Safari  					   # 暂时没有明确测试

@@ -32,7 +32,7 @@ def  drivertype():
 	drivertypes=drivertypes.strip('\n')
 	drivertypef.close()
 
-	return(drivertypes)
+	return(float(drivertypes))
 
 
 ######  获得是否进行报告的标记

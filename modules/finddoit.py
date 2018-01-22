@@ -233,7 +233,7 @@ def send_keys(browser,xpath, value):
 	js2="display: 'block';"         		#js2="display: '';"
 	#js2="readonly: 'False';" 
 
-	if int(drivertypes)==5:     ###  phantomjs 情况比较特殊 ,  selenium 对元素上执行 js 的方法, phantomjs 找不到元素
+	if drivertypes==5:     ###  phantomjs 情况比较特殊 ,  selenium 对元素上执行 js 的方法, phantomjs 找不到元素
 
 		changeattrbyjs(browser,xpath,"style" ,"display:'block'")
 		changeattrbyjs(browser,xpath,"style" ,"readonly:'block'")
@@ -411,7 +411,7 @@ def loads(browser,Url,timeouts=8,alerts=1):   # 默认页面重试的超时时�
 				browser.set_window_size(width,height)   #phantomjs 最大化窗体仍可能是小窗体, 导致抓屏过小, 或找不到元素(phantomjs特有问题)
 
 			## 如果是 远程或容器模式, 可能最大化或大小调整(按照远程)无效,  而且 get_window_size 会出错,  这个时候强行进行修正大小, 避免浏览器找不到元素
-			if int(drivertypes) >=10 and int(drivertypes) <30:
+			if drivertypes >=10 and drivertypes <30:
 				width=1024
 				height=768
 				browser.set_window_size(width,height)
@@ -719,7 +719,7 @@ def getalert(browser, location=0, size=0):   #需要抓图时传入这两个参�
 	####  获得 driver 属性
 	drivertypes = drivertype()
 
-	if int(drivertypes) ==5 or int(drivertypes) ==15  or int(drivertypes) ==25 :      # phantomjs ,  容器 htmlunitjs ,  远程 htmlunitjs
+	if drivertypes ==5 or drivertypes ==15  or drivertypes ==25 :      # phantomjs ,  容器 htmlunitjs ,  远程 htmlunitjs
 		# 需要在操作前提前注入脚本   acceptbyalert_beforedo_ghostdriver(browser)
 		texts=u"GhostDriver模式,未获取"     ### 这里是  Phantomjs , Htmlunit (Htmlunitjs)  模式的判断返回
 	else:
@@ -754,7 +754,7 @@ def maybealert(browser, timeout):
 	####  获得 driver 属性
 	drivertypes = drivertype()
 
-	if int(drivertypes) ==5 or int(drivertypes) ==15  or int(drivertypes) ==25 :      # phantomjs ,  容器 htmlunitjs ,  远程 htmlunitjs.   注意: 其他模式不操作
+	if drivertypes ==5 or drivertypes ==15  or drivertypes ==25 :      # phantomjs ,  容器 htmlunitjs ,  远程 htmlunitjs.   注意: 其他模式不操作
 		# 需要在操作前提前注入脚本   acceptbyalert_beforedo_ghostdriver(browser)
 		texts=u"GhostDriver模式,未获取"     ### 这里是 Phantomjs 或 Htmlunit 模式判断的返回
 		return (texts)	
@@ -834,7 +834,7 @@ def acceptbyalert_beforedo_ghostdriver(browser):
 	####  获得 driver 属性
 	drivertypes = drivertype()
 
-	if int(drivertypes) ==5 or int(drivertypes) ==15  or int(drivertypes) ==25 :      # phantomjs ,  容器 htmlunitjs ,  远程 htmlunitjs.   注意: 其他模式不操作
+	if drivertypes ==5 or drivertypes ==15  or drivertypes ==25 :      # phantomjs ,  容器 htmlunitjs ,  远程 htmlunitjs.   注意: 其他模式不操作
 
 		js="window.confirm = function(){return true;}"
 		browser.execute_script(js)

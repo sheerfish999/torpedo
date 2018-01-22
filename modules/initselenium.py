@@ -181,7 +181,6 @@ def initdriver(dockerinitsh, remotedriverip, get_record, get_report, get_type, d
 				os.system(dockerinitsh)         #注意必须 root 权限执行本 py 脚本
 
 
-
 	browser.maximize_window()  # 如果是docker或远程, 其大小判断来自远程端, 需要 x-server 设置
 
 
@@ -267,23 +266,33 @@ def profileset(profile, getimgflash, get_type):
 ## 初始化并连接
 def trytoconnect(remotedriverip, get_type):
 
-	if get_type==0 or get_type==6:   ## firefox
+	if get_type==0  or get_type==0.1 or get_type==6:   ## firefox
 
 		if get_type==6:
 			xvfb.start()   # 虚拟界面终端
 			print(u"#### 尝试进入虚拟界面终端")
 
+		#browser = webdriver.Firefox()    ## 如果不使用配置文件
+
 		profile = FirefoxProfile()
 		#profile=profileset(profile,  getimgflash, get_type)
 		profile.set_preference("capability.policy.default.Window.frameElement.get","allAccess")   # 避免一些权限问题 如 gecko 驱动的问题
-		browser = webdriver.Firefox(profile)
-		#browser = webdriver.Firefox()    ## 这里没有使用配置文件
+		
+		if get_type==0.1:    ### 无头模式   firefox 56 以后支持
+			options = webdriver.FirefoxOptions()
+			options.add_argument('--headless')
+			print(u"#### Firefox 无头模式")
+
+			browser = webdriver.Firefox(profile,options=options)
+		else:
+			browser = webdriver.Firefox(profile)
+			
 
 		print(u"#### 驱动模式: 【本地 Firefox】")
 
 		return(browser)
 
-	if get_type==1 or get_type==7 or get_type==1.1:   ## chrome   http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
+	if get_type==1 or get_type==1.1 or get_type==7:   ## chrome   http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
 
 		if get_type==7:
 			xvfb.start()   # 虚拟界面终端
