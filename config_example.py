@@ -44,7 +44,7 @@ if getenvs('get_type')=="":   ## 使用环境变量地址
 	#get_type=0.1    # 本地 firefox 无头模式
 	get_type=1     	 # 本地 chrome       ####  目前推荐  调试使用  chromedriver版本对应关系：http://blog.csdn.net/huilan_same/article/details/51896672
 	#get_type=1.1    # 本地 chrome 无头模式
-	#get_type=2     # 本地 ie  windows #### 需要将 ie 安全 "安全模式"，全部调整为相同（关闭或打开），某些产品只能使用该驱动。但速度较慢, 某些API不支持
+	#get_type=2     # 本地 ie  windows #### 参考 support 中如何支持 ie 。速度较慢, 某些API不支持. 
 	#get_type=5	    # 本地 phantomjs   ###### 服务器使用, 某些API不支持, js弹窗不支持，需要注入解决.  selenium 官方已经不再推荐
 
 	# 10-19 本地容器
