@@ -30,6 +30,9 @@ def searchbaidu(browser,testUrl):
 	#send_keys(browser,".//*[@id='kw111']","123")
 	clicks(browser,".//*[@id='su']")
 
+
+	"""
+
 	## 截图插入报告
 	xpath=".//*[@id='kw']"
 	lastele=browser.find_element_by_xpath(xpath)
@@ -66,17 +69,20 @@ def searchbaidu(browser,testUrl):
 
 	"""
 
+
+	
+
 	### 示例四   动态调试
 
-	修改 debug_content.py 执行 debug_content.sh / debug_content.bat 完成动态调试
-	或直接使用单行命令行模式： debug_cmdline.sh / debug_cmdline.bat
+	#修改 debug_content.py 执行 debug_content.sh / debug_content.bat 完成动态调试
+	#或直接使用单行命令行模式： debug_cmdline.sh / debug_cmdline.bat
 
 	
 
-	# pause()  ## 中断后可用于远程调试
+	pause()  ## 中断后可用于远程调试 ，  如  debug(browser)  可用于输出指定控件的 xpath（功能开发中）
 
 	
-	"""
+	
 
 
 
