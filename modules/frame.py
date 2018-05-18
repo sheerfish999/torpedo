@@ -222,17 +222,27 @@ def debug(browser):
 	path_list=[]
 	tagstack = []
 
+	# 得到 xpath
 	xpath_list=getall_xpath(browser.page_source)
 
+	# 有效 xpath
+	xpath_list=available_xpath(browser,xpath_list)
+	
+
 	#这里用作进一步处理
-
+	
 	text=""
-	filename="debug.log"
 	for i in range(len(xpath_list)):
-		text=text + xpath_list[i]       
+		text=text+ xpath_list[i][0] + " " +  str(xpath_list[i][1]['y'])  + " " + str(xpath_list[i][1]['x']) + " " + str(xpath_list[i][2]['height']) + " " +  str(xpath_list[i][2]['width']) +"\n"
 
-	#savefiles(filename,text)      #------ 这里什么情况  为什么不能写入文件
+	filename="./debug.log"
+	savefiles(filename,text) 
+	
+	#print(text)      ## 由于采用debug模式缓冲区大小原因，输出不完整 建议文件调试 
 
+
+
+### 遍历 xpath ， 但没有 序号信息，需要再处理
 
 class ShowStructure(HTMLParser.HTMLParser):
 
@@ -256,67 +266,157 @@ class ShowStructure(HTMLParser.HTMLParser):
 
 def getall_xpath(html):
 
-
-
 	############################
 
 	ShowStructure().feed(html)  
 
 
-	## 生成规则： 同一个叶子生成规则为短路径到长路径，然后逐个枚举叶子。所以按照这个规则，可以从头（从短）整理生成序号
-
-	########################## 标识序号
-
-	for i in range(len(path_list)):
-
-
-		x=1
-		index=i
-		strs=""
-
-		# 列举后面(到下一个之前）的成员，并逐个修改
-		for ii in range(i+1,len(path_list)):  
-
-			if path_list[i]==path_list[ii]:   # 完全相同则逐个标记
-
-				strs=path_list[i] # 存储特征, 且存在过相同内容
-
-				## 上一标记和本次标记之间的位置，将相同路径进行标记
-				for iii in range(index,ii):
-
-					temp=path_list[iii]
-					
-					if temp[:len(strs)]==strs:   # 有前端相同特征
-
-						temp=strs + "[" + str(x) + "]" # 前串
-						if len(path_list[iii])-len(strs) !=0:  # 不是当前
-							path_list[iii]=temp + path_list[iii][-1*(len(path_list[iii])-len(strs)):]  # 后串
-						else:
-							path_list[iii]=temp
-
-				x = x + 1  # 标号增加
-				index=ii  #记录本次的位置
-
-
-			## 最后一个标记到末尾的位置，将相同路径进行标记
-			if ii==len(path_list)-1 and strs!="":
-
-				for iii in range(index,len(path_list)):   # 上升一个标记位置到结束
-
-					temp=path_list[iii]
-
-					if temp[:len(strs)]==strs:   # 有前端相同特征
-
-						temp=strs + "[" + str(x) + "]" # 前串
-						if len(path_list[iii])-len(strs) !=0:  # 不是当前
-							path_list[iii]=temp + path_list[iii][-1*(len(path_list[iii])-len(strs)):]  # 后串
-						else:
-							path_list[iii]=temp
-
+	path_list=xpath2indexpath()
 
 
 	return path_list
 
-	
+
+##### 普通 xpath 生成带序号的标准 xpath
+
+## 生成规则： 同一个叶子生成规则为短路径到长路径，然后逐个枚举叶子。所以按照这个规则，可以从头（从短）整理生成序号
+# 注意  不同浏览器同一个元素的 绝对路径 xpath 可能是不同的， 可能与 driver 解析有关 （和agent无关也不是针对浏览器的构造、多数情况一致），因此多采用 相对路径
+
+def xpath2indexpath():
+
+	## 生成 xpath list
+
+	for i in range(len(path_list)):
+
+		for ii in range(i+1,len(path_list)):
+
+			if path_list[i]==path_list[ii] and path_list[i][-1:]!="]":   ## 完全相同的分支且没设置过，则累加  
+
+				add=1
+				strs=path_list[i]  ## 记录下来  以此为基准比较  避免值改变发生影响
+
+				path_list[i]=xpath_setindex(path_list[i],1)
+				path_list[ii]=xpath_setindex(path_list[ii],2)
+
+				for iii in range(ii+1,len(path_list)):  ## 修改该分支下的部分 对应节点标记都累加
+
+					if path_list[iii]==strs:  # 再次相同，则累加数增加
+						add=add+1
+
+					if path_list[iii].find(strs)==0:
+
+						newxpath_node= xpath_addindex(strs,add)  # 再次增加
+						path_list[iii]=path_list[iii].replace(strs,newxpath_node)   # 替换
+
+
+
+	## 算法漏洞 ， 即 /a/b/c[1]/d  中的 c[1] 没有进行生成， 要再进行处理一下
+
+
+	for i in range(len(path_list)):
+
+		if path_list[i][-3:]=="[1]":
+
+			xpath_old=path_list[i][:-3]
+
+			for ii in range(i+1,len(path_list)):
+
+				if path_list[ii].find(xpath_old+"[2]/")==0:  # 出现新的就不再添加
+					break
+
+				path_list[ii]=path_list[ii].replace(xpath_old,xpath_old+"[1]")
+
+
+
+	## 算法漏洞  结尾会有 [1][2] 这样的序号
+
+	for i in range(len(path_list)):
+
+		if path_list[i].find("[1][")>0:
+
+			path_list[i]=path_list[i].replace("[1][","[")
+
+
+
+	return path_list	
+
+
+
+## xpath序号设置与递增  注意：如果没有则设置为 1
+
+# 获得
+def xpath_getindex(xpath):
+
+	num=int(xpath.split("[")[-1].split("]")[0]) # 当前值
+
+	return num
+
+# 设置
+def xpath_setindex(xpath,sets):
+
+	if xpath[-1:]!="]":  ## 没设置过
+		xpath=xpath+"[" + str(sets) + "]"
+	else:
+
+		num=xpath_getindex(xpath) # 当前值
+		oldnum_str="[" + str(num) + "]"
+		lens=len(oldnum_str)*-1
+
+		xpath=xpath[:lens] +"[" + str(sets) + "]"
+
+	return xpath
+
+# 增加
+def xpath_addindex(xpath,add=1):
+
+	if xpath[-1:]!="]":  ## 没设置过
+		xpath=xpath+"[1]"
+
+
+	num=xpath_getindex(xpath) # 当前值
+	oldnum_str="[" + str(num) + "]"
+	lens=len(oldnum_str)*-1
+
+	num=num+add
+
+	xpath=xpath[:lens] +"[" + str(num) + "]"
+
+	return xpath
+
+
+
+### 去掉无意义的 xpath
+
+def available_xpath(browser,xpath_list):
+
+
+	# list 得到坐标、大小 并进行过滤
+	lastpathlist=[]
+
+	for i in range(len(xpath_list)):
+
+		## 过滤特别 xpath
+		if xpath_list[i]=="//html" or  xpath_list[i]=="//html/body":
+			continue
+
+		if xpath_list[i].find("/script[") >0 or xpath_list[i][-7:]=="/script":
+			continue
+
+		## 过滤无意义的 ele
+		ele=browser.find_element_by_xpath(xpath_list[i])
+
+		location=ele.location
+		size=ele.size
+
+		height=size['height']
+		width=size['width']
+
+		if height==0 and width==0:
+			continue
+
+		lastpathlist.append([xpath_list[i],location,size])
+
+
+	return lastpathlist
 
 
