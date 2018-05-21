@@ -79,7 +79,7 @@ def searchbaidu(browser,testUrl):
 
 	
 
-	pause()  ## 中断后可用于远程调试 ，  如  debug(browser)  可用于输出指定控件的 xpath（功能开发中）
+	pause()  ## 中断后可用于远程调试 ，  如  debug(browser)  可用于输出指定控件的 xpath
 
 	
 	

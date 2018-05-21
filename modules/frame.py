@@ -8,6 +8,8 @@ import time
 
 import traceback
 
+import keyboard # pip install keyboard  同时支持 windows linux
+
 if sys.version_info.major==2:   #python2
 	import HTMLParser  #pip install HTMLParser
 
@@ -241,6 +243,12 @@ def debug(browser):
 	#print(text)      ## 由于采用debug模式缓冲区大小原因，输出不完整 建议文件调试 
 
 
+	mouse_js(browser) # 注入脚本
+	print("Use Ctrl to get Xpath in current page, Shift to release, then debug(browser) to refresh Xpath list in current page step.")
+
+	keyboard.add_hotkey('ctrl', getpos_event, args=(browser,xpath_list))
+	keyboard.add_hotkey('shift', rel_getpos_event, args=())
+
 
 ### 遍历 xpath ， 但没有 序号信息，需要再处理
 
@@ -309,12 +317,11 @@ def xpath2indexpath():
 						path_list[iii]=path_list[iii].replace(strs,newxpath_node)   # 替换
 
 
-
-	## 算法漏洞 ， 即 /a/b/c[1]/d  中的 c[1] 没有进行生成， 要再进行处理一下
-
+	## 补丁
 
 	for i in range(len(path_list)):
 
+		## 算法漏洞 ， 即 /a/b/c[1]/d  中的 c[1] 没有进行生成， 要再进行处理一下
 		if path_list[i][-3:]=="[1]":
 
 			xpath_old=path_list[i][:-3]
@@ -327,15 +334,10 @@ def xpath2indexpath():
 				path_list[ii]=path_list[ii].replace(xpath_old,xpath_old+"[1]")
 
 
-
-	## 算法漏洞  结尾会有 [1][2] 这样的序号
-
-	for i in range(len(path_list)):
-
+		## 算法漏洞  结尾会有 [1][2] 这样的序号
 		if path_list[i].find("[1][")>0:
 
 			path_list[i]=path_list[i].replace("[1][","[")
-
 
 
 	return path_list	
@@ -420,3 +422,89 @@ def available_xpath(browser,xpath_list):
 	return lastpathlist
 
 
+############### 键盘捕获与匹配位置 得到对应的 xpath
+
+
+# 注入js  供获得鼠标坐标
+def mouse_js(browser):
+
+
+	js="var Otextbox=document.createElement('div');" + \
+		"Otextbox.setAttribute('id','xpath_debug');" + \
+		"document.body.appendChild(Otextbox);"
+
+	browser.execute_script(js)
+
+
+	js="document.onmousemove=function(event) " + \
+		"{var e = event || window.event;" + \
+		"var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;"+ \
+		"var scrollY = document.documentElement.scrollTop ||document.body.scrollTop;"+ \
+		"var x = e.pageX || e.clientX +scrollX;var y = e.pageY || e.clientY +scrollY;" + \
+		"var Otextbox= document.getElementById('xpath_debug');" + \
+		"Otextbox.setAttribute('x',x);Otextbox.setAttribute('y',y); }"
+
+	browser.execute_script(js)
+
+
+
+def getpos_event(browser,xpath_list):
+
+	## 获得鼠标当前坐标
+
+	ele=browser.find_element_by_id("xpath_debug")
+	
+	x=int(ele.get_attribute("x"))
+	y=int(ele.get_attribute("y"))
+
+	#print(x,y)
+
+	## 根据 list 开始过滤
+
+	lastarea=-1
+	lastpath=""
+
+	for i in range(len(xpath_list)):
+
+		xpath=xpath_list[i][0]
+		y1=xpath_list[i][1]['y']
+		x1=xpath_list[i][1]['x']
+		height=xpath_list[i][2]['height']
+		width=xpath_list[i][2]['width']
+
+		y2=y1+height;
+		x2=x1+width;
+
+		# 矩形范围内:
+		if x>=x1 and x<=x2 and y>=y1 and y<=y2:
+
+			area=height*width # 面积
+
+			if lastarea> area or lastarea==-1:
+				lastarea=area
+				lastpath=xpath
+
+
+	print(lastpath)
+
+	### 标识对象
+
+	the_ele=browser.find_element_by_xpath(lastpath)
+	browser.execute_script("arguments[0].style.border=\"2px solid red\";", the_ele)	
+
+
+	# 以下方法会影响实际操作，因此不采用
+
+	"""
+	js="var Otextbox= document.getElementById('xpath_debug');" + \
+		"Otextbox.style.cssText='width:'" + str(width) +"'px;height:'" + str(height) +"'px;left:'"+ str(x1)  +'px;top:'+ str(y1) +'px;position:absolute; background-color:#F00;opacity:0.5;z-index:9999';
+
+	browser.execute_script(js)
+	"""
+
+
+def rel_getpos_event():
+
+	keyboard.remove_hotkey('alt+z')
+
+	print("Xpath debug mode has been finished.")
