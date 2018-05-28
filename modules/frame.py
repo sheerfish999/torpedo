@@ -5,6 +5,7 @@ import codecs
 
 import glob
 import time
+import datetime
 
 import traceback
 
@@ -448,6 +449,8 @@ def mouse_js(browser):
 
 
 
+########## 快捷键 输出 xpath
+
 def getpos_event(browser,xpath_list):
 
 	## 获得鼠标当前坐标
@@ -480,12 +483,26 @@ def getpos_event(browser,xpath_list):
 
 			area=height*width # 面积
 
+			### 取最小面积
 			if lastarea> area or lastarea==-1:
 				lastarea=area
 				lastpath=xpath
 
 
-	print(lastpath)
+	times=datetime.datetime.now()
+	hour=str(times.hour)
+	minute=str(times.minute)
+	second=str(times.second)
+	the_time=hour + ":" + minute + ":" + second + " "
+
+	print(the_time + lastpath)
+
+	### 获取简化的路径变形，逐层向上 直到元素为 1 个
+
+	simplifyxpath=simplify_xpath(browser,lastpath)
+
+	if simplifyxpath!=lastpath:
+		print(the_time + simplifyxpath)
 
 	### 标识对象
 
@@ -503,8 +520,65 @@ def getpos_event(browser,xpath_list):
 	"""
 
 
+####  简化 xpath , 减少全路径 xpath 长度， 减少不同浏览器的 xpath 结构不同带来的问题
+
+def simplify_xpath(browser,xpath):
+
+	simplifyxpath=xpath
+
+	xpath_split_list=xpath.split("/")
+	#print(xpath_split_list)
+
+	## 所有 xpath 位置，从长到短倒序
+	xpath_list=[]
+	xpath_now=""
+	for i  in range(len(xpath_split_list)):
+		xpath_now=xpath_now  + "/" + xpath_split_list[i]
+
+		if xpath_now!="/" and  xpath_now!="//" and  xpath_now!="///html" and  xpath_now!="///html/body":
+			xpath_now=xpath_now.replace("///","//")
+			xpath_list.append(xpath_now)
+
+	xpath_list.reverse()
+
+	## 逐个查找是否有 id 或 class,   xpath_list[0] 是完整路径
+
+	for i in range(len(xpath_list)):
+
+		ele=browser.find_element_by_xpath(xpath_list[i])
+
+		text=ele.text
+		ids=ele.get_attribute("id")
+		classes=ele.get_attribute("class")
+		
+		overplus=xpath_list[0].replace(xpath_list[i],"")  ## 剩余的尾部串
+
+		if text!="" or ids!="" or classes!="":
+
+			if text!="":
+				xpath=".//*[contains(text(),'" + text + "')]" 
+
+			if ids!="":
+				xpath=".//*[@id='" + ids + "']"
+
+			if classes!="":
+				xpath=".//*[@class='" + classes + "']"
+								
+			now_ele_list=browser.find_elements_by_xpath(xpath)
+
+			if len(now_ele_list)==1:
+
+				simplifyxpath = xpath + overplus
+				break
+			
+
+	return simplifyxpath
+
+
+########### 释放快捷键
+
 def rel_getpos_event():
 
-	keyboard.remove_hotkey('alt+z')
+	keyboard.remove_hotkey('ctrl')
 
 	print("Xpath debug mode has been finished.")
