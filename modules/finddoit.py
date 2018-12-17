@@ -13,7 +13,7 @@ from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
-
+from selenium.webdriver.common.alert import Alert
 
 import os,time,datetime,sys
 import chardet
@@ -492,6 +492,43 @@ def exists(browser,xpath,timesouts):
 		return(1)   #存在
 
 
+#########  返回 xpath list 中最先出现的元素的序号   用于判断载入的页面整体情况，如跳转的页面是哪个
+
+def existlist(browser,xpathlist,timeout,cyc_time=0.001):
+
+	### 避免页面渲染速度影响
+	wait_for_page_load(browser)
+
+	### 
+
+	timestart = datetime.datetime.now()	
+
+	while True:
+
+		tag=False # 发现
+
+		for i in range(len(xpathlist)):
+
+			xpath=xpathlist[i]
+
+			if exists(browser,xpath,cyc_time) !=0:
+				tag=True
+				break
+
+		if tag==True:
+			break
+		else:
+			### 总体时间判断是否超时
+			timeend = datetime.datetime.now()
+			rettime=round((timeend-timestart).total_seconds(),1)
+			
+			if rettime > timeout:
+				i=-1  ## 指定时间内没有等待到
+				break
+
+	return i
+
+
 
 ###### 查找并自动切换到存在元素的 iframe 上, 简易搜索一层，搜索失败则退到特定层。已经处于复杂的嵌套时不建议使用
 
@@ -504,6 +541,9 @@ level=2  从当前下搜索，失败后退到当前
 注意： PhantomJS/Safari/IE  由于不支持  switch_to.parent_frame ，所以不支持 12。 chrome 和 firefox 应支持
 
 """
+
+# xpath 比照元素的 xpath
+# frametype  frame 或  iframe 的 xpath 信息
 
 def search_switch_to_frametype(browser,xpath,frametype,level=0,timeouts=3):
 
@@ -873,4 +913,130 @@ def show_where(browser,xpath):
 	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)	
 
 
+
+
+######### 载入页面前 删除缓存  （目前只支持本地  chrome 和  firefox)
+
+def cleancache_beforeload(browser):  
+
+	####  获得 driver 属性
+	drivertypes = drivertype()
+
+	################# firefox
+
+	if drivertypes>=0 and drivertypes<1:
+
+		loads(browser,"about:preferences#privacy")
+
+		clicks(browser,"//*[@id='clearSiteDataButton']")   # 外面的按钮
+
+		# js执行 css 对应按钮 , 其它方式未成功
+
+		dialog_selector = '#dialogOverlay-0 > groupbox:nth-child(1) > browser:nth-child(2)'
+
+		accept_dialog_script = (
+			f"const browser = document.querySelector('{dialog_selector}');" + \
+			"browser.contentDocument.documentElement.querySelector('#clearButton').click();")   # 里一层按钮
+
+		# wait
+		WebDriverWait(browser, 5).until(lambda the_driver: the_driver.find_element_by_css_selector(dialog_selector).is_displayed())  
+
+		# click
+		browser.execute_script(accept_dialog_script)
+
+		# wait alert
+		WebDriverWait(browser, 5).until(EC.alert_is_present())
+		alert = Alert(browser)
+		alert.accept()
+
+		loads(browser,"about:blank")
+
+	################# chrome 
+
+	if drivertypes>=1 and drivertypes<2:
+
+		loads(browser,"chrome://settings/clearBrowserData")
+
+		# js执行 css 对应按钮 , 其它方式未成功
+
+		dialog_selector ='* /deep/ #clearBrowsingDataConfirm'   # 跳过 shadow roots
+
+		# wait
+		WebDriverWait(browser, 5).until(lambda the_driver: the_driver.find_element_by_css_selector(dialog_selector))
+
+		accept_dialog_script = (
+			f"const browser = document.querySelector('{dialog_selector}');" + \
+			"browser.click();")
+
+		# click
+		browser.execute_script(accept_dialog_script)
+
+		loads(browser,"about:blank")
+
+
+##### 载入页面前 以文件形式删除缓存  （目前只支持本地  chrome 和  firefox)
+
+#  注意，本地 chrome 这种方法清除缓存后，第一次载入后资源索引可能有问题，所以 load 后要 refresh 一次
+
+def cleancache_beforeload_byfile(browser):
+
+
+	####  获得 driver 属性
+	drivertypes = drivertype()
+
+
+	################# firefox
+
+	if drivertypes>=0 and drivertypes<1:
+
+		loads(browser,"about:cache")
+		text=getvalues(browser,"/html/body/table[2]/tbody/tr[4]/td")
+
+		### 强制删除缓存 
+
+		path=text + r"\entries"
+
+		for i in os.listdir(path):
+
+			path_file = os.path.join(path,i) 
+
+			if os.path.isfile(path_file):
+
+				try:
+					os.remove(path_file)
+				except:
+					pass
+
+
+	################# chrome 
+
+	if drivertypes>=1 and drivertypes<2:
+
+		loads(browser,"chrome://appcache-internals/")
+		text=getvalues(browser,"//*[@id='appcache-list']/div/div[1]/span[1]/span[2]")
+
+		### 强制删除缓存 
+
+		path=text + r"\Cache"
+
+		for i in os.listdir(path):
+			path_file = os.path.join(path,i) 
+
+			if os.path.isfile(path_file):
+
+				if path_file.find(r"\f_")>0:
+
+					try:
+						os.remove(path_file)
+					except:
+						pass
+
+		## 新窗口
+		js = "window.open('about:blank')" 
+		browser.execute_script(js)
+		
+		## 切换到新窗口
+		latest_window=browser.window_handles[-1]
+		browser.close() 
+		browser.switch_to.window(latest_window)
 
