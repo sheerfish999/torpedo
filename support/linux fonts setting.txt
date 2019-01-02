@@ -1,8 +1,0 @@
-
-字体
-cp simsun.ttc /usr/share/fonts/
-fc-cache -fv
-
-编码
-localedef -c -f UTF-8 -i zh_CN zh_CN.utf8
-export LC_ALL=zh_CN.utf8        #  /etc/profile

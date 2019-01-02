@@ -14,19 +14,27 @@ try:
 except:
 	pass
 
-
-################################################  测试的业务流
-
-testName="test"  ## 用于快速测试框架基本功能.   如用例名称为  test.py 则  testName="test"
-
-############ 涉及业务功能点操作的封装
-
-from testbaidu import *     #######  测试使用， 添加测试用例依赖的其它的 py
-
-# from XXXX import *
+sys.path.append(sys.path[0] + "/case/")  ## 测试用例的路径
 
 
-###############################################  驱动初始化信息:
+################################################  测试的业务流    ################## 请配置这段
+
+
+############ 1 测试框架的入口，测试用例留.   如用例名称为  case/test.py 则  testName="test"
+
+testName="test"  
+
+############ 2 涉及业务功能点操作的其它封装库  (建议放置于 case 目录下)
+
+from testbaidu import *
+
+############ 3 起始地址信息  ###############
+
+testUrl="https://www.baidu.com/"
+Urls=testUrl
+
+
+###############################################  驱动初始化信息: 
 
 thetimes=1   #  循环次数    失败的话会 中断本个业务流, 然后继续下个循环
 
@@ -137,13 +145,6 @@ ocr_client_id="3567is0MyuhRQeUP0QdYgMZt"
 ocr_client_secret="scbzdg9mMsZLEaL7nd8s2DxItD50OKLH"
 
 
-
-###########################################  测试框架用的一些变量  ###############
-
-testUrl="https://www.baidu.com/"
-Urls=testUrl   ### 如果后文没有业务流或者没有标记，则按测试URL标记
-
-
 ######################################   邮件  ##########################
 
 ## 可能被 子函数 exec, 这种情况下必须 global
@@ -157,12 +158,6 @@ mail_host="mail.xxxxx.com"
 mail_user="xxxxxx"   
 mail_pass="xxxxxxxx"   
 mail_postfix="xxxxx.com"  #发件箱的后缀
-
-
-
-
-##################################### 业务中需要引用的变量
-
 
 
 

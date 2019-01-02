@@ -1,6 +1,0 @@
-
-
-1  使用合适版本的 iedriver： http://selenium-release.storage.googleapis.com/index.html
-2  执行注册表文件，导入相关键值
-3  安全 "安全模式"，全部调整为相同（关闭或打开）
-4  IE10 以上：选项设置中的高级页中，取消增强保护模式

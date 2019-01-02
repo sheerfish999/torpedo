@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
 
 	###导入业务流
-	run=openfiles(testName+".py")
+	run=openfiles("./case/"+ testName+".py")
 
 	Successful=0  ## 成功次数
 

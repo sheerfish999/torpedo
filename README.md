@@ -62,5 +62,9 @@
 
 	config_example.py 更名为 config.py
 
+## 3)  测试用例编写和样例位置
+
+	case 目录
+
 
 
