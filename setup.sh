@@ -26,6 +26,9 @@ pip install -U jsonpath_rw
 
 pip install -U keyboard
 
+pip install -U chardet
+pip install -U xvfbwrapper
+
 
 
 

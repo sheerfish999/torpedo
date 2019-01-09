@@ -202,6 +202,18 @@ def cn2url(strs):
 
 
 
+############  下载文件
 
 
+def save_file(url,savepath):
+
+	if sys.version_info.major==3:   #python3
+		data = urllib2.urlopen(url).read()
+	else:
+		data = urllib2.request.urlopen(url).read()
+
+
+	f = open(savepath, 'wb')
+	f.write(data)  
+	f.close()  
 

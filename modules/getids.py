@@ -74,17 +74,17 @@ def getcookie(server,username,password):
 	return(cookies)
 
 
-	#一个登陆测试  直接使用 cookie
+#一个登陆测试的样例  直接使用 cookie
 
-	"""
-	browser.get(Url)
-	cookie=getcookie(server,username,password)
-	cookie=cookie.replace("ccat=","")
-	#print(cookie)
-	browser.add_cookie({'name':'ccat', 'value':cookie})   
-	browser.get(Url)
+"""
+browser.get(Url)
+cookie=getcookie(server,username,password)
+cookie=cookie.replace("ccat=","")
+#print(cookie)
+browser.add_cookie({'name':'ccat', 'value':cookie})   
+browser.get(Url)
 
-	"""
+"""
 
 
 
@@ -262,7 +262,7 @@ if __name__ == '__main__':
 
 	server="10.17.5.151"
 	port=911
-	Phone="13718104161"
+	Phone="137****4161"
 
 	#print(getmsg(server,Phone))
 	#print(getpicid(server,port))

@@ -23,3 +23,9 @@ pip install -U keyboard
 
 rem imagehash:  should install scipy from pypi first, https://pypi.python.org/pypi/scipy/1.0.0rc1 , then:
 pip install  -U imagehash
+
+pip install -U pywin32
+
+pip install -U chardet
+
+pip install -U xvfbwrapper
