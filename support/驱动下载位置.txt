@@ -1,2 +1,8 @@
 
 ²Î¿¼£ºhttps://sheerfish.top/torpedo_support
+
+geckodriver:
+https://github.com/mozilla/geckodriver/releases
+
+chromedriver:
+http://npm.taobao.org/mirrors/chromedriver/

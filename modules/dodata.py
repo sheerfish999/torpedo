@@ -4,10 +4,10 @@
 
 import sys,re
 
-
 import json
 from jsonpath_rw import jsonpath, parse    # pip2/pip3 install jsonpath_rw
 
+from lxml import etree
 
 import platform
 sysstr = platform.system()   ### 判断操作系统类型   Windows   Linux    .   本脚本函数入口, 统一以 LINUX 为准, 其后在函数内进行转换

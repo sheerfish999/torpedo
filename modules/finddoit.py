@@ -624,6 +624,7 @@ def search_switch_to_frame(browser,xpath,level=0,timeouts=3):      #### 存在�
 def getlinkxpath(linkstr, eletypes="a",parentPath="//"):    # eletypes 默认元素类型 a  , parentPath 默认上层路径位于根
 
 	# 链接  包含的方法  //a[contains(text(),'自动化测试t8ca8b8b8')]
+	# 对于特别的 xml , 注意对象名必须转为小写
 
 	if parentPath!="//":
 

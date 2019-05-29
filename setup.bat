@@ -29,3 +29,5 @@ pip install -U pywin32
 pip install -U chardet
 
 pip install -U xvfbwrapper
+
+pip install -U lxml
