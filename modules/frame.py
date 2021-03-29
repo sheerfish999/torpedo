@@ -26,7 +26,9 @@ if sys.version_info.major==3:   #python3
 def openfiles(filename):
 
 
-	paths=os.getcwd()    #绝对路径  , os.getcwd()  代替  sys.path[0]
+	#paths=os.getcwd()    #绝对路径  , os.getcwd()  代替  sys.path[0]
+	paths=os.path.split(os.path.realpath(__file__))[0]   # 这个才是脚本的实际路径
+	
 	all_the_text = codecs.open(paths + "/"+ filename,'r','utf-8').read( )
 
 	if sys.version_info.major==2: 

@@ -32,6 +32,3 @@ pip install -U xvfbwrapper
 pip install -U lxml
 
 
-
-
-

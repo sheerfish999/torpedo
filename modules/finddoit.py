@@ -491,45 +491,6 @@ def exists(browser,xpath,timesouts):
 	else:
 		return(1)   #存在
 
-
-#########  返回 xpath list 中最先出现的元素的序号   用于判断载入的页面整体情况，如跳转的页面是哪个
-
-def existlist(browser,xpathlist,timeout,cyc_time=0.001):
-
-	### 避免页面渲染速度影响
-	wait_for_page_load(browser)
-
-	### 
-
-	timestart = datetime.datetime.now()	
-
-	while True:
-
-		tag=False # 发现
-
-		for i in range(len(xpathlist)):
-
-			xpath=xpathlist[i]
-
-			if exists(browser,xpath,cyc_time) !=0:
-				tag=True
-				break
-
-		if tag==True:
-			break
-		else:
-			### 总体时间判断是否超时
-			timeend = datetime.datetime.now()
-			rettime=round((timeend-timestart).total_seconds(),1)
-			
-			if rettime > timeout:
-				i=-1  ## 指定时间内没有等待到
-				break
-
-	return i
-
-
-
 ###### 查找并自动切换到存在元素的 iframe 上, 简易搜索一层，搜索失败则退到特定层。已经处于复杂的嵌套时不建议使用
 
 
@@ -544,7 +505,6 @@ level=2  从当前下搜索，失败后退到当前
 
 # xpath 比照元素的 xpath
 # frametype  frame 或  iframe 的 xpath 信息
-
 def search_switch_to_frametype(browser,xpath,frametype,level=0,timeouts=3):
 
 	## 等待页面完全载入完成
@@ -914,9 +874,46 @@ def show_where(browser,xpath):
 	browser.execute_script("arguments[0].style.border=\"2px solid red\";", lastele)	
 
 
+######################################
 
 
-######### 载入页面前 删除缓存  （目前只支持本地  chrome 和  firefox)
+###  返回 xpath list 中最先出现的元素的序号   用于判断载入的页面整体情况，如跳转的页面是哪个
+
+def existlist(browser,xpathlist,timeout,cyc_time=0.001):
+
+	### 避免页面渲染速度影响
+	wait_for_page_load(browser)
+
+	### 
+
+	timestart = datetime.datetime.now()	
+
+	while True:
+
+		tag=False # 发现
+
+		for i in range(len(xpathlist)):
+
+			xpath=xpathlist[i]
+
+			if exists(browser,xpath,cyc_time) !=0:
+				tag=True
+				break
+
+		if tag==True:
+			break
+		else:
+			### 总体时间判断是否超时
+			timeend = datetime.datetime.now()
+			rettime=round((timeend-timestart).total_seconds(),1)
+			
+			if rettime > timeout:
+				i=-1  ## 指定时间内没有等待到
+				break
+
+	return i
+	
+##### 载入页面前 删除缓存  （目前只支持本地  chrome 和  firefox)
 
 def cleancache_beforeload(browser):  
 

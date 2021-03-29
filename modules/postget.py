@@ -28,7 +28,7 @@ if sys.version_info.major==2:   #python2
 	import cookielib
 	
 if sys.version_info.major==3:   #python3
-	from urllib import request as urllib2  
+	from urllib import request as urllib2
 	import http.cookiejar as cookielib           # pip3 install request
 
 
